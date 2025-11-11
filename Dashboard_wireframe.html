@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Dashboard Wireframe - TAN HAO SHUAN</title>
+    
+    <!-- ALL CSS STYLES GO HERE -->
+    <style>
+        /* Basic Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        /* Container to center everything */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Page Title */
+        .page-title {
+            text-align: center;
+            background: #000;
+            color: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #000;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #f5f5f5;
+            border: 2px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 70px;
+            height: 70px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            background: #ddd;
+        }
+
+        .profile-info .username {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-info .user-role {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Stats Grid - THIS IS WHAT YOU ASKED ABOUT! */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns */
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            border: 1px solid #666;
+            padding: 15px;
+            text-align: center;
+            background: #fafafa;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Section Box */
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+        }
+
+        .section-body {
+            padding: 15px;
+        }
+
+        /* Streak Calendar */
+        .streak-calendar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .day-box {
+            text-align: center;
+        }
+
+        .day-circle {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #666;
+            border-radius: 50%;
+            background: #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .day-label {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Activity List */
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border: 1px solid #999;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #666;
+            background: #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .activity-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Note Box */
+        .note-box {
+            border: 1px dashed #999;
+            padding: 12px;
+            background: #f9f9f9;
+            font-size: 13px;
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <div class="nav-logo">APRecycle</div>
+            <div class="nav-items">
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Teams</div>
+                <div class="nav-item">Inbox (2)</div>
+            </div>
+        </div>
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-pic"></div>
+            <div class="profile-info">
+                <div class="username">TAN HAO SHUAN</div>
+                <div class="user-role">Recycler | Level 5</div>
+            </div>
+        </div>
+
+        <!-- Statistics Grid - USING THE STYLES YOU ASKED ABOUT! -->
+        <div class="section">
+            <div class="section-header">User Statistics</div>
+            <div class="section-body">
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div style="font-size: 20px;">●</div>
+                        <div class="stat-number">1,250</div>
+                        <div class="stat-label">Total Points</div>
+                    </div>
+                    <div class="stat-box">
+                        <div style="font-size: 20px;">●</div>
+                        <div class="stat-number">45kg</div>
+                        <div class="stat-label">CO₂ Reduced</div>
+                    </div>
+                    <div class="stat-box">
+                        <div style="font-size: 20px;">●</div>
+                        <div class="stat-number">7 days</div>
+                        <div class="stat-label">Current Streak</div>
+                    </div>
+                    <div class="stat-box">
+                        <div style="font-size: 20px;">●</div>
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Badges Earned</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Streak Section -->
+        <div class="section">
+            <div class="section-header">● Your Streak</div>
+            <div class="section-body">
+                <div class="streak-calendar">
+                    <div class="day-box">
+                        <div class="day-circle">✓</div>
+                        <div class="day-label">Mon</div>
+                    </div>
+                    <div class="day-box">
+                        <div class="day-circle">✓</div>
+                        <div class="day-label">Tue</div>
+                    </div>
+                    <div class="day-box">
+                        <div class="day-circle">✓</div>
+                        <div class="day-label">Wed</div>
+                    </div>
+                    <div class="day-box">
+                        <div class="day-circle">✓</div>
+                        <div class="day-label">Thu</div>
+                    </div>
+                    <div class="day-box">
+                        <div class="day-circle">✓</div>
+                        <div class="day-label">Fri</div>
+                    </div>
+                    <div class="day-box">
+                        <div class="day-circle">✓</div>
+                        <div class="day-label">Sat</div>
+                    </div>
+                    <div class="day-box">
+                        <div class="day-circle">✓</div>
+                        <div class="day-label">Sun</div>
+                    </div>
+                </div>
+                <div class="note-box">
+                    Keep it up! You're on a 7-day streak. Recycle today to maintain it!
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section">
+            <div class="section-header">Quick Actions</div>
+            <div class="section-body">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                    <div style="border: 2px solid #666; padding: 20px; text-align: center; background: #fafafa; cursor: pointer;">
+                        <div style="font-size: 30px; margin-bottom: 10px;">📷</div>
+                        <div style="font-weight: bold; font-size: 13px;">Recycle Now</div>
+                    </div>
+                    <div style="border: 2px solid #666; padding: 20px; text-align: center; background: #fafafa; cursor: pointer;">
+                        <div style="font-size: 30px; margin-bottom: 10px;">📚</div>
+                        <div style="font-weight: bold; font-size: 13px;">Education Hub</div>
+                    </div>
+                    <div style="border: 2px solid #666; padding: 20px; text-align: center; background: #fafafa; cursor: pointer;">
+                        <div style="font-size: 30px; margin-bottom: 10px;">🏆</div>
+                        <div style="font-weight: bold; font-size: 13px;">Join Challenge</div>
+                    </div>
+                    <div style="border: 2px solid #666; padding: 20px; text-align: center; background: #fafafa; cursor: pointer;">
+                        <div style="font-size: 30px; margin-bottom: 10px;">🎖️</div>
+                        <div style="font-weight: bold; font-size: 13px;">My Badges</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="section">
+            <div class="section-header">Recent Activity</div>
+            <div class="section-body">
+                <div class="activity-item">
+                    <div class="activity-icon"></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Recycled 2 Plastic Bottles</div>
+                        <div class="activity-subtitle">Today, 10:30 AM • +20 points</div>
+                    </div>
+                    <div style="font-weight: bold; font-size: 18px;">✓</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon"></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Recycled Paper Stack</div>
+                        <div class="activity-subtitle">Yesterday, 2:15 PM • +15 points</div>
+                    </div>
+                    <div style="font-weight: bold; font-size: 18px;">✓</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon"></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Recycled 3 Aluminum Cans</div>
+                        <div class="activity-subtitle">2 days ago, 4:00 PM • +30 points</div>
+                    </div>
+                    <div style="font-weight: bold; font-size: 18px;">✓</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- COMMENTS FOR LEARNING -->
+    <!-- 
+    HOW THIS WORKS:
+    
+    1. CSS GOES IN <head> section inside <style> tags
+    2. HTML content goes in <body> section
+    3. To use a CSS class, add class="classname" to your HTML element
+    
+    EXAMPLE:
+    CSS:  .stats-grid { display: grid; }
+    HTML: <div class="stats-grid">...</div>
+    
+    TIPS FOR YOU:
+    - Change colors by editing background: #e0e0e0
+    - Change sizes by editing padding, margin, width, height
+    - Add more boxes by copying <div class="stat-box">...</div>
+    -->
+
+</body>
+</html>

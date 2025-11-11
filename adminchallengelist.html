@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenges List</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .button {
+            border: 2px solid #000;
+            padding: 8px 15px;
+            background: #e0e0e0;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .challenge-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #999;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+
+        .challenge-info {
+            flex: 1;
+        }
+
+        .challenge-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .challenge-meta {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle - Administrator</div>
+            <div class="nav-items">
+                <div class="nav-item">Challenges</div>
+                <div class="nav-item">Analytics</div>
+                <div class="nav-item">Moderators</div>
+                <div class="nav-item">Logout</div>
+            </div>
+        </div>
+
+        <div class="back-link">← Back to Main Menu</div>
+
+        <div class="section">
+            <div class="section-header">
+                <div>Challenges Management</div>
+                <div class="button">+ Create New Challenge</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">Active Challenges</div>
+            <div class="section-body">
+                <div class="challenge-item">
+                    <div class="challenge-info">
+                        <div class="challenge-title">Plastic-Free Week Challenge</div>
+                        <div class="challenge-meta">Start: 01/12/2025 • End: 07/12/2025 • Multiplier: 2x • Participants: 245</div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Delete</div>
+                    </div>
+                </div>
+
+                <div class="challenge-item">
+                    <div class="challenge-info">
+                        <div class="challenge-title">Campus Clean-Up Competition</div>
+                        <div class="challenge-meta">Start: 15/11/2025 • End: 15/12/2025 • Multiplier: 4x • Participants: 180</div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Delete</div>
+                    </div>
+                </div>
+
+                <div class="challenge-item">
+                    <div class="challenge-info">
+                        <div class="challenge-title">Paper Recycling Marathon</div>
+                        <div class="challenge-meta">Start: 20/11/2025 • End: 04/12/2025 • Multiplier: 2x • Participants: 156</div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Delete</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">Upcoming Challenges</div>
+            <div class="section-body">
+                <div class="challenge-item">
+                    <div class="challenge-info">
+                        <div class="challenge-title">Metal Can Collection Drive</div>
+                        <div class="challenge-meta">Start: 16/12/2025 • End: 23/12/2025 • Multiplier: 2x</div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Delete</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

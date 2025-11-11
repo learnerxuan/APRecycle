@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Management - Main Menu</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
+            background: #000;
+            color: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .status-box {
+            background: #e8e8e8;
+            border: 1px solid #999;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            border: 2px solid #666;
+            padding: 25px;
+            background: #fafafa;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #666;
+            border-radius: 50%;
+            background: #ddd;
+            margin: 0 auto 15px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .card-link {
+            font-weight: bold;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle</div>
+            <div class="nav-items">
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Teams</div>
+                <div class="nav-item">Inbox (2)</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">● Team Management</div>
+            <div class="section-body">
+                <div style="font-size: 13px; color: #666;">
+                    Join an existing team or create your own
+                </div>
+            </div>
+        </div>
+
+        <div class="status-box">
+            <strong>Current Status:</strong> You are not in any team yet
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-icon"></div>
+                <div class="card-title">Join a Team</div>
+                <div class="card-desc">
+                    Browse and join existing teams competing in recycling challenges
+                </div>
+                <div class="card-link">Browse Teams →</div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"></div>
+                <div class="card-title">Create a Team</div>
+                <div class="card-desc">
+                    Start your own team and invite others to join your mission
+                </div>
+                <div class="card-link">Create Team →</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

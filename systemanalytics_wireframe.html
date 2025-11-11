@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Analytics Dashboard</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            border: 1px solid #666;
+            padding: 20px;
+            text-align: center;
+            background: #f5f5f5;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .chart-box {
+            border: 2px solid #999;
+            padding: 40px;
+            background: #fafafa;
+            text-align: center;
+            margin: 15px 0;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-placeholder {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .button {
+            border: 2px solid #000;
+            padding: 12px 25px;
+            background: #e0e0e0;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        .data-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle - Administrator</div>
+            <div class="nav-items">
+                <div class="nav-item">Challenges</div>
+                <div class="nav-item">Analytics</div>
+                <div class="nav-item">Moderators</div>
+                <div class="nav-item">Logout</div>
+            </div>
+        </div>
+
+        <div class="back-link">← Back to Main Menu</div>
+
+        <div class="section">
+            <div class="section-header">● System Analytics Dashboard</div>
+            <div class="section-body">
+                <div style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                    Campus-wide recycling statistics and trends
+                </div>
+
+                <!-- Overall Stats -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number">8,523</div>
+                        <div class="stat-label">Total Items Recycled</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">1,450</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">342kg</div>
+                        <div class="stat-label">Total CO₂ Reduced</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">89%</div>
+                        <div class="stat-label">Participation Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Material Breakdown -->
+        <div class="section">
+            <div class="section-header">Material Category Breakdown</div>
+            <div class="section-body">
+                <div class="data-row">
+                    <div class="data-label">Plastic Bottles</div>
+                    <div>3,245 items (38%)</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Paper</div>
+                    <div>2,890 items (34%)</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Aluminum Cans</div>
+                    <div>1,678 items (20%)</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Glass</div>
+                    <div>710 items (8%)</div>
+                </div>
+
+                <div class="chart-box">
+                    <div class="chart-placeholder">
+                        [Bar Chart: Material Distribution]<br>
+                        Plastic: ████████████████████ 38%<br>
+                        Paper: ██████████████████ 34%<br>
+                        Cans: ████████████ 20%<br>
+                        Glass: █████ 8%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participation Trends -->
+        <div class="section">
+            <div class="section-header">Participation Trends (Last 7 Days)</div>
+            <div class="section-body">
+                <div class="chart-box">
+                    <div class="chart-placeholder">
+                        [Line Chart: Daily Participation]<br><br>
+                        Mon: 120 items<br>
+                        Tue: 145 items<br>
+                        Wed: 138 items<br>
+                        Thu: 162 items<br>
+                        Fri: 155 items<br>
+                        Sat: 89 items<br>
+                        Sun: 78 items
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Environmental Impact -->
+        <div class="section">
+            <div class="section-header">Environmental Impact Calculations</div>
+            <div class="section-body">
+                <div class="data-row">
+                    <div class="data-label">Total CO₂ Reduction</div>
+                    <div>342kg (equivalent to 15 trees planted)</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Energy Saved</div>
+                    <div>4,560 kWh (enough to power 45 homes for 1 day)</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Water Saved</div>
+                    <div>12,340 liters</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Waste Diverted from Landfill</div>
+                    <div>1,250kg</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Contributors -->
+        <div class="section">
+            <div class="section-header">Top 5 Contributors (This Month)</div>
+            <div class="section-body">
+                <div class="data-row">
+                    <div><strong>1.</strong> Engineering Faculty</div>
+                    <div>1,245 items</div>
+                </div>
+                <div class="data-row">
+                    <div><strong>2.</strong> Green Warriors Team</div>
+                    <div>980 items</div>
+                </div>
+                <div class="data-row">
+                    <div><strong>3.</strong> Computer Science Dept</div>
+                    <div>867 items</div>
+                </div>
+                <div class="data-row">
+                    <div><strong>4.</strong> Sustainability Club</div>
+                    <div>723 items</div>
+                </div>
+                <div class="data-row">
+                    <div><strong>5.</strong> Business School</div>
+                    <div>654 items</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Report Button -->
+        <div class="button-container">
+            <div class="button">Generate Detailed Report (PDF)</div>
+        </div>
+    </div>
+
+    <!-- 
+    C2 FLOW MATCHED:
+    ✓ Calculate campus-wide recycling stats
+    ✓ Participation trends
+    ✓ Material category breakdowns
+    ✓ Environmental impact calculations
+    ✓ Display the results
+    ✓ Generate Report → Generate PDF
+    -->
+</body>
+</html>

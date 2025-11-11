@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox - Message List</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
+            background: #000;
+            color: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .badge {
+            border: 1px solid #000;
+            padding: 5px 12px;
+            background: #ddd;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .message-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #999;
+            border-left: 4px solid #000;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+
+        .message-item.unread {
+            background: #f0f0f0;
+        }
+
+        .message-icon {
+            width: 45px;
+            height: 45px;
+            border: 1px solid #666;
+            background: #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .message-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .unread-dot {
+            width: 6px;
+            height: 6px;
+            background: #000;
+            border-radius: 50%;
+        }
+
+        .message-preview {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .message-meta {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .message-status-icon {
+            font-size: 18px;
+            color: #999;
+        }
+
+        .note-box {
+            border: 1px dashed #999;
+            padding: 12px;
+            background: #f9f9f9;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="navbar">
+            <div class="nav-logo">APRecycle</div>
+            <div class="nav-items">
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Teams</div>
+                <div class="nav-item">Inbox (2)</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div>● Inbox</div>
+                <div class="badge">2 unread</div>
+            </div>
+            <div class="section-body">
+                <div style="font-size: 13px; color: #666;">
+                    Feedback from moderators
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-body">
+                <!-- Unread Message 1 -->
+                <div class="message-item unread">
+                    <div class="message-icon"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <div class="message-title">Recycling Verified ✓</div>
+                            <div class="unread-dot"></div>
+                        </div>
+                        <div class="message-preview">
+                            Great job! Your 2 plastic bottles have been verified and approved...
+                        </div>
+                        <div class="message-meta">2 hours ago • +20 points</div>
+                    </div>
+                    <div class="message-status-icon">✉</div>
+                </div>
+
+                <!-- Unread Message 2 -->
+                <div class="message-item unread">
+                    <div class="message-icon"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <div class="message-title">Item Rejected</div>
+                            <div class="unread-dot"></div>
+                        </div>
+                        <div class="message-preview">
+                            Sorry, the item you uploaded appears to be contaminated...
+                        </div>
+                        <div class="message-meta">1 day ago</div>
+                    </div>
+                    <div class="message-status-icon">✉</div>
+                </div>
+
+                <!-- Read Message -->
+                <div class="message-item">
+                    <div class="message-icon"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <div class="message-title">Helpful Tip</div>
+                        </div>
+                        <div class="message-preview">
+                            Remember to rinse plastic bottles before recycling...
+                        </div>
+                        <div class="message-meta">2 days ago</div>
+                    </div>
+                    <div class="message-status-icon">✉</div>
+                </div>
+
+                <!-- Read Message -->
+                <div class="message-item">
+                    <div class="message-icon"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <div class="message-title">Paper Stack Verified ✓</div>
+                        </div>
+                        <div class="message-preview">
+                            Excellent! Your paper recycling has been verified...
+                        </div>
+                        <div class="message-meta">3 days ago • +15 points</div>
+                    </div>
+                    <div class="message-status-icon">✉</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note-box">
+            Click on any message to view details and take action
+        </div>
+    </div>
+</body>
+</html>

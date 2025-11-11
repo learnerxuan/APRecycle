@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Team</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
+            background: #000;
+            color: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .input-field {
+            border: 1px solid #666;
+            padding: 12px;
+            background: #fff;
+            margin: 8px 0;
+            font-size: 13px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .label {
+            font-weight: bold;
+            margin: 15px 0 5px 0;
+            font-size: 13px;
+        }
+
+        .textarea {
+            border: 1px solid #666;
+            padding: 12px;
+            background: #fff;
+            font-size: 13px;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 80px;
+            font-family: Arial, sans-serif;
+        }
+
+        .radio-group {
+            margin: 10px 0;
+        }
+
+        .radio-option {
+            margin: 8px 0;
+            font-size: 13px;
+        }
+
+        .button {
+            border: 2px solid #000;
+            padding: 12px 30px;
+            background: #e0e0e0;
+            font-weight: bold;
+            display: inline-block;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle</div>
+            <div class="nav-items">
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Teams</div>
+                <div class="nav-item">Inbox (2)</div>
+            </div>
+        </div>
+
+        <div class="back-link">← Back to Team Management</div>
+
+        <div class="section">
+            <div class="section-header">Create a New Team</div>
+            <div class="section-body">
+                <div style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                    Fill in the information to start your team
+                </div>
+
+                <div class="label">Team Name *</div>
+                <div class="input-field">e.g., Green Warriors</div>
+
+                <div class="label">Team Description *</div>
+                <textarea class="textarea">Describe your team's mission and goals...</textarea>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div class="button">Create Team</div>
+        </div>
+    </div>
+</body>
+</html>
