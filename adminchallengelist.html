@@ -6,55 +6,77 @@
     <title>Challenges List</title>
     
     <style>
+        /* --- GLOBAL RESET FOR ALIGNMENT --- */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             background: #ffffff;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            width: 100%;
         }
 
+        /* --- NAVBAR --- */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #e0e0e0;
             border: 2px solid #000;
-            padding: 15px 20px;
+            padding: 12px;
             margin-bottom: 20px;
+            gap: 10px;
         }
 
         .nav-logo {
             font-weight: bold;
             font-size: 16px;
+            flex-shrink: 0;
         }
 
         .nav-items {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .nav-item {
             border: 1px solid #666;
-            padding: 8px 15px;
+            padding: 6px 10px;
             background: #f5f5f5;
-            font-size: 13px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: #d0d0d0;
         }
 
         .back-link {
             margin-bottom: 20px;
             font-size: 14px;
             color: #333;
+            display: block;
+            font-weight: bold;
+            text-decoration: none;
         }
 
+        /* --- SECTIONS --- */
         .section {
             border: 2px solid #000;
             margin-bottom: 20px;
             background: #fff;
+            width: 100%;
         }
 
         .section-header {
@@ -66,49 +88,135 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .section-body {
             padding: 20px;
         }
 
+        /* --- BUTTONS --- */
         .button {
             border: 2px solid #000;
-            padding: 8px 15px;
+            padding: 10px 15px;
             background: #e0e0e0;
             font-weight: bold;
             font-size: 12px;
             cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
         }
 
+        .button:hover {
+            background: #ccc;
+        }
+
+        /* Special button in header */
+        .header-btn {
+            padding: 8px 12px;
+        }
+
+        /* --- CHALLENGE ITEM LIST --- */
         .challenge-item {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column; /* Default mobile: Stack vertically */
+            gap: 15px;
             padding: 15px;
             border: 1px solid #999;
             margin: 10px 0;
             background: #fafafa;
+            width: 100%;
+        }
+
+        /* Desktop: Switch to row layout */
+        @media (min-width: 600px) {
+            .challenge-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
 
         .challenge-info {
             flex: 1;
+            width: 100%;
         }
 
         .challenge-title {
             font-weight: bold;
             font-size: 14px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            line-height: 1.4;
         }
 
         .challenge-meta {
-            font-size: 11px;
+            font-size: 12px; /* Slightly larger for readability */
             color: #666;
+            line-height: 1.4;
         }
 
+        /* --- ACTION BUTTONS --- */
         .action-buttons {
             display: flex;
             gap: 8px;
+            width: 100%; /* Full width on mobile */
+        }
+
+        @media (min-width: 600px) {
+            .action-buttons {
+                width: auto; /* Auto width on desktop */
+            }
+        }
+
+        .action-buttons .button {
+            flex: 1; /* Equal width buttons on mobile */
+        }
+
+        /* --- MOBILE ALIGNMENT (Max 480px) --- */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .nav-items {
+                justify-content: center;
+                margin-top: 8px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .header-btn {
+                width: 100%; /* Full width Create button on mobile */
+            }
+        }
+
+        /* --- 320px SPECIFIC ALIGNMENT --- */
+        @media (max-width: 360px) {
+            .nav-item {
+                flex: 1;
+                text-align: center;
+                font-size: 11px;
+                padding: 8px 4px;
+            }
+            
+            .challenge-item {
+                padding: 10px; /* Tighter padding */
+            }
+            
+            .challenge-meta {
+                font-size: 11px;
+            }
         }
     </style>
 </head>
@@ -124,12 +232,12 @@
             </div>
         </div>
 
-        <div class="back-link">← Back to Main Menu</div>
+        <a href="#" class="back-link">← Back to Main Menu</a>
 
         <div class="section">
             <div class="section-header">
                 <div>Challenges Management</div>
-                <div class="button">+ Create New Challenge</div>
+                <div class="button header-btn">+ Create New Challenge</div>
             </div>
         </div>
 
