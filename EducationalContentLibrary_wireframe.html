@@ -6,221 +6,288 @@
     <title>Educational Content Library</title>
     
     <style>
+        /* --- RESET FOR ALIGNMENT --- */
+        * {
+            box-sizing: border-box; /* This fixes 90% of alignment issues */
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             background: #ffffff;
+            overflow-x: hidden;
         }
 
+        /* Simulating the container constraints */
         .container {
-            max-width: 1000px;
+            max-width: 100%;
             margin: 0 auto;
         }
 
-        .page-title {
-            text-align: center;
-            background: #000;
-            color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            border: 2px solid #000;
-        }
-
+        /* --- NAVIGATION ALIGNMENT --- */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #e0e0e0;
             border: 2px solid #000;
-            padding: 15px 20px;
-            margin-bottom: 20px;
+            padding: 12px;
+            gap: 10px; /* Adds space between logo and items */
         }
 
         .nav-logo {
             font-weight: bold;
-            font-size: 16px;
+            flex-shrink: 0; /* Prevents logo from getting squashed */
         }
 
         .nav-items {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end; /* Aligns items to right on desktop */
         }
 
         .nav-item {
             border: 1px solid #666;
-            padding: 8px 15px;
+            padding: 6px 10px;
             background: #f5f5f5;
-            font-size: 13px;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
         }
 
         .back-link {
-            margin-bottom: 20px;
+            margin: 15px 0;
             font-size: 14px;
-            color: #333;
+            display: block; /* Ensures it takes up space */
         }
 
+        /* --- SECTIONS & HEADERS --- */
         .section {
             border: 2px solid #000;
             margin-bottom: 20px;
             background: #fff;
+            width: 100%; /* Ensures full alignment */
         }
 
         .section-header {
             background: #e0e0e0;
             border-bottom: 2px solid #000;
-            padding: 12px 15px;
+            padding: 12px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
         }
 
         .section-body {
-            padding: 20px;
+            padding: 15px;
         }
 
+        /* --- CONTENT ITEMS (THE BOXES) --- */
         .content-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
             border: 1px solid #999;
-            margin: 8px 0;
             background: #fafafa;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column; /* Stacks content vertically */
+            gap: 12px; /* Consistent spacing between Text and Buttons */
+            width: 100%;
+        }
+
+        .content-text-group {
+            /* Holds title and meta */
+            width: 100%;
+        }
+
+        .content-button-group {
+            /* Holds the buttons */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
         .content-title {
             font-weight: bold;
             font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 4px;
         }
 
         .content-meta {
             font-size: 11px;
-            color: #666;
-            margin-top: 3px;
+            color: #555;
+            line-height: 1.3;
         }
 
+        /* --- BUTTONS --- */
         .button {
             border: 2px solid #000;
-            padding: 6px 12px;
+            padding: 8px;
             background: #e0e0e0;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 12px;
             cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+            display: inline-block;
         }
+
+        /* Hover effect for better feel */
+        .button:hover, .nav-item:hover {
+            background: #d0d0d0;
+        }
+
+        /* --- MOBILE ALIGNMENT (MAX 480px) --- */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px; /* Reduce outer padding */
+            }
+
+            .navbar {
+                flex-direction: column; /* Stack logo and items */
+                align-items: stretch; /* Stretch to full width */
+                text-align: center;
+            }
+
+            .nav-items {
+                justify-content: center; /* Center items */
+                margin-top: 8px;
+            }
+
+            .section-header {
+                flex-direction: column; /* Stack Title and Create Button */
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .section-header .button {
+                width: 100%; /* Full width button */
+            }
+        }
+
+        /* --- 320px (SMALL SCREEN) SPECIFIC ALIGNMENT --- */
+        @media (max-width: 360px) {
+            .nav-item {
+                flex: 1; /* Make nav items grow to fill space evenly */
+                text-align: center;
+                font-size: 11px;
+                padding: 6px 4px;
+            }
+            
+            .section-body {
+                padding: 10px; /* Tighter padding inside white box */
+            }
+
+            .content-item {
+                padding: 10px;
+            }
+
+            .button {
+                width: 100%; /* Force all buttons to full width */
+                box-sizing: border-box;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
 
-        <div class="navbar">
-            <div class="nav-logo">APRecycle - Eco-Moderator</div>
-            <div class="nav-items">
-                <div class="nav-item">Review Queue</div>
-                <div class="nav-item">Education</div>
-                <div class="nav-item">Logout</div>
-            </div>
-        </div>
+<div class="container">
 
-        <div class="back-link">← Back to Main Menu</div>
-
-        <div class="section">
-            <div class="section-header">
-                <div>Educational Content Library</div>
-                <div class="button" style="padding: 8px 15px; font-size: 12px;">+ Create New</div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">Published Content</div>
-            <div class="section-body">
-                <div class="content-item">
-                    <div>
-                        <div class="content-title">How to Properly Recycle Plastic Bottles</div>
-                        <div class="content-meta">Published 2 days ago • 45 views • Category: Plastic</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <div class="button">Edit</div>
-                        <div class="button">Delete</div>
-                    </div>
-                </div>
-
-                <div class="content-item">
-                    <div>
-                        <div class="content-title">Common Recycling Mistakes to Avoid</div>
-                        <div class="content-meta">Published 5 days ago • 78 views • Category: General Tips</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <div class="button">Edit</div>
-                        <div class="button">Delete</div>
-                    </div>
-                </div>
-
-                <div class="content-item">
-                    <div>
-                        <div class="content-title">Paper Recycling Guide</div>
-                        <div class="content-meta">Published 1 week ago • 62 views • Category: Paper</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <div class="button">Edit</div>
-                        <div class="button">Delete</div>
-                    </div>
-                </div>
-
-                <div class="content-item">
-                    <div>
-                        <div class="content-title">Aluminum Can Recycling Benefits</div>
-                        <div class="content-meta">Published 2 weeks ago • 53 views • Category: Metal</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <div class="button">Edit</div>
-                        <div class="button">Delete</div>
-                    </div>
-                </div>
-
-                <div class="content-item">
-                    <div>
-                        <div class="content-title">Glass Recycling Do's and Don'ts</div>
-                        <div class="content-meta">Published 3 weeks ago • 41 views • Category: Glass</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <div class="button">Edit</div>
-                        <div class="button">Delete</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">Drafts</div>
-            <div class="section-body">
-                <div class="content-item">
-                    <div>
-                        <div class="content-title">Advanced Recycling Techniques</div>
-                        <div class="content-meta">Last edited 1 day ago • Draft</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <div class="button">Continue Editing</div>
-                        <div class="button">Delete</div>
-                    </div>
-                </div>
-
-                <div class="content-item">
-                    <div>
-                        <div class="content-title">Composting Basics</div>
-                        <div class="content-meta">Last edited 3 days ago • Draft</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <div class="button">Continue Editing</div>
-                        <div class="button">Delete</div>
-                    </div>
-                </div>
-            </div>
+    <div class="navbar">
+        <div class="nav-logo">APRecycle - Eco-Moderator</div>
+        <div class="nav-items">
+            <div class="nav-item">Review Queue</div>
+            <div class="nav-item">Education</div>
+            <div class="nav-item">Logout</div>
         </div>
     </div>
+
+    <div class="back-link">← Back to Main Menu</div>
+
+    <div class="section">
+        <div class="section-header">
+            <div>Educational Content Library</div>
+            <div class="button">+ Create New</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Published Content</div>
+        <div class="section-body">
+
+            <div class="content-item">
+                <div class="content-text-group">
+                    <div class="content-title">How to Properly Recycle Plastic Bottles</div>
+                    <div class="content-meta">Published 2 days ago • 45 views • Category: Plastic</div>
+                </div>
+                <div class="content-button-group">
+                    <div class="button">Edit</div>
+                    <div class="button">Delete</div>
+                </div>
+            </div>
+
+            <div class="content-item">
+                <div class="content-text-group">
+                    <div class="content-title">Common Recycling Mistakes to Avoid</div>
+                    <div class="content-meta">Published 5 days ago • 78 views • Category: General Tips</div>
+                </div>
+                <div class="content-button-group">
+                    <div class="button">Edit</div>
+                    <div class="button">Delete</div>
+                </div>
+            </div>
+
+            <div class="content-item">
+                <div class="content-text-group">
+                    <div class="content-title">Paper Recycling Guide</div>
+                    <div class="content-meta">Published 1 week ago • 62 views • Category: Paper</div>
+                </div>
+                <div class="content-button-group">
+                    <div class="button">Edit</div>
+                    <div class="button">Delete</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">Drafts</div>
+        <div class="section-body">
+
+            <div class="content-item">
+                <div class="content-text-group">
+                    <div class="content-title">Advanced Recycling Techniques</div>
+                    <div class="content-meta">Last edited 1 day ago • Draft</div>
+                </div>
+                <div class="content-button-group">
+                    <div class="button">Continue Editing</div>
+                    <div class="button">Delete</div>
+                </div>
+            </div>
+
+            <div class="content-item">
+                <div class="content-text-group">
+                    <div class="content-title">Composting Basics</div>
+                    <div class="content-meta">Last edited 3 days ago • Draft</div>
+                </div>
+                <div class="content-button-group">
+                    <div class="button">Continue Editing</div>
+                    <div class="button">Delete</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>
