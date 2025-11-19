@@ -6,55 +6,77 @@
     <title>Add Eco-Moderator</title>
     
     <style>
+        /* --- GLOBAL RESET FOR ALIGNMENT --- */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             background: #ffffff;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            width: 100%;
         }
 
+        /* --- NAVBAR --- */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #e0e0e0;
             border: 2px solid #000;
-            padding: 15px 20px;
+            padding: 12px;
             margin-bottom: 20px;
+            gap: 10px;
         }
 
         .nav-logo {
             font-weight: bold;
             font-size: 16px;
+            flex-shrink: 0;
         }
 
         .nav-items {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .nav-item {
             border: 1px solid #666;
-            padding: 8px 15px;
+            padding: 6px 10px;
             background: #f5f5f5;
-            font-size: 13px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: #d0d0d0;
         }
 
         .back-link {
             margin-bottom: 20px;
             font-size: 14px;
             color: #333;
+            display: block;
+            font-weight: bold;
+            text-decoration: none;
         }
 
+        /* --- SECTION STYLING --- */
         .section {
             border: 2px solid #000;
             margin-bottom: 20px;
             background: #fff;
+            width: 100%;
         }
 
         .section-header {
@@ -69,25 +91,33 @@
             padding: 20px;
         }
 
-        .input-field {
-            border: 1px solid #666;
-            padding: 12px;
-            background: #fff;
-            margin: 10px 0;
-            font-size: 13px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
+        /* --- FORM ELEMENTS --- */
         .label {
             font-weight: bold;
             margin: 15px 0 5px 0;
             font-size: 13px;
+            display: block;
         }
 
+        .input-field {
+            border: 1px solid #666;
+            padding: 12px;
+            background: #fff;
+            margin-bottom: 10px;
+            font-size: 14px; /* Slightly larger for easier typing */
+            width: 100%; /* Ensures it fits parent container */
+            display: block;
+        }
+
+        .input-field::placeholder {
+            color: #999;
+        }
+
+        /* --- BUTTONS --- */
         .button-container {
             text-align: center;
             margin-top: 20px;
+            width: 100%;
         }
 
         .button {
@@ -97,6 +127,53 @@
             font-weight: bold;
             font-size: 14px;
             cursor: pointer;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        .button:hover {
+            background: #ccc;
+        }
+
+        /* --- MOBILE ALIGNMENT (Max 480px) --- */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .nav-items {
+                justify-content: center;
+                margin-top: 8px;
+            }
+
+            .section-body {
+                padding: 15px;
+            }
+
+            .button {
+                width: 100%; /* Full width button on mobile */
+                box-sizing: border-box;
+            }
+        }
+
+        /* --- 320px SPECIFIC ALIGNMENT --- */
+        @media (max-width: 360px) {
+            .nav-item {
+                flex: 1;
+                text-align: center;
+                font-size: 11px;
+                padding: 8px 4px;
+            }
+            
+            .input-field {
+                padding: 10px; /* Tighter padding for inputs */
+            }
         }
     </style>
 </head>
@@ -112,31 +189,31 @@
             </div>
         </div>
 
-        <div class="back-link">← Back to Moderator List</div>
+        <a href="#" class="back-link">← Back to Moderator List</a>
 
         <div class="section">
             <div class="section-header">Add New Eco-Moderator</div>
             <div class="section-body">
-                <div style="font-size: 13px; color: #666; margin-bottom: 20px;">
-                    Fill in the information of the new eco-moderator
+                <div style="font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.4;">
+                    Fill in the information below to register a new moderator for the APRecycle system.
                 </div>
 
-                <div class="label">Student/Staff ID *</div>
-                <div class="input-field">e.g., TP082620</div>
+                <label class="label">Student/Staff ID *</label>
+                <input type="text" class="input-field" placeholder="e.g., TP082620">
 
-                <div class="label">Full Name *</div>
-                <div class="input-field">e.g., LOW ZE XUAN</div>
+                <label class="label">Full Name *</label>
+                <input type="text" class="input-field" placeholder="e.g., LOW ZE XUAN">
 
-                <div class="label">Email Address *</div>
-                <div class="input-field">e.g., tp082620@mail.apu.edu.my</div>
+                <label class="label">Email Address *</label>
+                <input type="email" class="input-field" placeholder="e.g., tp082620@mail.apu.edu.my">
 
-                <div class="label">Phone Number</div>
-                <div class="input-field">e.g., +60123456789</div>
+                <label class="label">Phone Number</label>
+                <input type="tel" class="input-field" placeholder="e.g., +60123456789">
             </div>
         </div>
 
         <div class="button-container">
-            <div class="button">Add Eco-Moderator</div>
+            <button class="button">Add Eco-Moderator</button>
         </div>
     </div>
 </body>
