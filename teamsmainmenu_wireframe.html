@@ -54,6 +54,7 @@
             padding: 8px 15px;
             background: #f5f5f5;
             font-size: 13px;
+            white-space: nowrap;
         }
 
         .section {
@@ -80,6 +81,7 @@
             padding: 12px 15px;
             margin-bottom: 20px;
             font-size: 13px;
+            text-align: center; /* Center text for better mobile balance */
         }
 
         .grid-2 {
@@ -121,6 +123,35 @@
         .card-link {
             font-weight: bold;
             font-size: 14px;
+        }
+
+        /* --- MOBILE ALIGNMENT FIXES --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column; /* Stack Logo and items */
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-items {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .nav-item {
+                flex: 1 1 auto; /* Buttons stretch evenly */
+                text-align: center;
+            }
+
+            /* Change grid from 2 columns to 1 column so cards don't squish */
+            .grid-2 {
+                grid-template-columns: 1fr; 
+            }
         }
     </style>
 </head>
