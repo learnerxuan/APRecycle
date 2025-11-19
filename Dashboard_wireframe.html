@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Dashboard Wireframe - TAN HAO SHUAN</title>
     
-    <!-- ALL CSS STYLES GO HERE -->
     <style>
         /* Basic Page Styling */
         body {
@@ -19,18 +18,6 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
-        }
-
-        /* Page Title */
-        .page-title {
-            text-align: center;
-            background: #000;
-            color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            border: 2px solid #000;
         }
 
         /* Navigation Bar */
@@ -91,10 +78,10 @@
             color: #666;
         }
 
-        /* Stats Grid - THIS IS WHAT YOU ASKED ABOUT! */
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns */
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -166,6 +153,31 @@
             color: #666;
         }
 
+        /* Quick Actions Grid */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .quick-action-box {
+            border: 2px solid #666;
+            padding: 20px;
+            text-align: center;
+            background: #fafafa;
+            cursor: pointer;
+        }
+
+        .quick-action-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .quick-action-label {
+            font-weight: bold;
+            font-size: 13px;
+        }
+
         /* Activity List */
         .activity-item {
             display: flex;
@@ -209,6 +221,238 @@
             font-style: italic;
             text-align: center;
         }
+
+        /* ============================================ */
+        /* MOBILE RESPONSIVE - TABLET (768px and below) */
+        /* ============================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            /* Navigation */
+            .navbar {
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .nav-logo {
+                font-size: 14px;
+            }
+
+            .nav-items {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .nav-item {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+
+            /* Profile Header */
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .profile-pic {
+                width: 60px;
+                height: 60px;
+            }
+
+            .username {
+                font-size: 16px;
+            }
+
+            /* Sections */
+            .section {
+                margin-bottom: 15px;
+            }
+
+            .section-header {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .section-body {
+                padding: 12px;
+            }
+
+            /* Stats Grid - 1 column on tablet */
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .stat-box {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 20px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            /* Streak Calendar */
+            .streak-calendar {
+                gap: 3px;
+                flex-wrap: wrap;
+            }
+
+            .day-circle {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+
+            .day-label {
+                font-size: 8px;
+            }
+
+            /* Quick Actions - 2 columns on tablet */
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .quick-action-box {
+                padding: 15px;
+            }
+
+            .quick-action-icon {
+                font-size: 26px;
+            }
+
+            .quick-action-label {
+                font-size: 12px;
+            }
+
+            /* Activity Items */
+            .activity-item {
+                flex-direction: row;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .activity-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .activity-title {
+                font-size: 13px;
+            }
+
+            .activity-subtitle {
+                font-size: 10px;
+            }
+
+            /* Note Box */
+            .note-box {
+                font-size: 11px;
+                padding: 10px;
+            }
+        }
+
+        /* ================================================ */
+        /* MOBILE RESPONSIVE - SMALL MOBILE (480px and below) */
+        /* ================================================ */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                margin: 0;
+            }
+
+            /* Navigation */
+            .navbar {
+                padding: 8px;
+                gap: 5px;
+            }
+
+            .nav-item {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+
+            /* Profile */
+            .profile-pic {
+                width: 50px;
+                height: 50px;
+            }
+
+            .username {
+                font-size: 14px;
+            }
+
+            /* Sections */
+            .section-body {
+                padding: 10px;
+            }
+
+            /* Stats Grid - stays 1 column */
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 18px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            /* Streak Calendar */
+            .day-circle {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            .day-label {
+                font-size: 7px;
+            }
+
+            /* Quick Actions - 1 column on small mobile */
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .quick-action-box {
+                padding: 12px;
+            }
+
+            .quick-action-icon {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .quick-action-label {
+                font-size: 11px;
+            }
+
+            /* Note Box */
+            .note-box {
+                font-size: 10px;
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -233,7 +477,7 @@
             </div>
         </div>
 
-        <!-- Statistics Grid - USING THE STYLES YOU ASKED ABOUT! -->
+        <!-- Statistics Grid -->
         <div class="section">
             <div class="section-header">User Statistics</div>
             <div class="section-body">
@@ -306,22 +550,22 @@
         <div class="section">
             <div class="section-header">Quick Actions</div>
             <div class="section-body">
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
-                    <div style="border: 2px solid #666; padding: 20px; text-align: center; background: #fafafa; cursor: pointer;">
-                        <div style="font-size: 30px; margin-bottom: 10px;">📷</div>
-                        <div style="font-weight: bold; font-size: 13px;">Recycle Now</div>
+                <div class="quick-actions-grid">
+                    <div class="quick-action-box">
+                        <div class="quick-action-icon">📷</div>
+                        <div class="quick-action-label">Recycle Now</div>
                     </div>
-                    <div style="border: 2px solid #666; padding: 20px; text-align: center; background: #fafafa; cursor: pointer;">
-                        <div style="font-size: 30px; margin-bottom: 10px;">📚</div>
-                        <div style="font-weight: bold; font-size: 13px;">Education Hub</div>
+                    <div class="quick-action-box">
+                        <div class="quick-action-icon">📚</div>
+                        <div class="quick-action-label">Education Hub</div>
                     </div>
-                    <div style="border: 2px solid #666; padding: 20px; text-align: center; background: #fafafa; cursor: pointer;">
-                        <div style="font-size: 30px; margin-bottom: 10px;">🏆</div>
-                        <div style="font-weight: bold; font-size: 13px;">Join Challenge</div>
+                    <div class="quick-action-box">
+                        <div class="quick-action-icon">🏆</div>
+                        <div class="quick-action-label">Join Challenge</div>
                     </div>
-                    <div style="border: 2px solid #666; padding: 20px; text-align: center; background: #fafafa; cursor: pointer;">
-                        <div style="font-size: 30px; margin-bottom: 10px;">🎖️</div>
-                        <div style="font-weight: bold; font-size: 13px;">My Badges</div>
+                    <div class="quick-action-box">
+                        <div class="quick-action-icon">🎖️</div>
+                        <div class="quick-action-label">My Badges</div>
                     </div>
                 </div>
             </div>
@@ -361,24 +605,5 @@
         </div>
 
     </div>
-
-    <!-- COMMENTS FOR LEARNING -->
-    <!-- 
-    HOW THIS WORKS:
-    
-    1. CSS GOES IN <head> section inside <style> tags
-    2. HTML content goes in <body> section
-    3. To use a CSS class, add class="classname" to your HTML element
-    
-    EXAMPLE:
-    CSS:  .stats-grid { display: grid; }
-    HTML: <div class="stats-grid">...</div>
-    
-    TIPS FOR YOU:
-    - Change colors by editing background: #e0e0e0
-    - Change sizes by editing padding, margin, width, height
-    - Add more boxes by copying <div class="stat-box">...</div>
-    -->
-
 </body>
 </html>
