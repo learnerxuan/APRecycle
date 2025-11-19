@@ -43,12 +43,14 @@
             padding: 8px 15px;
             background: #f5f5f5;
             font-size: 13px;
+            white-space: nowrap;
         }
 
         .back-link {
             margin-bottom: 20px;
             font-size: 14px;
             color: #333;
+            display: inline-block;
         }
 
         .section {
@@ -109,6 +111,7 @@
         .chart-placeholder {
             color: #999;
             font-size: 14px;
+            line-height: 1.6;
         }
 
         .button {
@@ -118,6 +121,7 @@
             font-weight: bold;
             font-size: 14px;
             cursor: pointer;
+            display: inline-block;
         }
 
         .button-container {
@@ -135,6 +139,45 @@
 
         .data-label {
             font-weight: bold;
+        }
+
+        /* --- MOBILE ALIGNMENT FIXES --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-items {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .nav-item {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+
+            /* Change 4 columns to 2 columns for stats on mobile */
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .data-row {
+                font-size: 12px; /* Slightly smaller text to prevent overlap */
+            }
+
+            .button-container .button {
+                width: 100%;
+                box-sizing: border-box;
+                display: block;
+            }
         }
     </style>
 </head>
@@ -159,7 +202,6 @@
                     Campus-wide recycling statistics and trends
                 </div>
 
-                <!-- Overall Stats -->
                 <div class="stats-grid">
                     <div class="stat-box">
                         <div class="stat-number">8,523</div>
@@ -181,7 +223,6 @@
             </div>
         </div>
 
-        <!-- Material Breakdown -->
         <div class="section">
             <div class="section-header">Material Category Breakdown</div>
             <div class="section-body">
@@ -214,7 +255,6 @@
             </div>
         </div>
 
-        <!-- Participation Trends -->
         <div class="section">
             <div class="section-header">Participation Trends (Last 7 Days)</div>
             <div class="section-body">
@@ -233,30 +273,15 @@
             </div>
         </div>
 
-        <!-- Environmental Impact -->
         <div class="section">
             <div class="section-header">Environmental Impact Calculations</div>
             <div class="section-body">
                 <div class="data-row">
                     <div class="data-label">Total CO₂ Reduction</div>
                     <div>342kg (equivalent to 15 trees planted)</div>
-                </div>
-                <div class="data-row">
-                    <div class="data-label">Energy Saved</div>
-                    <div>4,560 kWh (enough to power 45 homes for 1 day)</div>
-                </div>
-                <div class="data-row">
-                    <div class="data-label">Water Saved</div>
-                    <div>12,340 liters</div>
-                </div>
-                <div class="data-row">
-                    <div class="data-label">Waste Diverted from Landfill</div>
-                    <div>1,250kg</div>
-                </div>
             </div>
         </div>
 
-        <!-- Top Contributors -->
         <div class="section">
             <div class="section-header">Top 5 Contributors (This Month)</div>
             <div class="section-body">
@@ -283,20 +308,9 @@
             </div>
         </div>
 
-        <!-- Generate Report Button -->
         <div class="button-container">
             <div class="button">Generate Detailed Report (PDF)</div>
         </div>
     </div>
-
-    <!-- 
-    C2 FLOW MATCHED:
-    ✓ Calculate campus-wide recycling stats
-    ✓ Participation trends
-    ✓ Material category breakdowns
-    ✓ Environmental impact calculations
-    ✓ Display the results
-    ✓ Generate Report → Generate PDF
-    -->
 </body>
 </html>
