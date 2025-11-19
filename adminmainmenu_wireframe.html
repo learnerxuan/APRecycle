@@ -43,6 +43,7 @@
             padding: 8px 15px;
             background: #f5f5f5;
             font-size: 13px;
+            white-space: nowrap; /* Prevents text breaking awkwardly */
         }
 
         .section {
@@ -127,6 +128,42 @@
         .card-link {
             font-weight: bold;
             font-size: 14px;
+        }
+
+        /* --- MOBILE ALIGNMENT FIXES --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px; /* Reduce outer padding on small screens */
+            }
+
+            .navbar {
+                flex-direction: column; /* Stack logo and items */
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-items {
+                flex-wrap: wrap; /* Allow buttons to wrap to next line if needed */
+                justify-content: center;
+                width: 100%;
+            }
+
+            .nav-item {
+                flex: 1 1 auto; /* Allow buttons to grow/shrink nicely */
+                text-align: center;
+            }
+
+            .stats-box {
+                grid-template-columns: repeat(2, 1fr); /* 2x2 Grid for stats */
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr; /* Stack cards vertically (1 column) */
+            }
+            
+            .card {
+                padding: 20px; /* Slightly reduce internal padding */
+            }
         }
     </style>
 </head>
