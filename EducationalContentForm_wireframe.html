@@ -9,24 +9,14 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             background: #ffffff;
         }
 
         .container {
-            max-width: 1000px;
+            width: 100%;
+            max-width: 100%;
             margin: 0 auto;
-        }
-
-        .page-title {
-            text-align: center;
-            background: #000;
-            color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            border: 2px solid #000;
         }
 
         .navbar {
@@ -37,16 +27,23 @@
             border: 2px solid #000;
             padding: 15px 20px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .nav-logo {
             font-weight: bold;
             font-size: 16px;
+            flex: 1 1 100%;
+            text-align: center;
+            margin-bottom: 10px;
         }
 
         .nav-items {
             display: flex;
             gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
         }
 
         .nav-item {
@@ -60,6 +57,7 @@
             margin-bottom: 20px;
             font-size: 14px;
             color: #333;
+            cursor: pointer;
         }
 
         .section {
@@ -80,6 +78,12 @@
             padding: 20px;
         }
 
+        .label {
+            font-weight: bold;
+            margin: 15px 0 5px 0;
+            font-size: 13px;
+        }
+
         .input-field {
             border: 1px solid #666;
             padding: 12px;
@@ -90,12 +94,6 @@
             box-sizing: border-box;
         }
 
-        .label {
-            font-weight: bold;
-            margin: 15px 0 5px 0;
-            font-size: 13px;
-        }
-
         .textarea {
             width: 100%;
             min-height: 150px;
@@ -104,19 +102,20 @@
             font-family: Arial;
             font-size: 13px;
             box-sizing: border-box;
+            margin-top: 10px;
         }
 
         .upload-area {
             border: 2px dashed #999;
-            padding: 40px;
+            padding: 30px;
             text-align: center;
             background: #f9f9f9;
             margin: 15px 0;
         }
 
         .upload-icon {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border: 2px solid #666;
             background: #e0e0e0;
             margin: 0 auto 15px;
@@ -129,7 +128,6 @@
 
         .action-buttons {
             display: flex;
-            gap: 10px;
             justify-content: center;
             margin-top: 20px;
         }
@@ -141,11 +139,63 @@
             font-weight: bold;
             font-size: 14px;
             cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ===========================
+           TABLET 768px
+        ============================ */
+        @media (max-width: 768px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .section-body {
+                padding: 15px;
+            }
+
+            .upload-area {
+                padding: 25px;
+            }
+        }
+
+        /* ===========================
+           MOBILE 480px + 320px
+        ============================ */
+        @media (max-width: 480px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                padding: 10px;
+            }
+
+            .upload-area {
+                padding: 20px;
+            }
+
+            .upload-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .section-body {
+                padding: 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+
         <div class="navbar">
             <div class="nav-logo">APRecycle - Eco-Moderator</div>
             <div class="nav-items">
@@ -160,12 +210,13 @@
         <div class="section">
             <div class="section-header">Create Educational Content</div>
             <div class="section-body">
+
                 <div style="font-size: 13px; color: #666; margin-bottom: 20px;">
                     Add recycling guides and tips for the knowledge hub
                 </div>
 
                 <div class="label">Content Title *</div>
-                <div class="input-field">e.g., "How to Properly Recycle Plastic Bottles"</div>
+                <input class="input-field" placeholder='e.g., "How to Properly Recycle Plastic Bottles"'>
 
                 <div class="label">Category *</div>
                 <select class="input-field">
@@ -179,15 +230,7 @@
                 </select>
 
                 <div class="label">Content Body *</div>
-                <textarea class="textarea" placeholder="Write your educational content here...
-
-Example:
-Step 1: Remove all caps and labels
-Step 2: Rinse the bottle with water
-Step 3: Crush the bottle to save space
-Step 4: Place in the correct recycling bin
-
-Remember: Clean recyclables are better recyclables!"></textarea>
+                <textarea class="textarea" placeholder="Write your educational content here..."></textarea>
 
                 <div class="label">Upload Supporting Image (Optional)</div>
                 <div class="upload-area">
@@ -197,13 +240,15 @@ Remember: Clean recyclables are better recyclables!"></textarea>
                 </div>
 
                 <div class="label">Tags (comma separated)</div>
-                <div class="input-field">plastic, bottles, recycling, tips</div>
+                <input class="input-field" placeholder="plastic, bottles, recycling, tips">
+
             </div>
         </div>
 
         <div class="action-buttons">
             <div class="button">Publish Content</div>
         </div>
+
     </div>
 </body>
 </html>
