@@ -26,7 +26,6 @@
             border: 2px solid #000;
             padding: 15px 20px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
         .nav-logo {
@@ -37,10 +36,6 @@
         .nav-items {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-            margin-top: 10px;
         }
 
         .nav-item {
@@ -48,9 +43,7 @@
             padding: 8px 15px;
             background: #f5f5f5;
             font-size: 13px;
-            text-align: center;
-            flex: 1;
-            min-width: 70px;
+            white-space: nowrap;
         }
 
         .section {
@@ -83,11 +76,14 @@
             background: #fafafa;
             text-align: center;
             cursor: pointer;
+            height: 100%; /* Ensures cards are same height */
+            box-sizing: border-box;
         }
 
         .card-icon {
             font-size: 40px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            display: block;
         }
 
         .card-title {
@@ -97,90 +93,46 @@
         }
 
         .card-desc {
-            font-size: 12px;
+            font-size: 13px;
             color: #666;
+            line-height: 1.4;
         }
 
-        /* ----------- Tablet ----------- */
+        /* ----------- MOBILE ALIGNMENT FIXES ----------- */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
             }
 
             .navbar {
-                padding: 10px;
-            }
-
-            .nav-item {
-                padding: 5px 10px;
-                font-size: 11px;
-            }
-
-            .grid-3 {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .card {
-                padding: 15px;
-            }
-
-            .card-title {
-                font-size: 14px;
-            }
-
-            .card-desc {
-                font-size: 11px;
-            }
-        }
-
-        /* ----------- Mobile 480px ----------- */
-        @media (max-width: 480px) {
-            .grid-3 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ----------- Small Mobile 320px FIX ----------- */
-        @media (max-width: 360px) {
-
-            body {
-                padding: 8px;
-            }
-
-            .navbar {
-                padding: 8px;
+                flex-direction: column; /* Stack Logo and Items */
+                gap: 15px;
+                text-align: center;
             }
 
             .nav-items {
-                flex-direction: column;
-                gap: 6px;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
             }
 
             .nav-item {
-                font-size: 11px;
-                padding: 6px;
-                width: 100%;
+                flex: 1 1 auto; /* Buttons stretch to fill space */
+                text-align: center;
+                padding: 10px; /* Larger touch target */
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr; /* Stack cards vertically */
+                gap: 20px;
+            }
+
+            .card {
+                padding: 25px; /* More breathing room inside cards */
             }
 
             .section-body {
                 padding: 15px;
-            }
-
-            .card {
-                padding: 12px;
-            }
-
-            .card-icon {
-                font-size: 32px;
-            }
-
-            .card-title {
-                font-size: 13px;
-            }
-
-            .card-desc {
-                font-size: 11px;
             }
         }
     </style>
