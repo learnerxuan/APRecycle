@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge Points - Teams</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333;
+            display: inline-block;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .challenge-selector {
+            margin-bottom: 20px;
+        }
+
+        .challenge-selector label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .challenge-selector select {
+            border: 1px solid #666;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #999;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+
+        .rank-number {
+            width: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+        .rank-1 { color: #FFD700; }
+        .rank-2 { color: #C0C0C0; }
+        .rank-3 { color: #CD7F32; }
+
+        .rank-info {
+            flex: 1;
+        }
+
+        .rank-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .rank-meta {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .rank-members {
+            font-size: 11px;
+            color: #555;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .rank-points {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+            min-width: 80px;
+        }
+
+        /* --- MOBILE ALIGNMENT FIXES --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-items {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .nav-item {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+
+            /* Stack Selector components */
+            .challenge-selector {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .challenge-selector select {
+                width: 100%; /* Full width for easier tapping */
+                padding: 12px;
+                box-sizing: border-box;
+            }
+
+            /* Rank Item Reorganization */
+            .rank-item {
+                flex-direction: column;
+                align-items: flex-start; /* Left align for readability */
+                gap: 10px;
+            }
+
+            .rank-number {
+                width: 100%;
+                text-align: left;
+                margin-right: 0;
+                border-bottom: 1px solid #eee; /* Visual separator */
+                padding-bottom: 5px;
+                margin-bottom: 5px;
+            }
+
+            .rank-info {
+                width: 100%;
+            }
+
+            .rank-points {
+                width: 100%;
+                text-align: center;
+                background: #e0e0e0; /* Highlight points on mobile */
+                padding: 8px;
+                box-sizing: border-box;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle</div>
+            <div class="nav-items">
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Leaderboard</div>
+                <div class="nav-item">Inbox</div>
+            </div>
+        </div>
+
+        <div class="back-link">← Back to Leaderboard</div>
+
+        <div class="section">
+            <div class="section-header">🎯 Challenge Points - Teams</div>
+
+            <div class="section-body">
+                <div class="challenge-selector">
+                    <label>Select Challenge:</label>
+                    <select>
+                        <option>Plastic-Free Week Challenge</option>
+                        <option>Campus Clean-Up Competition</option>
+                        <option>Paper Recycling Marathon</option>
+                        <option>Metal Can Collection Drive</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 15px; padding: 10px; background: #f5f5f5; border: 1px solid #999;">
+                    <strong>Challenge:</strong> Plastic-Free Week Challenge<br>
+                    <strong>Duration:</strong> 01/12/2025 - 07/12/2025<br>
+                    <strong>Points Multiplier:</strong> 2x
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number rank-1">🥇 1</div>
+                    <div class="rank-info">
+                        <div class="rank-name">GREEN WARRIORS</div>
+                        <div class="rank-meta">8 members • 542 plastic items collected</div>
+                        <div class="rank-members">Ahmad Abdullah, Sarah Lim, Low Ze Xuan, Tan Hao Shuan, Laeu Zi-Li, Muhammad Farris, Heng Ee Sern, Kevin Wong</div>
+                    </div>
+                    <div class="rank-points">5,440 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number rank-2">🥈 2</div>
+                    <div class="rank-info">
+                        <div class="rank-name">ECO DEFENDERS</div>
+                        <div class="rank-meta">7 members • 398 plastic items collected</div>
+                        <div class="rank-members">Lisa Chen, Rajesh Kumar, Priya Sharma, David Ng, Emma Wong, James Toh, Sophia Lee</div>
+                    </div>
+                    <div class="rank-points">3,984 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number rank-3">🥉 3</div>
+                    <div class="rank-info">
+                        <div class="rank-name">RECYCLING CHAMPIONS</div>
+                        <div class="rank-meta">6 members • 285 plastic items collected</div>
+                        <div class="rank-members">Michael Tan, Jessica Liu, Alex Kumar, Ryan Ooi, Diana Chew, Brandon Chua</div>
+                    </div>
+                    <div class="rank-points">2,850 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">4</div>
+                    <div class="rank-info">
+                        <div class="rank-name">PLANET PROTECTORS</div>
+                        <div class="rank-meta">5 members • 195 plastic items collected</div>
+                        <div class="rank-members">Nina Sharma, Chris Wong, Malia Patel, Kai Zhang, Sophie Martin</div>
+                    </div>
+                    <div class="rank-points">1,950 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">5</div>
+                    <div class="rank-info">
+                        <div class="rank-name">SUSTAINABILITY SQUAD</div>
+                        <div class="rank-meta">6 members • 172 plastic items collected</div>
+                        <div class="rank-members">Oliver Tan, Rebecca Ng, Hassan Ali, Grace Lim, Nathan Goh, Zara Khan</div>
+                    </div>
+                    <div class="rank-points">1,720 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">6</div>
+                    <div class="rank-info">
+                        <div class="rank-name">NATURE NINJAS</div>
+                        <div class="rank-meta">5 members • 148 plastic items collected</div>
+                        <div class="rank-members">Tyler Chen, Madison Lim, Aiden Wong, Jasmine Lee, Lucas Toh</div>
+                    </div>
+                    <div class="rank-points">1,480 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">7</div>
+                    <div class="rank-info">
+                        <div class="rank-name">CLEAN EARTH CREW</div>
+                        <div class="rank-meta">7 members • 135 plastic items collected</div>
+                        <div class="rank-members">Isabella Garcia, Aaron Brown, Natasha Patel, Marcus Lee, Sofia Ng, Jordan Chua, Emma Tan</div>
+                    </div>
+                    <div class="rank-points">1,350 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">8</div>
+                    <div class="rank-info">
+                        <div class="rank-name">OCEAN GUARDIANS</div>
+                        <div class="rank-meta">4 members • 98 plastic items collected</div>
+                        <div class="rank-members">Ethan Wong, Chloe Tan, Liam Ng, Ava Chew</div>
+                    </div>
+                    <div class="rank-points">980 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">9</div>
+                    <div class="rank-info">
+                        <div class="rank-name">GREEN ALLIANCE</div>
+                        <div class="rank-meta">6 members • 82 plastic items collected</div>
+                        <div class="rank-members">Megan Liu, Jordan Lee, Priya Singh, Caleb Park, Hannah Kim, Rohan Patel</div>
+                    </div>
+                    <div class="rank-points">820 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">10</div>
+                    <div class="rank-info">
+                        <div class="rank-name">FUTURE EARTH</div>
+                        <div class="rank-meta">5 members • 65 plastic items collected</div>
+                        <div class="rank-members">Noah Torres, Lily Chen, Benjamin Kim, Aurora Lee, Xavier Goh</div>
+                    </div>
+                    <div class="rank-points">650 pts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
