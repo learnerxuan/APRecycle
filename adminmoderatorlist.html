@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Moderator List</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333;
+            display: inline-block;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .button {
+            border: 2px solid #000;
+            padding: 8px 15px;
+            background: #e0e0e0;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .moderator-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #999;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+
+        .moderator-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: 10px; /* Space between info and buttons */
+        }
+
+        .moderator-avatar {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #666;
+            border-radius: 50%;
+            background: #ddd;
+            flex-shrink: 0; /* Prevents avatar from squishing */
+        }
+
+        .moderator-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .moderator-meta {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* --- MOBILE ALIGNMENT FIXES --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-items {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .nav-item {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+
+            /* Header: Stack title and "Add New" button */
+            .section-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                align-items: stretch; /* Makes button full width */
+            }
+
+            /* Moderator Item: Stack info and buttons */
+            .moderator-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .moderator-info {
+                width: 100%;
+                margin-right: 0;
+            }
+
+            /* Make buttons full width and split evenly */
+            .action-buttons {
+                width: 100%;
+                display: flex;
+                gap: 10px;
+            }
+
+            .action-buttons .button {
+                flex: 1; /* Each button takes 50% width */
+                padding: 10px; /* Make taller for easier tapping */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle - Administrator</div>
+            <div class="nav-items">
+                <div class="nav-item">Challenges</div>
+                <div class="nav-item">Analytics</div>
+                <div class="nav-item">Moderators</div>
+                <div class="nav-item">Logout</div>
+            </div>
+        </div>
+
+        <div class="back-link">← Back to Main Menu</div>
+
+        <div class="section">
+            <div class="section-header">
+                <div>Eco-Moderator Management</div>
+                <div class="button">+ Add New Moderator</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">Active Eco-Moderators (15)</div>
+            <div class="section-body">
+                <div class="moderator-item">
+                    <div class="moderator-info">
+                        <div class="moderator-avatar"></div>
+                        <div>
+                            <div class="moderator-name">LOW ZE XUAN</div>
+                            <div class="moderator-meta">ID: TP082620 • Joined: 3 months ago • Reviews: 142</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Remove</div>
+                    </div>
+                </div>
+
+                <div class="moderator-item">
+                    <div class="moderator-info">
+                        <div class="moderator-avatar"></div>
+                        <div>
+                            <div class="moderator-name">LAEU ZI-LI</div>
+                            <div class="moderator-meta">ID: TP083604 • Joined: 2 months ago • Reviews: 98</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Remove</div>
+                    </div>
+                </div>
+
+                <div class="moderator-item">
+                    <div class="moderator-info">
+                        <div class="moderator-avatar"></div>
+                        <div>
+                            <div class="moderator-name">MUHAMMAD FARRIS BIN RAZMAN</div>
+                            <div class="moderator-meta">ID: TP082730 • Joined: 2 months ago • Reviews: 87</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Remove</div>
+                    </div>
+                </div>
+
+                <div class="moderator-item">
+                    <div class="moderator-info">
+                        <div class="moderator-avatar"></div>
+                        <div>
+                            <div class="moderator-name">AHMAD ABDULLAH</div>
+                            <div class="moderator-meta">ID: TP081234 • Joined: 4 months ago • Reviews: 203</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Remove</div>
+                    </div>
+                </div>
+
+                <div class="moderator-item">
+                    <div class="moderator-info">
+                        <div class="moderator-avatar"></div>
+                        <div>
+                            <div class="moderator-name">SARAH LIM</div>
+                            <div class="moderator-meta">ID: TP082456 • Joined: 1 month ago • Reviews: 56</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="button">Edit</div>
+                        <div class="button">Remove</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
