@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Content - Recycler</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .search-bar {
+            border: 2px solid #999;
+            padding: 12px;
+            background: #f9f9f9;
+            font-size: 14px;
+            width: 100%;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            border: 2px solid #999;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .category-tab.active {
+            background: #e0e0e0;
+            border-color: #000;
+            font-weight: bold;
+        }
+
+        .content-card {
+            border: 2px solid #999;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            cursor: pointer;
+        }
+
+        .content-card:hover {
+            background: #f0f0f0;
+        }
+
+        .content-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .content-icon {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #666;
+            background: #e0e0e0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .content-info {
+            flex: 1;
+        }
+
+        .content-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .content-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .content-excerpt {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            border: 1px solid #666;
+            padding: 4px 10px;
+            background: #e0e0e0;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .nav-items {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .nav-item {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .content-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .nav-items {
+                justify-content: center;
+                margin-top: 8px;
+            }
+
+            .category-tabs {
+                flex-direction: column;
+            }
+
+            .category-tab {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .nav-item {
+                text-align: center;
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle</div>
+            <div class="nav-items">
+                <div class="nav-item">Recycle QR</div>
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Challenge</div>
+                <div class="nav-item">Educational Content</div>
+                <div class="nav-item">Teams</div>
+                <div class="nav-item">Leaderboard</div>
+                <div class="nav-item">Inbox (2)</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">📚 Educational Content</div>
+            <div class="section-body">
+                <div style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                    Learn about recycling best practices and environmental impact
+                </div>
+
+                <div class="search-bar">🔍 Search articles...</div>
+
+                <div class="category-tabs">
+                    <div class="category-tab active">All</div>
+                    <div class="category-tab">Plastic</div>
+                    <div class="category-tab">Paper</div>
+                    <div class="category-tab">Metal</div>
+                    <div class="category-tab">E-Waste</div>
+                    <div class="category-tab">General Tips</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">Featured Articles</div>
+            <div class="section-body">
+                <!-- Article 1 -->
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="content-icon">♻️</div>
+                        <div class="content-info">
+                            <div class="content-title">How to Properly Recycle Plastic Bottles</div>
+                            <div class="content-meta">
+                                <span class="badge">Plastic</span>
+                                Published 2 days ago • 5 min read • 342 views
+                            </div>
+                            <div class="content-excerpt">
+                                Learn the correct way to prepare plastic bottles for recycling.
+                                This guide covers cleaning, removing labels, and sorting different types of plastics.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 2 -->
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="content-icon">📄</div>
+                        <div class="content-info">
+                            <div class="content-title">Common Recycling Mistakes to Avoid</div>
+                            <div class="content-meta">
+                                <span class="badge">General Tips</span>
+                                Published 5 days ago • 4 min read • 567 views
+                            </div>
+                            <div class="content-excerpt">
+                                Discover the most common recycling errors and how to prevent them.
+                                From contaminated items to wishcycling, we cover everything you need to know.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 3 -->
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="content-icon">📰</div>
+                        <div class="content-info">
+                            <div class="content-title">Paper Recycling: A Complete Guide</div>
+                            <div class="content-meta">
+                                <span class="badge">Paper</span>
+                                Published 1 week ago • 6 min read • 289 views
+                            </div>
+                            <div class="content-excerpt">
+                                Everything you need to know about paper recycling. Learn which types of paper
+                                can be recycled and how to prepare them properly.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 4 -->
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="content-icon">🔌</div>
+                        <div class="content-info">
+                            <div class="content-title">Electronic Waste: Why It Matters</div>
+                            <div class="content-meta">
+                                <span class="badge">E-Waste</span>
+                                Published 1 week ago • 7 min read • 421 views
+                            </div>
+                            <div class="content-excerpt">
+                                Understanding the importance of e-waste recycling and its environmental impact.
+                                Learn how to safely dispose of old electronics.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 5 -->
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="content-icon">🥫</div>
+                        <div class="content-info">
+                            <div class="content-title">Metal Recycling: Aluminum vs Steel</div>
+                            <div class="content-meta">
+                                <span class="badge">Metal</span>
+                                Published 2 weeks ago • 5 min read • 198 views
+                            </div>
+                            <div class="content-excerpt">
+                                Learn the differences between aluminum and steel recycling.
+                                This article explains how to identify and sort metal items correctly.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 6 -->
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="content-icon">🌍</div>
+                        <div class="content-info">
+                            <div class="content-title">The Environmental Impact of Recycling</div>
+                            <div class="content-meta">
+                                <span class="badge">General Tips</span>
+                                Published 2 weeks ago • 8 min read • 634 views
+                            </div>
+                            <div class="content-excerpt">
+                                Discover how your recycling efforts contribute to environmental conservation.
+                                Learn about the broader impact of waste reduction and sustainable practices.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-body">
+                <div style="text-align: center;">
+                    <div style="border: 2px solid #000; padding: 12px 30px; background: #e0e0e0;
+                                font-weight: bold; display: inline-block; cursor: pointer;">
+                        Load More Articles
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

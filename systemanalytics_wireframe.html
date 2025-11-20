@@ -144,33 +144,33 @@
         /* --- MOBILE ALIGNMENT FIXES --- */
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 10px; /* Reduce outer padding on small screens */
             }
 
             .navbar {
-                flex-direction: column;
+                flex-direction: column; /* Stack logo and items */
                 gap: 15px;
                 text-align: center;
             }
 
             .nav-items {
-                flex-wrap: wrap;
+                flex-wrap: wrap; /* Allow buttons to wrap to next line if needed */
                 justify-content: center;
                 width: 100%;
             }
 
             .nav-item {
-                flex: 1 1 auto;
                 text-align: center;
+                padding: 6px 10px;
+                font-size: 12px;
             }
 
-            /* Change 4 columns to 2 columns for stats on mobile */
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
             .data-row {
-                font-size: 12px; /* Slightly smaller text to prevent overlap */
+                font-size: 12px;
             }
 
             .button-container .button {
@@ -188,6 +188,7 @@
             <div class="nav-items">
                 <div class="nav-item">Challenges</div>
                 <div class="nav-item">Analytics</div>
+                <div class="nav-item">Leaderboard</div>
                 <div class="nav-item">Moderators</div>
                 <div class="nav-item">Logout</div>
             </div>

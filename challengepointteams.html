@@ -147,19 +147,21 @@
 
             .navbar {
                 flex-direction: column;
-                gap: 15px;
+                align-items: stretch;
                 text-align: center;
+                gap: 8px;
+                padding: 10px;
             }
 
             .nav-items {
                 flex-wrap: wrap;
                 justify-content: center;
-                width: 100%;
+                gap: 8px;
             }
 
             .nav-item {
-                flex: 1 1 auto;
-                text-align: center;
+                padding: 6px 10px;
+                font-size: 12px;
             }
 
             /* Stack Selector components */
@@ -204,6 +206,27 @@
                 margin-top: 5px;
             }
         }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .nav-items {
+                justify-content: center;
+                margin-top: 8px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .nav-item {
+                text-align: center;
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -211,9 +234,13 @@
         <div class="navbar">
             <div class="nav-logo">APRecycle</div>
             <div class="nav-items">
+                <div class="nav-item">Recycle QR</div>
                 <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Challenge</div>
+                <div class="nav-item">Educational Content</div>
+                <div class="nav-item">Teams</div>
                 <div class="nav-item">Leaderboard</div>
-                <div class="nav-item">Inbox</div>
+                <div class="nav-item">Inbox (2)</div>
             </div>
         </div>
 

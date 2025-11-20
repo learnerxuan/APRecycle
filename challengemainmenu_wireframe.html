@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenges - Browse</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .tab-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            border: 2px solid #999;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .tab.active {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+        }
+
+        .challenge-card {
+            border: 2px solid #666;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .challenge-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .challenge-badge {
+            border: 1px solid #000;
+            padding: 5px 12px;
+            background: #ddd;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .challenge-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .challenge-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .challenge-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .button {
+            border: 2px solid #000;
+            padding: 8px 20px;
+            background: #e0e0e0;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .button:hover {
+            background: #ccc;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .nav-items {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .nav-item {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .challenge-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .challenge-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .challenge-footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .nav-items {
+                justify-content: center;
+                margin-top: 8px;
+            }
+
+            .tab-group {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .tab {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .nav-item {
+                text-align: center;
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle</div>
+            <div class="nav-items">
+                <div class="nav-item">Recycle QR</div>
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Challenge</div>
+                <div class="nav-item">Educational Content</div>
+                <div class="nav-item">Teams</div>
+                <div class="nav-item">Leaderboard</div>
+                <div class="nav-item">Inbox (2)</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div>🎯 Challenges</div>
+            </div>
+            <div class="section-body">
+                <div style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                    Join challenges to compete and earn bonus points
+                </div>
+
+                <div class="tab-group">
+                    <div class="tab active">Available</div>
+                    <div class="tab">My Challenges</div>
+                </div>
+
+                <!-- Challenge Card 1 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div>
+                            <div class="challenge-title">Plastic-Free Week Challenge</div>
+                            <div style="font-size: 11px; color: #999;">November 20-27, 2025</div>
+                        </div>
+                        <div class="challenge-badge">Active</div>
+                    </div>
+                    <div class="challenge-desc">
+                        Recycle at least 10 plastic items this week and earn bonus points.
+                        Challenge yourself to reduce plastic waste!
+                    </div>
+                    <div class="challenge-meta">
+                        <div>🏆 Reward: +100 bonus points</div>
+                        <div>👥 156 participants</div>
+                        <div>⏰ 5 days left</div>
+                    </div>
+                    <div class="challenge-footer">
+                        <div style="font-size: 12px; color: #666;">Individual Challenge</div>
+                        <div class="button">View Details</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Card 2 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div>
+                            <div class="challenge-title">Team Paper Recycling Sprint</div>
+                            <div style="font-size: 11px; color: #999;">November 15-30, 2025</div>
+                        </div>
+                        <div class="challenge-badge">Active</div>
+                    </div>
+                    <div class="challenge-desc">
+                        Team challenge! Work together to recycle 50kg of paper.
+                        Top 3 teams win exclusive badges.
+                    </div>
+                    <div class="challenge-meta">
+                        <div>🏆 Reward: Team badge + 200 points</div>
+                        <div>👥 24 teams joined</div>
+                        <div>⏰ 10 days left</div>
+                    </div>
+                    <div class="challenge-footer">
+                        <div style="font-size: 12px; color: #666;">Team Challenge</div>
+                        <div class="button">View Details</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Card 3 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div>
+                            <div class="challenge-title">30-Day Recycling Streak</div>
+                            <div style="font-size: 11px; color: #999;">December 1-31, 2025</div>
+                        </div>
+                        <div class="challenge-badge" style="background: #f0f0f0;">Upcoming</div>
+                    </div>
+                    <div class="challenge-desc">
+                        Recycle at least one item every day for 30 consecutive days.
+                        Build your recycling habit!
+                    </div>
+                    <div class="challenge-meta">
+                        <div>🏆 Reward: +300 points + special badge</div>
+                        <div>👥 45 pre-registered</div>
+                        <div>⏰ Starts in 11 days</div>
+                    </div>
+                    <div class="challenge-footer">
+                        <div style="font-size: 12px; color: #666;">Individual Challenge</div>
+                        <div class="button">View Details</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Card 4 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div>
+                            <div class="challenge-title">E-Waste Collection Drive</div>
+                            <div style="font-size: 11px; color: #999;">November 25-28, 2025</div>
+                        </div>
+                        <div class="challenge-badge">Active</div>
+                    </div>
+                    <div class="challenge-desc">
+                        Special weekend event! Recycle electronic waste and contribute
+                        to a cleaner environment.
+                    </div>
+                    <div class="challenge-meta">
+                        <div>🏆 Reward: +150 points per item</div>
+                        <div>👥 89 participants</div>
+                        <div>⏰ 5 days left</div>
+                    </div>
+                    <div class="challenge-footer">
+                        <div style="font-size: 12px; color: #666;">Individual Challenge</div>
+                        <div class="button">View Details</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

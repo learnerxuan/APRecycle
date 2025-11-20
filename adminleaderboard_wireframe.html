@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Administrator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: block;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            border: 1px solid #999;
+            padding: 15px;
+            text-align: center;
+            background: #fafafa;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            border: 2px solid #666;
+            padding: 20px;
+            background: #fafafa;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            background: #f0f0f0;
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .filter-section {
+            background: #f5f5f5;
+            border: 1px solid #999;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .filter-select {
+            border: 1px solid #666;
+            padding: 8px 12px;
+            background: #fff;
+            font-size: 13px;
+            min-width: 150px;
+        }
+
+        .button {
+            border: 2px solid #000;
+            padding: 8px 20px;
+            background: #e0e0e0;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background: #ccc;
+        }
+
+        .top-users-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .top-user-card {
+            border: 2px solid #666;
+            padding: 20px;
+            background: #fafafa;
+            text-align: center;
+        }
+
+        .top-user-card.rank-1 {
+            background: #fff9e6;
+            border-color: #ffd700;
+        }
+
+        .top-user-card.rank-2 {
+            background: #f5f5f5;
+            border-color: #c0c0c0;
+        }
+
+        .top-user-card.rank-3 {
+            background: #fff5e6;
+            border-color: #cd7f32;
+        }
+
+        .rank-badge {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .user-id {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .user-points {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table th {
+            background: #e0e0e0;
+            border: 1px solid #999;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .action-links {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .action-link {
+            color: #0066cc;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* --- MOBILE ALIGNMENT FIXES --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px; /* Reduce outer padding on small screens */
+            }
+
+            .navbar {
+                flex-direction: column; /* Stack logo and items */
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-items {
+                flex-wrap: wrap; /* Allow buttons to wrap to next line if needed */
+                justify-content: center;
+                width: 100%;
+            }
+
+            .nav-item {
+                text-align: center;
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .top-users-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle - Administrator</div>
+            <div class="nav-items">
+                <div class="nav-item">Challenges</div>
+                <div class="nav-item">Analytics</div>
+                <div class="nav-item">Leaderboard</div>
+                <div class="nav-item">Moderators</div>
+                <div class="nav-item">Logout</div>
+            </div>
+        </div>
+
+        <div class="back-link">← Back to Main Menu</div>
+
+        <div class="section">
+            <div class="section-header">🏆 Leaderboard Overview</div>
+            <div class="section-body">
+                <div style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                    Monitor and manage all leaderboard rankings across the platform
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div style="font-size: 24px;">👥</div>
+                        <div class="stat-number">1,234</div>
+                        <div class="stat-label">Total Recyclers</div>
+                    </div>
+                    <div class="stat-box">
+                        <div style="font-size: 24px;">🏃</div>
+                        <div class="stat-number">892</div>
+                        <div class="stat-label">Active This Month</div>
+                    </div>
+                    <div class="stat-box">
+                        <div style="font-size: 24px;">👥</div>
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Total Teams</div>
+                    </div>
+                    <div class="stat-box">
+                        <div style="font-size: 24px;">🎯</div>
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Active Challenges</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">Quick Access</div>
+            <div class="section-body">
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-icon">👤</div>
+                        <div class="card-title">Individual Rankings</div>
+                        <div class="card-desc">View personal recycler leaderboards</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">👥</div>
+                        <div class="card-title">Team Rankings</div>
+                        <div class="card-desc">Monitor team competition standings</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">🎯</div>
+                        <div class="card-title">Challenge Rankings</div>
+                        <div class="card-desc">Track active challenge leaderboards</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">Top Individual Recyclers - This Month</div>
+            <div class="section-body">
+                <div class="top-users-grid">
+                    <div class="top-user-card rank-1">
+                        <div class="rank-badge">🥇</div>
+                        <div class="user-name">AHMAD ABDULLAH</div>
+                        <div class="user-id">TP081234</div>
+                        <div class="user-points">2,450 pts</div>
+                        <div style="font-size: 11px; color: #666; margin-top: 5px;">245 items recycled</div>
+                    </div>
+
+                    <div class="top-user-card rank-2">
+                        <div class="rank-badge">🥈</div>
+                        <div class="user-name">SARAH LIM</div>
+                        <div class="user-id">TP082456</div>
+                        <div class="user-points">1,980 pts</div>
+                        <div style="font-size: 11px; color: #666; margin-top: 5px;">198 items recycled</div>
+                    </div>
+
+                    <div class="top-user-card rank-3">
+                        <div class="rank-badge">🥉</div>
+                        <div class="user-name">LOW ZE XUAN</div>
+                        <div class="user-id">TP082620</div>
+                        <div class="user-points">1,760 pts</div>
+                        <div style="font-size: 11px; color: #666; margin-top: 5px;">176 items recycled</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">All Rankings - Detailed View</div>
+            <div class="section-body">
+                <div class="filter-section">
+                    <div class="filter-label">Filter by:</div>
+                    <select class="filter-select">
+                        <option>Individual - Monthly</option>
+                        <option>Individual - Lifetime</option>
+                        <option>Team - Monthly</option>
+                        <option>Team - Lifetime</option>
+                        <option>Challenge - Active</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Time Periods</option>
+                        <option>November 2025</option>
+                        <option>October 2025</option>
+                        <option>Q4 2025</option>
+                    </select>
+                    <div class="button">Apply Filters</div>
+                    <div class="button">Export CSV</div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Points</th>
+                                <th>Items Recycled</th>
+                                <th>Join Date</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1</strong></td>
+                                <td>TP081234</td>
+                                <td>AHMAD ABDULLAH</td>
+                                <td><strong>2,450</strong></td>
+                                <td>245</td>
+                                <td>Jan 15, 2025</td>
+                                <td>Today</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>2</strong></td>
+                                <td>TP082456</td>
+                                <td>SARAH LIM</td>
+                                <td><strong>1,980</strong></td>
+                                <td>198</td>
+                                <td>Feb 3, 2025</td>
+                                <td>Today</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>3</strong></td>
+                                <td>TP082620</td>
+                                <td>LOW ZE XUAN</td>
+                                <td><strong>1,760</strong></td>
+                                <td>176</td>
+                                <td>Jan 28, 2025</td>
+                                <td>Yesterday</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>TP083604</td>
+                                <td>LAEU ZI-LI</td>
+                                <td>1,450</td>
+                                <td>145</td>
+                                <td>Mar 12, 2025</td>
+                                <td>Yesterday</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>TP082730</td>
+                                <td>MUHAMMAD FARRIS</td>
+                                <td>1,320</td>
+                                <td>132</td>
+                                <td>Feb 8, 2025</td>
+                                <td>2 days ago</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>TP080852</td>
+                                <td>TAN HAO SHUAN</td>
+                                <td>1,180</td>
+                                <td>118</td>
+                                <td>Jan 5, 2025</td>
+                                <td>3 days ago</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>TP081786</td>
+                                <td>HENG EE SERN</td>
+                                <td>1,050</td>
+                                <td>105</td>
+                                <td>Feb 20, 2025</td>
+                                <td>3 days ago</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>TP081567</td>
+                                <td>KEVIN WONG</td>
+                                <td>980</td>
+                                <td>98</td>
+                                <td>Mar 1, 2025</td>
+                                <td>4 days ago</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>TP082345</td>
+                                <td>LISA CHEN</td>
+                                <td>870</td>
+                                <td>87</td>
+                                <td>Jan 18, 2025</td>
+                                <td>5 days ago</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>TP082891</td>
+                                <td>RAJESH KUMAR</td>
+                                <td>760</td>
+                                <td>76</td>
+                                <td>Feb 14, 2025</td>
+                                <td>1 week ago</td>
+                                <td>
+                                    <div class="action-links">
+                                        <span class="action-link">View Profile</span>
+                                        <span class="action-link">History</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <div class="button">Load More (1,224 remaining)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -105,28 +105,29 @@
         /* --- MOBILE ALIGNMENT FIXES --- */
         @media (max-width: 768px) {
             body {
-                padding: 10px; /* More screen space for content */
+                padding: 10px; /* Reduce outer padding on small screens */
             }
 
             .navbar {
-                flex-direction: column; /* Stack Logo and Items */
+                flex-direction: column; /* Stack logo and items */
                 gap: 15px;
                 text-align: center;
             }
 
             .nav-items {
-                flex-wrap: wrap; /* Allow menu items to wrap */
+                flex-wrap: wrap; /* Allow buttons to wrap to next line if needed */
                 justify-content: center;
                 width: 100%;
             }
 
             .nav-item {
-                flex: 1 1 auto; /* Buttons grow to fill space nicely */
                 text-align: center;
+                padding: 6px 10px;
+                font-size: 12px;
             }
 
             .section-body {
-                padding: 15px; /* Slightly less internal padding */
+                padding: 15px;
             }
 
             .button-container {
@@ -134,7 +135,7 @@
             }
 
             .button {
-                width: 100%; /* Full width button for easier mobile tapping */
+                width: 100%;
                 box-sizing: border-box;
             }
         }
@@ -147,6 +148,7 @@
             <div class="nav-items">
                 <div class="nav-item">Challenges</div>
                 <div class="nav-item">Analytics</div>
+                <div class="nav-item">Leaderboard</div>
                 <div class="nav-item">Moderators</div>
                 <div class="nav-item">Logout</div>
             </div>

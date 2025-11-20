@@ -173,21 +173,28 @@
             flex: 1; /* Equal width buttons on mobile */
         }
 
-        /* --- MOBILE ALIGNMENT (Max 480px) --- */
-        @media (max-width: 480px) {
+        /* --- MOBILE ALIGNMENT FIXES --- */
+        @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 10px; /* Reduce outer padding on small screens */
             }
 
             .navbar {
-                flex-direction: column;
-                align-items: stretch;
+                flex-direction: column; /* Stack logo and items */
+                gap: 15px;
                 text-align: center;
             }
 
             .nav-items {
+                flex-wrap: wrap; /* Allow buttons to wrap to next line if needed */
                 justify-content: center;
-                margin-top: 8px;
+                width: 100%;
+            }
+
+            .nav-item {
+                text-align: center;
+                padding: 6px 10px;
+                font-size: 12px;
             }
 
             .section-header {
@@ -197,25 +204,7 @@
             }
 
             .header-btn {
-                width: 100%; /* Full width Create button on mobile */
-            }
-        }
-
-        /* --- 320px SPECIFIC ALIGNMENT --- */
-        @media (max-width: 360px) {
-            .nav-item {
-                flex: 1;
-                text-align: center;
-                font-size: 11px;
-                padding: 8px 4px;
-            }
-            
-            .challenge-item {
-                padding: 10px; /* Tighter padding */
-            }
-            
-            .challenge-meta {
-                font-size: 11px;
+                width: 100%;
             }
         }
     </style>
@@ -227,6 +216,7 @@
             <div class="nav-items">
                 <div class="nav-item">Challenges</div>
                 <div class="nav-item">Analytics</div>
+                <div class="nav-item">Leaderboard</div>
                 <div class="nav-item">Moderators</div>
                 <div class="nav-item">Logout</div>
             </div>
