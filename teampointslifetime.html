@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Points - Lifetime</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            border: 1px solid #666;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            font-size: 13px;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .section {
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            border: 2px solid #999;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background: #e0e0e0;
+            border-bottom: 2px solid #000;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #999;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+
+        .rank-number {
+            width: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+        .rank-1 { color: #FFD700; }
+        .rank-2 { color: #C0C0C0; }
+        .rank-3 { color: #CD7F32; }
+
+        .rank-info {
+            flex: 1;
+        }
+
+        .rank-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .rank-meta {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .rank-points {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+            min-width: 80px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .rank-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .rank-number {
+                margin-right: 0;
+            }
+
+            .rank-points {
+                text-align: center;
+                min-width: auto;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-logo">APRecycle</div>
+            <div class="nav-items">
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Leaderboard</div>
+                <div class="nav-item">Inbox</div>
+            </div>
+        </div>
+
+        <div class="back-link">← Back to Leaderboard</div>
+
+        <div class="section">
+            <div class="section-header">👥 Team Points - Lifetime</div>
+
+            <div class="section-body">
+                <div class="tabs">
+                    <div class="tab">Monthly</div>
+                    <div class="tab active">Lifetime</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number rank-1">🥇 1</div>
+                    <div class="rank-info">
+                        <div class="rank-name">Green Warriors</div>
+                        <div class="rank-meta">12 members • Since launch</div>
+                    </div>
+                    <div class="rank-points">142,450 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number rank-2">🥈 2</div>
+                    <div class="rank-info">
+                        <div class="rank-name">Sustainability Club</div>
+                        <div class="rank-meta">20 members • Fastest growing</div>
+                    </div>
+                    <div class="rank-points">98,880 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number rank-3">🥉 3</div>
+                    <div class="rank-info">
+                        <div class="rank-name">Engineering Squad</div>
+                        <div class="rank-meta">15 members • Consistent performers</div>
+                    </div>
+                    <div class="rank-points">86,760 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">4</div>
+                    <div class="rank-info">
+                        <div class="rank-name">Eco Champions</div>
+                        <div class="rank-meta">8 members • Dedicated team</div>
+                    </div>
+                    <div class="rank-points">74,450 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">5</div>
+                    <div class="rank-info">
+                        <div class="rank-name">Computer Science Team</div>
+                        <div class="rank-meta">18 members • Tech enthusiasts</div>
+                    </div>
+                    <div class="rank-points">62,320 pts</div>
+                </div>
+
+                <div class="rank-item">
+                    <div class="rank-number">6</div>
+                    <div class="rank-info">
+                        <div class="rank-name">Business School Recyclers</div>
+                        <div class="rank-meta">10 members • Active contributors</div>
+                    </div>
+                    <div class="rank-points">49,180 pts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
