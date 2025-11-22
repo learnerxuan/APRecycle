@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APRecycle Bin Camera Simulator</title>
+    <link rel="stylesheet" href="bin_camera.css">
+</head>
+<body>
+    <h1>🗑️ APRecycle Bin Camera Simulator</h1>
+    
+    <video id="camera-feed" autoplay playsinline></video>
+
+    <button id="capture-button" disabled>Initializing Camera... </button>
+
+    <canvas id="photo-canvas"></canvas>
+
+    <div id="status-container">
+        <h2>System Status</h2>
+        <img id="captured-image" alt="Captured Waste Image" style="display: none;">
+        <p id="data-status">Waiting for camera initialization...</p>
+    </div>
+
+    <script src="bin_camera.js"></script>
+</body>
+</html>
