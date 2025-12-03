@@ -1,0 +1,20 @@
+<?php
+define('DB_SERVER', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_NAME', 'aprecycle');
+
+function getDBConnection() {
+    $conn = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+
+    return $conn;   
+}
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
