@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: center;
             align-items: center;       
             height: 100vh;             
-            margin: 0;                      
+            margin: 0;
 }
 
         .login-container{
@@ -89,6 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .logo{
             text-align: center;
             margin-bottom: 2rem;
+        }
+
+        .logo img{
+            width: 60px;
+            height: 60px;
         }
 
         .logo h1 {
@@ -170,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="login-container">
         <div class="logo">
-            <h1>🌱 APRecycle</h1>
+            <img src="assets/aprecycle-logo.png"><h1>APRecycle</h1>
             <p>Smart Recycling System for APU</p>
         </div>
 
