@@ -446,7 +446,7 @@ include 'includes/header.php';
                             <div class="challenge-meta-item">
                                 <i class="fas fa-bolt"></i>
                                 <strong>Multiplier:</strong>
-                                <span class="multiplier-badge">×<?php echo $challenge['point_multiplier']; ?></span>
+                                <span class="multiplier-badge">ï¿½<?php echo $challenge['point_multiplier']; ?></span>
                             </div>
                             <div class="challenge-meta-item">
                                 <i class="fas fa-users"></i>
@@ -525,7 +525,7 @@ include 'includes/header.php';
                             <div class="challenge-meta-item">
                                 <i class="fas fa-bolt"></i>
                                 <strong>Multiplier:</strong>
-                                <span class="multiplier-badge">×<?php echo $challenge['point_multiplier']; ?></span>
+                                <span class="multiplier-badge"><?php echo $challenge['point_multiplier']; ?></span>
                             </div>
                             <div class="challenge-meta-item">
                                 <i class="fas fa-users"></i>
