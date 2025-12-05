@@ -36,10 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Redirect by role
                 switch ($user['role']){
                     case 'administrator':
-                        header('Location: admin/dasboard.php');
+                        header('Location: admin/dashboard.php');
                         break;
                     case 'eco-moderator':
                         header('Location: eco-moderator/dashboard.php');
+                        break;
                     case 'recycler':
                     default:
                         header('Location: recycler/dashboard.php');

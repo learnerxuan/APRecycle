@@ -153,9 +153,14 @@ if (file_put_contents($target_file_path, $image_data_binary)) {
     if ($confidence >= 0.80 && $is_valid_waste) {
         $status = 'Approved';
         $points_awarded = 15;
+    } elseif ($confidence >= 0.80 && !$is_valid_waste) {
+        // High confidence AND it is NOT waste -> Reject immediately
+        $status = 'Rejected';
+        $points_awarded = 0;
     } else {
-        $status = 'Pending'; // Low confidence submissions need manual review
-        $points_awarded = 0; // No points until approved
+        // Low confidence -> Needs review
+        $status = 'Pending';
+        $points_awarded = 0;
     }
 
     $sql_insert = "INSERT INTO recycling_submission (user_id, bin_id, image_url, ai_confidence, status) VALUES (?, ?, ?, ?, ?)";
@@ -175,6 +180,9 @@ if (file_put_contents($target_file_path, $image_data_binary)) {
 
             $response['status'] = 'success';
             $response['message'] = "Success! Item classified as {$classification}. Saved to DB. +{$points_awarded} points added.";
+        } elseif ($status === 'Rejected') {
+            $response['status'] = 'error';
+            $response['message'] = "Item rejected: This is not a recyclable waste item.";
         } else {
             $response['status'] = 'success';
             $response['message'] = "Item classified as {$classification} with " . round($confidence * 100) . "% confidence. Saved as 'Pending' for manual review.";
