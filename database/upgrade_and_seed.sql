@@ -140,19 +140,19 @@ INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `role`, `qr_code
 -- STEP 8: SAMPLE DATA - CHALLENGES
 -- ============================================
 
-INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `end_date`, `badge_id`, `reward_id`, `point_multiplier`, `created_at`) VALUES
+INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `end_date`, `badge_id`, `reward_id`, `point_multiplier`) VALUES
 -- Active Challenges
-(1, 'Plastic Free November', 'Join us in reducing plastic waste this November! Recycle at least 20 plastic items to complete this challenge and earn double points on all plastic recycling.', '2024-11-01', '2024-11-30', 4, 2, 2.0, '2024-10-25 10:00:00'),
-(2, 'E-Waste Drive December', 'Bring your old electronics! This month we focus on e-waste recycling. Recycle any e-waste item and get 1.5x points plus a chance to win awesome rewards.', '2024-12-01', '2024-12-31', 6, 5, 1.5, '2024-11-20 11:00:00'),
+(1, 'Plastic Free November', 'Join us in reducing plastic waste this November! Recycle at least 20 plastic items to complete this challenge and earn double points on all plastic recycling.', '2024-11-01', '2024-11-30', 4, 2, 2.0),
+(2, 'E-Waste Drive December', 'Bring your old electronics! This month we focus on e-waste recycling. Recycle any e-waste item and get 1.5x points plus a chance to win awesome rewards.', '2024-12-01', '2024-12-31', 6, 5, 1.5),
 
 -- Upcoming Challenges
-(3, 'Earth Week Challenge 2025', 'Celebrate Earth Week by recycling daily! Maintain a 7-day streak during Earth Week and earn the exclusive Week Streak badge plus bonus points.', '2025-01-15', '2025-01-22', 7, 3, 2.5, '2024-11-25 09:00:00'),
-(4, 'Paper Recycling Month', 'February is Paper Month! Help us save trees by recycling paper products. Triple points for all paper items!', '2025-02-01', '2025-02-28', 6, 4, 3.0, '2024-11-26 10:00:00'),
-(5, 'Aluminum Can Drive', 'Crush it! Recycle aluminum cans and help reduce energy consumption. Every can counts!', '2025-03-01', '2025-03-15', 5, 1, 1.8, '2024-11-27 14:00:00'),
+(3, 'Earth Week Challenge 2025', 'Celebrate Earth Week by recycling daily! Maintain a 7-day streak during Earth Week and earn the exclusive Week Streak badge plus bonus points.', '2025-01-15', '2025-01-22', 7, 3, 2.5),
+(4, 'Paper Recycling Month', 'February is Paper Month! Help us save trees by recycling paper products. Triple points for all paper items!', '2025-02-01', '2025-02-28', 6, 4, 3.0),
+(5, 'Aluminum Can Drive', 'Crush it! Recycle aluminum cans and help reduce energy consumption. Every can counts!', '2025-03-01', '2025-03-15', 5, 1, 1.8),
 
 -- Past Challenges
-(6, 'October Kickoff Challenge', 'Start your recycling journey this October! First challenge of the semester with 1.5x points on all materials.', '2024-10-01', '2024-10-31', 1, 1, 1.5, '2024-09-25 10:00:00'),
-(7, 'Back to School Recycle', 'Welcome back! Start the semester green by recycling old school supplies and materials.', '2024-09-01', '2024-09-30', 1, NULL, 1.2, '2024-08-20 09:00:00');
+(6, 'October Kickoff Challenge', 'Start your recycling journey this October! First challenge of the semester with 1.5x points on all materials.', '2024-10-01', '2024-10-31', 1, 1, 1.5),
+(7, 'Back to School Recycle', 'Welcome back! Start the semester green by recycling old school supplies and materials.', '2024-09-01', '2024-09-30', 1, NULL, 1.2);
 
 -- ============================================
 -- STEP 9: SAMPLE DATA - USER CHALLENGES
