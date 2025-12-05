@@ -103,38 +103,38 @@ INSERT INTO `team` (`team_id`, `team_name`, `description`, `date_created`, `poin
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `role`, `qr_code`, `lifetime_points`, `created_at`, `team_id`) VALUES
 -- Administrators
-(1, 'admin1', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@aprecycle.com', 'administrator', 'QR_ADMIN001', 0, '2024-08-01 08:00:00', NULL),
-(2, 'admin2', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin2@aprecycle.com', 'administrator', 'QR_ADMIN002', 0, '2024-08-01 08:30:00', NULL),
+(1, 'admin1', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'admin@aprecycle.com', 'administrator', 'QR_ADMIN001', 0, '2024-08-01 08:00:00', NULL),
+(2, 'admin2', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'admin2@aprecycle.com', 'administrator', 'QR_ADMIN002', 0, '2024-08-01 08:30:00', NULL),
 
 -- Eco-Moderators
-(3, 'moderator1', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'moderator1@aprecycle.com', 'eco-moderator', 'QR_MOD001', 150, '2024-08-05 09:00:00', NULL),
-(4, 'moderator2', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'moderator2@aprecycle.com', 'eco-moderator', 'QR_MOD002', 200, '2024-08-05 09:30:00', NULL),
-(5, 'moderator3', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'moderator3@aprecycle.com', 'eco-moderator', 'QR_MOD003', 180, '2024-08-10 10:00:00', NULL),
+(3, 'moderator1', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'moderator1@aprecycle.com', 'eco-moderator', 'QR_MOD001', 150, '2024-08-05 09:00:00', NULL),
+(4, 'moderator2', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'moderator2@aprecycle.com', 'eco-moderator', 'QR_MOD002', 200, '2024-08-05 09:30:00', NULL),
+(5, 'moderator3', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'moderator3@aprecycle.com', 'eco-moderator', 'QR_MOD003', 180, '2024-08-10 10:00:00', NULL),
 
 -- Recyclers (Team 1 - Green Warriors)
-(6, 'john_warrior', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'john@student.apu.edu.my', 'recycler', 'QR_USR006', 450, '2024-09-01 11:00:00', 1),
-(7, 'sarah_green', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'sarah@student.apu.edu.my', 'recycler', 'QR_USR007', 420, '2024-09-02 12:00:00', 1),
-(8, 'mike_eco', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'mike@student.apu.edu.my', 'recycler', 'QR_USR008', 380, '2024-09-03 13:00:00', 1),
+(6, 'john_warrior', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'john@student.apu.edu.my', 'recycler', 'QR_USR006', 450, '2024-09-01 11:00:00', 1),
+(7, 'sarah_green', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'sarah@student.apu.edu.my', 'recycler', 'QR_USR007', 420, '2024-09-02 12:00:00', 1),
+(8, 'mike_eco', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'mike@student.apu.edu.my', 'recycler', 'QR_USR008', 380, '2024-09-03 13:00:00', 1),
 
 -- Recyclers (Team 2 - Eco Legends)
-(9, 'emma_legend', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'emma@student.apu.edu.my', 'recycler', 'QR_USR009', 390, '2024-09-05 15:00:00', 2),
-(10, 'david_eco', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'david@student.apu.edu.my', 'recycler', 'QR_USR010', 360, '2024-09-06 16:00:00', 2),
-(11, 'lisa_planet', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'lisa@student.apu.edu.my', 'recycler', 'QR_USR011', 340, '2024-09-07 14:00:00', 2),
+(9, 'emma_legend', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'emma@student.apu.edu.my', 'recycler', 'QR_USR009', 390, '2024-09-05 15:00:00', 2),
+(10, 'david_eco', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'david@student.apu.edu.my', 'recycler', 'QR_USR010', 360, '2024-09-06 16:00:00', 2),
+(11, 'lisa_planet', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'lisa@student.apu.edu.my', 'recycler', 'QR_USR011', 340, '2024-09-07 14:00:00', 2),
 
 -- Recyclers (Team 3 - Planet Defenders)
-(12, 'alex_defender', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'alex@student.apu.edu.my', 'recycler', 'QR_USR012', 350, '2024-09-10 10:00:00', 3),
-(13, 'maria_save', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'maria@student.apu.edu.my', 'recycler', 'QR_USR013', 320, '2024-09-11 11:00:00', 3),
+(12, 'alex_defender', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'alex@student.apu.edu.my', 'recycler', 'QR_USR012', 350, '2024-09-10 10:00:00', 3),
+(13, 'maria_save', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'maria@student.apu.edu.my', 'recycler', 'QR_USR013', 320, '2024-09-11 11:00:00', 3),
 
 -- Recyclers (Team 4 - Sustainability Squad)
-(14, 'ryan_squad', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'ryan@student.apu.edu.my', 'recycler', 'QR_USR014', 310, '2024-09-15 17:00:00', 4),
-(15, 'sophia_sustain', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'sophia@student.apu.edu.my', 'recycler', 'QR_USR015', 290, '2024-09-16 18:00:00', 4),
+(14, 'ryan_squad', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'ryan@student.apu.edu.my', 'recycler', 'QR_USR014', 310, '2024-09-15 17:00:00', 4),
+(15, 'sophia_sustain', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'sophia@student.apu.edu.my', 'recycler', 'QR_USR015', 290, '2024-09-16 18:00:00', 4),
 
 -- Recyclers (No Team)
-(16, 'kevin_solo', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'kevin@student.apu.edu.my', 'recycler', 'QR_USR016', 250, '2024-09-20 12:00:00', NULL),
-(17, 'jenny_new', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'jenny@student.apu.edu.my', 'recycler', 'QR_USR017', 180, '2024-10-01 13:00:00', NULL),
-(18, 'tom_beginner', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tom@student.apu.edu.my', 'recycler', 'QR_USR018', 120, '2024-10-15 14:00:00', NULL),
-(19, 'anna_starter', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'anna@student.apu.edu.my', 'recycler', 'QR_USR019', 90, '2024-11-01 15:00:00', NULL),
-(20, 'peter_fresh', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'peter@student.apu.edu.my', 'recycler', 'QR_USR020', 60, '2024-11-15 16:00:00', NULL);
+(16, 'kevin_solo', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'kevin@student.apu.edu.my', 'recycler', 'QR_USR016', 250, '2024-09-20 12:00:00', NULL),
+(17, 'jenny_new', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'jenny@student.apu.edu.my', 'recycler', 'QR_USR017', 180, '2024-10-01 13:00:00', NULL),
+(18, 'tom_beginner', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'tom@student.apu.edu.my', 'recycler', 'QR_USR018', 120, '2024-10-15 14:00:00', NULL),
+(19, 'anna_starter', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'anna@student.apu.edu.my', 'recycler', 'QR_USR019', 90, '2024-11-01 15:00:00', NULL),
+(20, 'peter_fresh', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'peter@student.apu.edu.my', 'recycler', 'QR_USR020', 60, '2024-11-15 16:00:00', NULL);
 
 -- ============================================
 -- STEP 8: SAMPLE DATA - CHALLENGES
