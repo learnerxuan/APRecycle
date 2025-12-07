@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 // API CONFIGURATION 
-$GEMINI_API_KEY = 'YOUR GEMINI API KEY'; 
+$GEMINI_API_KEY = 'GEMINI API'; 
 $GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$GEMINI_API_KEY}";
 
 // Settings for local XAMPP
@@ -17,7 +17,10 @@ $response = [
     'status' => 'error',
     'message' => 'Initialization error.',
     'classification' => 'N/A',
-    'confidence' => 0.0
+    'confidence' => 0.0,
+    'needs_qr_scan' => false,
+    'submission_id' => null,
+    'potential_points' => 0
 ];
 
 // Receive and Decode the raw JSON payload from the AJAX request
@@ -146,46 +149,49 @@ if (file_put_contents($target_file_path, $image_data_binary)) {
         exit;
     }
 
-    $simulated_user_id = 1;
+    // No user_id yet - will be filled after QR scan
     $simulated_bin_id = 1;
 
-    // Determine status and points based on confidence level
+    // Determine status and potential points based on confidence level
     if ($confidence >= 0.80 && $is_valid_waste) {
         $status = 'Approved';
-        $points_awarded = 15;
+        $potential_points = 15;
     } elseif ($confidence >= 0.80 && !$is_valid_waste) {
         // High confidence AND it is NOT waste -> Reject immediately
         $status = 'Rejected';
-        $points_awarded = 0;
+        $potential_points = 0;
     } else {
         // Low confidence -> Needs review
         $status = 'Pending';
-        $points_awarded = 0;
+        $potential_points = 0;
     }
 
+    // Insert submission WITHOUT user_id (will be updated after QR scan)
+    // Using 0 as placeholder since column doesn't allow NULL
+    $placeholder_user_id = 0;
     $sql_insert = "INSERT INTO recycling_submission (user_id, bin_id, image_url, ai_confidence, status) VALUES (?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql_insert);
-    $stmt->bind_param("iisds", $simulated_user_id, $simulated_bin_id, $target_file_path, $confidence, $status);
+    $stmt->bind_param("iisds", $placeholder_user_id, $simulated_bin_id, $target_file_path, $confidence, $status);
 
     if ($stmt->execute()) {
+        $submission_id = $conn->insert_id; // Get the newly created submission ID
 
-        // Only award points if status is Approved
-        if ($points_awarded > 0) {
-            $sql_update_points = "UPDATE user SET lifetime_points = lifetime_points + ? WHERE user_id = ?";
-            $stmt_points = $conn->prepare($sql_update_points);
-            $stmt_points->bind_param("ii", $points_awarded, $simulated_user_id);
-            $stmt_points->execute();
-            $stmt_points->close();
-
-            $response['status'] = 'success';
-            $response['message'] = "Success! Item classified as {$classification}. Saved to DB. +{$points_awarded} points added.";
-        } elseif ($status === 'Rejected') {
+        if ($status === 'Rejected') {
+            // Item is not recyclable waste - reject without QR scan
             $response['status'] = 'error';
             $response['message'] = "Item rejected: This is not a recyclable waste item.";
+            $response['classification'] = $classification;
+            $response['confidence'] = $confidence;
         } else {
+            // Success - now need QR scan to link user
             $response['status'] = 'success';
-            $response['message'] = "Item classified as {$classification} with " . round($confidence * 100) . "% confidence. Saved as 'Pending' for manual review.";
+            $response['message'] = "Item classified as {$classification}. Please scan your QR code to complete.";
+            $response['classification'] = $classification;
+            $response['confidence'] = $confidence;
+            $response['needs_qr_scan'] = true;
+            $response['submission_id'] = $submission_id;
+            $response['potential_points'] = $potential_points;
         }
     } else {
         $response['status'] = 'error';

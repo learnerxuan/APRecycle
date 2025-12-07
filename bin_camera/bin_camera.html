@@ -3,24 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APRecycle Bin Camera Simulator</title>
-    <link rel="stylesheet" href="bin_camera.css">
+    <title>APRecycle Smart Bin</title>
+    <script src="html5-qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F7FAFC;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #2D5D3F;
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .header p {
+            color: #718096;
+            margin: 0;
+        }
+
+        .step-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .step-container h2 {
+            color: #2D5D3F;
+            margin: 0 0 20px 0;
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        #camera-feed {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 8px;
+            background: black;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        #qr-reader {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        #capture-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: 3px solid #2D5D3F !important;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #2D5D3F !important;
+            color: white !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: block !important;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        #capture-btn:hover:not(:disabled) {
+            background: #3A7A54 !important;
+            transform: translateY(-2px);
+        }
+
+        #capture-btn:disabled {
+            background: #A0AEC0 !important;
+            color: white !important;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.7;
+        }
+
+        .status-box {
+            background: #EDF2F7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #2D5D3F;
+        }
+
+        .status-box p {
+            margin: 0;
+            color: #2D3748;
+            font-size: 0.95rem;
+        }
+
+        .result-box {
+            background: #C6F6D5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        .result-box h3 {
+            color: #2D5D3F;
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .points-badge {
+            background: linear-gradient(135deg, #FFD93D, #FFC107);
+            color: #1A202C;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: inline-block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        canvas {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>🗑️ APRecycle Bin Camera Simulator</h1>
-    
-    <video id="camera-feed" autoplay playsinline></video>
+    <div class="container">
+        <div class="header">
+            <h1>🗑️ APRecycle Smart Bin</h1>
+            <p>Scan waste, scan your QR, earn points!</p>
+        </div>
 
-    <button id="capture-button" disabled>Initializing Camera... </button>
+        <!-- Step 1: Capture Waste -->
+        <div id="step-1" class="step-container">
+            <h2>Step 1: Scan Waste Item</h2>
+            <video id="camera-feed" autoplay playsinline></video>
+            <canvas id="photo-canvas"></canvas>
+            <button id="capture-btn" class="btn" disabled>Initializing Camera...</button>
+            <div class="status-box">
+                <p id="status-text">Starting camera...</p>
+            </div>
+        </div>
 
-    <canvas id="photo-canvas"></canvas>
+        <!-- Step 2: Scan QR Code -->
+        <div id="step-2" class="step-container hidden">
+            <h2>Step 2: Scan Your QR Code</h2>
 
-    <div id="status-container">
-        <h2>System Status</h2>
-        <img id="captured-image" alt="Captured Waste Image" style="display: none;">
-        <p id="data-status">Waiting for camera initialization...</p>
+            <div class="result-box">
+                <h3 id="classification-text">Item Classified</h3>
+                <div class="points-badge" id="points-badge">0 points</div>
+            </div>
+
+            <div id="qr-reader"></div>
+
+            <div class="status-box">
+                <p id="qr-status">Position your QR code in front of the camera...</p>
+            </div>
+        </div>
     </div>
 
-    <script src="bin_camera.js"></script>
+    <script src="bin_camera.js?v=5"></script>
 </body>
 </html>
