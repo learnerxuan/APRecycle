@@ -7,7 +7,7 @@
 header('Content-Type: application/json');
 
 // API CONFIGURATION
-$GEMINI_API_KEY = 'AIzaSyA07DEIDyva822P8UUZlk0dmRN_r49x05c';
+$GEMINI_API_KEY = 'GEMINI';
 $GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$GEMINI_API_KEY}";
 
 // Initialize response
