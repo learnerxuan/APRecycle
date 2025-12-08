@@ -7,7 +7,7 @@
 header('Content-Type: application/json');
 
 // API CONFIGURATION
-$GEMINI_API_KEY = 'GEMINI';
+$GEMINI_API_KEY = 'AIzaSyDOGJ2x3QI36Anji26aedXAX5xWjtYRtRc';
 $GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$GEMINI_API_KEY}";
 
 // Initialize response
@@ -105,7 +105,7 @@ if (
 
 // Return classification result
 $classification = $classification_data['classification'];
-$confidence = (float)$classification_data['confidence_score'];
+$confidence = (float) $classification_data['confidence_score'];
 
 $class_lower = strtolower($classification);
 $is_valid_waste = true;

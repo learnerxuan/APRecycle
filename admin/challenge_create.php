@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $point_multiplier = floatval($_POST['point_multiplier']);
     $badge_id = !empty($_POST['badge_id']) ? intval($_POST['badge_id']) : null;
     $reward_id = !empty($_POST['reward_id']) ? intval($_POST['reward_id']) : null;
+    $target_material_id = !empty($_POST['target_material_id']) ? intval($_POST['target_material_id']) : null;
 
     // Validation
     if (empty($title) || empty($description) || empty($start_date) || empty($end_date)) {
@@ -26,11 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error_message = "Point multiplier must be greater than 0.";
     } else {
         // Insert challenge
-        $insert_query = "INSERT INTO challenge (title, description, start_date, end_date, point_multiplier, badge_id, reward_id, created_at)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+        $insert_query = "INSERT INTO challenge (title, description, start_date, end_date, point_multiplier, badge_id, reward_id, target_material_id, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
 
         $stmt = mysqli_prepare($conn, $insert_query);
-        mysqli_stmt_bind_param($stmt, "ssssdii", $title, $description, $start_date, $end_date, $point_multiplier, $badge_id, $reward_id);
+        mysqli_stmt_bind_param($stmt, "ssssdiis", $title, $description, $start_date, $end_date, $point_multiplier, $badge_id, $reward_id, $target_material_id);
 
         if (mysqli_stmt_execute($stmt)) {
             $success_message = "Challenge created successfully!";
@@ -270,7 +271,8 @@ include 'includes/header.php';
 <div class="info-box">
     <p>
         <i class="fas fa-info-circle"></i>
-        <span>Create engaging challenges to motivate recyclers. Set dates, point multipliers, and optional badges/rewards to make recycling more fun!</span>
+        <span>Create engaging challenges to motivate recyclers. Set dates, point multipliers, and optional
+            badges/rewards to make recycling more fun!</span>
     </p>
 </div>
 
@@ -279,22 +281,18 @@ include 'includes/header.php';
         <!-- Challenge Title -->
         <div class="form-group">
             <label for="title" class="required">Challenge Title</label>
-            <input type="text"
-                   id="title"
-                   name="title"
-                   value="<?php echo isset($title) ? htmlspecialchars($title) : ''; ?>"
-                   placeholder="e.g., Earth Day Recycling Challenge"
-                   required>
+            <input type="text" id="title" name="title"
+                value="<?php echo isset($title) ? htmlspecialchars($title) : ''; ?>"
+                placeholder="e.g., Earth Day Recycling Challenge" required>
             <small>Choose a catchy, descriptive name for your challenge</small>
         </div>
 
         <!-- Challenge Description -->
         <div class="form-group">
             <label for="description" class="required">Description</label>
-            <textarea id="description"
-                      name="description"
-                      placeholder="Describe the challenge goals, rules, and what participants need to do..."
-                      required><?php echo isset($description) ? htmlspecialchars($description) : ''; ?></textarea>
+            <textarea id="description" name="description"
+                placeholder="Describe the challenge goals, rules, and what participants need to do..."
+                required><?php echo isset($description) ? htmlspecialchars($description) : ''; ?></textarea>
             <small>Provide clear instructions and motivation for participants</small>
         </div>
 
@@ -302,23 +300,17 @@ include 'includes/header.php';
         <div class="form-row">
             <div class="form-group">
                 <label for="start_date" class="required">Start Date</label>
-                <input type="date"
-                       id="start_date"
-                       name="start_date"
-                       value="<?php echo isset($start_date) ? $start_date : date('Y-m-d'); ?>"
-                       min="<?php echo date('Y-m-d'); ?>"
-                       required>
+                <input type="date" id="start_date" name="start_date"
+                    value="<?php echo isset($start_date) ? $start_date : date('Y-m-d'); ?>"
+                    min="<?php echo date('Y-m-d'); ?>" required>
                 <small>When the challenge begins</small>
             </div>
 
             <div class="form-group">
                 <label for="end_date" class="required">End Date</label>
-                <input type="date"
-                       id="end_date"
-                       name="end_date"
-                       value="<?php echo isset($end_date) ? $end_date : ''; ?>"
-                       min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
-                       required>
+                <input type="date" id="end_date" name="end_date"
+                    value="<?php echo isset($end_date) ? $end_date : ''; ?>"
+                    min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" required>
                 <small>When the challenge ends</small>
             </div>
         </div>
@@ -326,14 +318,9 @@ include 'includes/header.php';
         <!-- Point Multiplier -->
         <div class="form-group">
             <label for="point_multiplier" class="required">Point Multiplier</label>
-            <input type="number"
-                   id="point_multiplier"
-                   name="point_multiplier"
-                   value="<?php echo isset($point_multiplier) ? $point_multiplier : '1.0'; ?>"
-                   min="0.1"
-                   max="10"
-                   step="0.1"
-                   required>
+            <input type="number" id="point_multiplier" name="point_multiplier"
+                value="<?php echo isset($point_multiplier) ? $point_multiplier : '1.0'; ?>" min="0.1" max="10"
+                step="0.1" required>
             <small>
                 <i class="fas fa-bolt"></i>
                 Multiply recycling points during this challenge (e.g., 2.0 = double points, 1.5 = 50% bonus)
@@ -346,8 +333,7 @@ include 'includes/header.php';
             <select id="badge_id" name="badge_id">
                 <option value="">-- No Badge --</option>
                 <?php while ($badge = mysqli_fetch_assoc($badges_result)): ?>
-                    <option value="<?php echo $badge['badge_id']; ?>"
-                            <?php echo (isset($badge_id) && $badge_id == $badge['badge_id']) ? 'selected' : ''; ?>>
+                    <option value="<?php echo $badge['badge_id']; ?>" <?php echo (isset($badge_id) && $badge_id == $badge['badge_id']) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($badge['badge_name']); ?>
                         <?php if ($badge['description']): ?>
                             - <?php echo htmlspecialchars($badge['description']); ?>
@@ -367,8 +353,7 @@ include 'includes/header.php';
             <select id="reward_id" name="reward_id">
                 <option value="">-- No Reward --</option>
                 <?php while ($reward = mysqli_fetch_assoc($rewards_result)): ?>
-                    <option value="<?php echo $reward['reward_id']; ?>"
-                            <?php echo (isset($reward_id) && $reward_id == $reward['reward_id']) ? 'selected' : ''; ?>>
+                    <option value="<?php echo $reward['reward_id']; ?>" <?php echo (isset($reward_id) && $reward_id == $reward['reward_id']) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($reward['reward_name']); ?>
                         <?php if ($reward['description']): ?>
                             - <?php echo htmlspecialchars($reward['description']); ?>
@@ -379,6 +364,28 @@ include 'includes/header.php';
             <small>
                 <i class="fas fa-gift"></i>
                 Offer a reward for challenge completion
+            </small>
+        </div>
+
+        <!-- Target Material Selection (Smart Challenge Logic) -->
+        <div class="form-group">
+            <label for="target_material_id">Target Material (Smart Challenge)</label>
+            <select id="target_material_id" name="target_material_id">
+                <option value="">-- All Materials (Generic Challenge) --</option>
+                <?php
+                $materials_query = "SELECT material_id, material_name FROM material ORDER BY material_name";
+                $materials_result = mysqli_query($conn, $materials_query);
+                while ($material = mysqli_fetch_assoc($materials_result)):
+                    ?>
+                    <option value="<?php echo $material['material_id']; ?>" <?php echo (isset($_POST['target_material_id']) && $_POST['target_material_id'] == $material['material_id']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($material['material_name']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+            <small>
+                <i class="fas fa-recycle"></i>
+                Select a specific material for this challenge (e.g., "Plastic" for a plastic-free challenge). Leave
+                empty for generic challenges.
             </small>
         </div>
 
@@ -396,7 +403,7 @@ include 'includes/header.php';
 
 <script>
     // Auto-update end date minimum when start date changes
-    document.getElementById('start_date').addEventListener('change', function() {
+    document.getElementById('start_date').addEventListener('change', function () {
         const startDate = new Date(this.value);
         const endDateInput = document.getElementById('end_date');
 
@@ -412,7 +419,7 @@ include 'includes/header.php';
     });
 
     // Form validation
-    document.querySelector('form').addEventListener('submit', function(e) {
+    document.querySelector('form').addEventListener('submit', function (e) {
         const startDate = new Date(document.getElementById('start_date').value);
         const endDate = new Date(document.getElementById('end_date').value);
         const multiplier = parseFloat(document.getElementById('point_multiplier').value);

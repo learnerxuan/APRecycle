@@ -47,7 +47,7 @@ if (!isset($data['classification']) || !isset($data['confidence'])) {
 $qr_code = trim($data['qr_code']); // Trim whitespace
 $base64Image = $data['image'];
 $classification = $data['classification'];
-$confidence = (float)$data['confidence'];
+$confidence = (float) $data['confidence'];
 
 // Parse QR code data
 // Expected format: RECYCLER:user_id:verification_hash
@@ -115,7 +115,8 @@ $file_name = "waste_" . uniqid() . ".jpg";
 $target_file_path = $target_dir . $file_name;
 $image_data_binary = base64_decode($base64Image);
 
-if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
+if (!is_dir($target_dir))
+    mkdir($target_dir, 0777, true);
 
 if (!file_put_contents($target_file_path, $image_data_binary)) {
     $response['message'] = 'Failed to save image file.';
@@ -145,11 +146,83 @@ if ($confidence >= 0.80 && $is_valid_waste) {
 
 $simulated_bin_id = 1;
 
+// Map Classification to Material ID
+$material_map = [
+    'plastic bottle' => 1,
+    'plastic' => 1,
+    'aluminum can' => 2,
+    'can' => 2,
+    'glass bottle' => 3,
+    'glass' => 3,
+    'cardboard box' => 4,
+    'cardboard' => 4,
+    'paper' => 5,
+    'e-waste' => 6,
+    'metal' => 8,
+    'metal scrap' => 8,
+    'plastic container' => 9,
+    'tetra pak' => 10
+];
+
+$detected_material_id = null;
+foreach ($material_map as $key => $id) {
+    if (strpos($class_lower, $key) !== false) {
+        $detected_material_id = $id;
+        break;
+    }
+}
+
+// Default multiplier
+$total_multiplier = 1.0;
+
+// Check and update challenges
+if ($detected_material_id) {
+    $challenge_stmt = $conn->prepare("
+            SELECT uc.challenge_id, c.target_material_id, c.point_multiplier 
+            FROM user_challenge uc 
+            JOIN challenge c ON uc.challenge_id = c.challenge_id 
+            WHERE uc.user_id = ? AND c.end_date >= CURDATE() AND c.start_date <= CURDATE()
+        ");
+    $challenge_stmt->bind_param("i", $user['user_id']);
+    $challenge_stmt->execute();
+    $challenges = $challenge_stmt->get_result();
+
+    while ($ch = $challenges->fetch_assoc()) {
+        // Check if material matches (or if it's a generic challenge)
+        if (is_null($ch['target_material_id']) || $ch['target_material_id'] == $detected_material_id) {
+            // Update challenge progress (+1 item recycled)
+            $update_ch = $conn->prepare("UPDATE user_challenge SET challenge_point = challenge_point + 1 WHERE user_id = ? AND challenge_id = ?");
+            $update_ch->bind_param("ii", $user['user_id'], $ch['challenge_id']);
+            $update_ch->execute();
+            $update_ch->close();
+
+            // Apply highest multiplier
+            if ($ch['point_multiplier'] > $total_multiplier) {
+                $total_multiplier = $ch['point_multiplier'];
+            }
+        }
+    }
+    $challenge_stmt->close();
+}
+
+// Apply multiplier to points
+$points_awarded = floor($points_awarded * $total_multiplier);
+
 // Insert submission with user_id
 $stmt = $conn->prepare("INSERT INTO recycling_submission (user_id, bin_id, image_url, ai_confidence, status) VALUES (?, ?, ?, ?, ?)");
 $stmt->bind_param("iisds", $user['user_id'], $simulated_bin_id, $target_file_path, $confidence, $status);
 
 if ($stmt->execute()) {
+    $submission_id = $conn->insert_id;
+
+    // Link submission material (helper table)
+    if ($detected_material_id) {
+        $stmt_mat = $conn->prepare("INSERT INTO submission_material (submission_id, material_id, quantity) VALUES (?, ?, 1)");
+        $stmt_mat->bind_param("ii", $submission_id, $detected_material_id);
+        $stmt_mat->execute();
+        $stmt_mat->close();
+    }
+
     // Award points if approved
     if ($points_awarded > 0) {
         $stmt_points = $conn->prepare("UPDATE user SET lifetime_points = lifetime_points + ? WHERE user_id = ?");
@@ -163,6 +236,9 @@ if ($stmt->execute()) {
     $response['user_id'] = $user['user_id'];
     $response['username'] = $user['username'];
     $response['points_awarded'] = $points_awarded;
+    if ($total_multiplier > 1.0) {
+        $response['message'] .= " (" . $total_multiplier . "x Challenge Multiplier Applied!)";
+    }
 
 } else {
     $response['message'] = 'Failed to save submission: ' . $stmt->error;

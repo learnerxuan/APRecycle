@@ -15,10 +15,21 @@ USE aprecycle;
 ALTER TABLE `challenge`
     MODIFY COLUMN `point_multiplier` DECIMAL(3,1) NOT NULL DEFAULT 1.0;
 
--- Add created_at to challenge table (skip if already exists)
--- Removed because column already exists in your database
+-- Add target_material_id to challenge table for Smart Challenges
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'challenge' AND COLUMN_NAME = 'target_material_id');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `challenge` ADD COLUMN `target_material_id` INT NULL DEFAULT NULL AFTER `reward_id`, ADD CONSTRAINT `fk_challenge_material` FOREIGN KEY (`target_material_id`) REFERENCES `material`(`material_id`) ON DELETE SET NULL ON UPDATE CASCADE;', 'SELECT "Column target_material_id already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
--- Note: Index creation may fail if they already exist - this is safe to ignore
+DEALLOCATE PREPARE stmt;
+
+-- Add created_at to challenge table
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'challenge' AND COLUMN_NAME = 'created_at');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `challenge` ADD COLUMN `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP', 'SELECT "Column created_at already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 -- ============================================
 -- STEP 2: SAMPLE DATA - MATERIALS
@@ -140,19 +151,19 @@ INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `role`, `qr_code
 -- STEP 8: SAMPLE DATA - CHALLENGES
 -- ============================================
 
-INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `end_date`, `badge_id`, `reward_id`, `point_multiplier`) VALUES
+INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `end_date`, `badge_id`, `reward_id`, `point_multiplier`, `target_material_id`) VALUES
 -- Active Challenges
-(1, 'Plastic Free November', 'Join us in reducing plastic waste this November! Recycle at least 20 plastic items to complete this challenge and earn double points on all plastic recycling.', '2024-11-01', '2024-11-30', 4, 2, 2.0),
-(2, 'E-Waste Drive December', 'Bring your old electronics! This month we focus on e-waste recycling. Recycle any e-waste item and get 1.5x points plus a chance to win awesome rewards.', '2024-12-01', '2024-12-31', 6, 5, 1.5),
+(1, 'Plastic Free November', 'Join us in reducing plastic waste this November! Recycle at least 20 plastic items to complete this challenge and earn double points on all plastic recycling.', '2024-11-01', '2024-11-30', 4, 2, 2.0, 1),
+(2, 'E-Waste Drive December', 'Bring your old electronics! This month we focus on e-waste recycling. Recycle any e-waste item and get 1.5x points plus a chance to win awesome rewards.', '2024-12-01', '2024-12-31', 6, 5, 1.5, 6),
 
 -- Upcoming Challenges
-(3, 'Earth Week Challenge 2025', 'Celebrate Earth Week by recycling daily! Maintain a 7-day streak during Earth Week and earn the exclusive Week Streak badge plus bonus points.', '2025-01-15', '2025-01-22', 7, 3, 2.5),
-(4, 'Paper Recycling Month', 'February is Paper Month! Help us save trees by recycling paper products. Triple points for all paper items!', '2025-02-01', '2025-02-28', 6, 4, 3.0),
-(5, 'Aluminum Can Drive', 'Crush it! Recycle aluminum cans and help reduce energy consumption. Every can counts!', '2025-03-01', '2025-03-15', 5, 1, 1.8),
+(3, 'Earth Week Challenge 2025', 'Celebrate Earth Week by recycling daily! Maintain a 7-day streak during Earth Week and earn the exclusive Week Streak badge plus bonus points.', '2025-01-15', '2025-01-22', 7, 3, 2.5, NULL),
+(4, 'Paper Recycling Month', 'February is Paper Month! Help us save trees by recycling paper products. Triple points for all paper items!', '2025-02-01', '2025-02-28', 6, 4, 3.0, 5),
+(5, 'Aluminum Can Drive', 'Crush it! Recycle aluminum cans and help reduce energy consumption. Every can counts!', '2025-03-01', '2025-03-15', 5, 1, 1.8, 2),
 
 -- Past Challenges
-(6, 'October Kickoff Challenge', 'Start your recycling journey this October! First challenge of the semester with 1.5x points on all materials.', '2024-10-01', '2024-10-31', 1, 1, 1.5),
-(7, 'Back to School Recycle', 'Welcome back! Start the semester green by recycling old school supplies and materials.', '2024-09-01', '2024-09-30', 1, NULL, 1.2);
+(6, 'October Kickoff Challenge', 'Start your recycling journey this October! First challenge of the semester with 1.5x points on all materials.', '2024-10-01', '2024-10-31', 1, 1, 1.5, NULL),
+(7, 'Back to School Recycle', 'Welcome back! Start the semester green by recycling old school supplies and materials.', '2024-09-01', '2024-09-30', 1, NULL, 1.2, NULL);
 
 -- ============================================
 -- STEP 9: SAMPLE DATA - USER CHALLENGES

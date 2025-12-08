@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 // API CONFIGURATION 
-$GEMINI_API_KEY = 'GEMINI API'; 
+$GEMINI_API_KEY = 'AIzaSyDOGJ2x3QI36Anji26aedXAX5xWjtYRtRc';
 $GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$GEMINI_API_KEY}";
 
 // Settings for local XAMPP
@@ -106,8 +106,8 @@ if (isset($api_response['candidates'][0]['content']['parts'][0]['text'])) {
 
 // Check if we successfully extracted the required data
 if (
-    !$classification_data || 
-    !isset($classification_data['classification']) || 
+    !$classification_data ||
+    !isset($classification_data['classification']) ||
     !isset($classification_data['confidence_score'])
 ) {
     $response['message'] = 'AI could not return a structured classification. Raw AI response received: ' . $api_response_raw;
@@ -117,7 +117,7 @@ if (
 
 // Extraction Successful 
 $classification = $classification_data['classification'];
-$confidence = (float)$classification_data['confidence_score']; // Treated as a number
+$confidence = (float) $classification_data['confidence_score']; // Treated as a number
 
 $response['classification'] = $classification;
 $response['confidence'] = $confidence;
@@ -135,16 +135,17 @@ $file_name = "waste_" . uniqid() . ".jpg";
 $target_file_path = $target_dir . $file_name;
 $image_data_binary = base64_decode($base64Image);
 
-if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
+if (!is_dir($target_dir))
+    mkdir($target_dir, 0777, true);
 
 if (file_put_contents($target_file_path, $image_data_binary)) {
 
     // Connect Database
     $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 
-    if ($conn -> connect_error) {
+    if ($conn->connect_error) {
         $response['status'] = 'error';
-        $response['message'] = "Database Connection Failed: ". $conn -> connect_error;
+        $response['message'] = "Database Connection Failed: " . $conn->connect_error;
         echo json_encode($response);
         exit;
     }
