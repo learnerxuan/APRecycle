@@ -46,15 +46,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
         }
 
         .admin-logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
+            width: 50px;
+            height: 50px;
             border-radius: var(--radius-md);
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: var(--text-xl);
+            background: transparent;
+        }
+
+        .admin-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* or cover if you prefer */
         }
 
         .admin-logo-text h1 {
@@ -246,11 +251,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="admin-header-top">
             <a href="dashboard.php" class="admin-logo">
                 <div class="admin-logo-icon">
-                    <i class="fas fa-recycle"></i>
+                    <img src="../assets/aprecycle-logo.png">
                 </div>
                 <div class="admin-logo-text">
                     <h1>APRecycle Admin</h1>
-                    <p>Smart Recycling System</p>
+                    <p>Smart Recycling System for APU</p>
                 </div>
             </a>
 

@@ -1,186 +1,251 @@
 <?php
-session_start();
 require_once '../php/config.php';
 
-// Ensure user is logged in as administrator
+// Check role permissions (Double check, though header handles it)
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrator') {
     header('Location: ../login.php');
     exit();
 }
 
-$page_title = 'Admin Dashboard';
-require_once 'includes/header.php';
-
 $conn = getDBConnection();
 
-// 1. Fetch Key System Metrics
-// Total Recyclers
-$result = $conn->query("SELECT COUNT(*) as count FROM user WHERE role = 'recycler'");
-$total_recyclers = $result->fetch_assoc()['count'];
+// --- 1. Fetch Statistics from Database ---
 
-// Total Recycled Items (Approved)
-$result = $conn->query("SELECT COUNT(*) as count FROM recycling_submission WHERE status = 'approved'");
-$total_recycled = $result->fetch_assoc()['count'];
+// A. Total Users (All roles or just Recyclers? Usually Recyclers + Mods)
+$user_query = "SELECT COUNT(*) as count FROM user WHERE role != 'administrator'";
+$user_result = mysqli_query($conn, $user_query);
+$total_users = mysqli_fetch_assoc($user_result)['count'];
 
-// Total Challenges (Active)
-$result = $conn->query("SELECT COUNT(*) as count FROM challenge WHERE start_date <= CURDATE() AND end_date >= CURDATE()");
-$active_challenges = $result->fetch_assoc()['count'];
+// B. Active Challenges (End date is in the future or today)
+$challenge_query = "SELECT COUNT(*) as count FROM challenge WHERE end_date >= CURDATE()";
+$challenge_result = mysqli_query($conn, $challenge_query);
+$active_challenges = mysqli_fetch_assoc($challenge_result)['count'];
 
-// Total Eco-Moderators
-$result = $conn->query("SELECT COUNT(*) as count FROM user WHERE role = 'eco-moderator'");
-$total_moderators = $result->fetch_assoc()['count'];
+// C. Items Recycled (Sum of all quantities in approved submissions)
+// Note: We join with recycling_submission to ensure we only count 'Approved' items
+$items_query = "SELECT SUM(sm.quantity) as count 
+                FROM submission_material sm
+                JOIN recycling_submission rs ON sm.submission_id = rs.submission_id
+                WHERE rs.status = 'Approved'";
+$items_result = mysqli_query($conn, $items_query);
+$row = mysqli_fetch_assoc($items_result);
+$items_recycled = $row['count'] ? $row['count'] : 0; // Handle NULL if empty
 
-// 2. Fetch Recent System Activity (Combined View)
-// We'll show the latest 5 approved submissions as a proxy for "Activity"
-$sql_activity = "SELECT s.submission_id, s.created_at, u.username, m.material_name, s.ai_confidence
-                 FROM recycling_submission s
-                 LEFT JOIN user u ON s.user_id = u.user_id
-                 LEFT JOIN submission_material sm ON s.submission_id = sm.submission_id
-                 LEFT JOIN material m ON sm.material_id = m.material_id
-                 WHERE s.status = 'approved'
-                 ORDER BY s.created_at DESC LIMIT 5";
-$recent_activity = $conn->query($sql_activity);
+// D. Eco-Moderators
+$mod_query = "SELECT COUNT(*) as count FROM user WHERE role = 'eco-moderator'";
+$mod_result = mysqli_query($conn, $mod_query);
+$total_mods = mysqli_fetch_assoc($mod_result)['count'];
+
+$page_title = "Dashboard";
+include 'includes/header.php';
 ?>
 
-<div class="page-header">
-    <h1 class="page-title">Admin Overview</h1>
-    <p class="page-description">High-level insights into the APRecycle system performance.</p>
-</div>
-
-<!-- Statistics Grid -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-8);">
+<style>
+    /* Dashboard Specific Styles */
     
-    <!-- User Count card -->
-    <div style="background: white; padding: var(--space-6); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border-bottom: 4px solid var(--color-primary);">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <p style="color: var(--color-gray-600); margin: 0; font-size: var(--text-sm); font-weight: 500;">Total Recyclers</p>
-                <h2 style="font-size: var(--text-4xl); margin: var(--space-2) 0 0 0; color: var(--color-gray-900);"><?php echo $total_recyclers; ?></h2>
-            </div>
-            <div style="padding: var(--space-3); background: var(--color-gray-100); border-radius: var(--radius-full); color: var(--color-primary);">
-                <i class="fas fa-users fa-lg"></i>
-            </div>
-        </div>
+    /* Stats Grid - 4 Columns */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: var(--space-6);
+        margin-bottom: var(--space-8);
+    }
+
+    .stat-card {
+        background: var(--color-white);
+        padding: var(--space-6);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid var(--color-gray-200);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--color-primary-light);
+    }
+
+    .stat-value {
+        font-size: var(--text-4xl);
+        font-weight: 700;
+        color: var(--color-gray-800);
+        margin-bottom: var(--space-2);
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: var(--text-sm);
+        color: var(--color-gray-600);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Action Grid - 3 Columns */
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--space-6);
+    }
+
+    .action-card {
+        background: var(--color-white);
+        padding: var(--space-8);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        text-align: center;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+        border: 1px solid var(--color-gray-200);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
+    .action-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--color-primary);
+    }
+
+    .action-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: var(--color-gray-100);
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: var(--space-6);
+        transition: background-color 0.3s ease;
+    }
+
+    .action-card:hover .action-icon-wrapper {
+        background: var(--color-primary-light);
+    }
+
+    .action-icon {
+        font-size: 2.5rem; /* 40px */
+        color: var(--color-gray-500);
+        transition: color 0.3s ease;
+    }
+
+    .action-card:hover .action-icon {
+        color: var(--color-white);
+    }
+
+    .action-title {
+        font-size: var(--text-xl);
+        font-weight: 700;
+        color: var(--color-gray-800);
+        margin-bottom: var(--space-3);
+    }
+
+    .action-desc {
+        font-size: var(--text-base);
+        color: var(--color-gray-600);
+        margin-bottom: var(--space-6);
+        flex-grow: 1; /* Pushes the link to bottom */
+        line-height: 1.5;
+    }
+
+    .action-link {
+        font-weight: 700;
+        color: var(--color-primary);
+        font-size: var(--text-sm);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+
+    .action-card:hover .action-link {
+        color: var(--color-primary-dark);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .stat-value {
+            font-size: var(--text-3xl);
+        }
+        
+        .action-card {
+            padding: var(--space-6);
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h2 class="page-title">
+        <i class="fas fa-tachometer-alt" style="margin-right: 10px;"></i>
+        Administrator Dashboard
+    </h2>
+    <p class="page-description">System overview and management tools</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value"><?php echo number_format($total_users); ?></div>
+        <div class="stat-label">Total Users</div>
     </div>
 
-    <!-- Recycled Items Count -->
-    <div style="background: white; padding: var(--space-6); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border-bottom: 4px solid var(--color-success);">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <p style="color: var(--color-gray-600); margin: 0; font-size: var(--text-sm); font-weight: 500;">Items Recycled</p>
-                <h2 style="font-size: var(--text-4xl); margin: var(--space-2) 0 0 0; color: var(--color-gray-900);"><?php echo $total_recycled; ?></h2>
-            </div>
-            <div style="padding: var(--space-3); background: #ECFDF5; border-radius: var(--radius-full); color: var(--color-success);">
-                <i class="fas fa-recycle fa-lg"></i>
-            </div>
-        </div>
+    <div class="stat-card">
+        <div class="stat-value"><?php echo number_format($active_challenges); ?></div>
+        <div class="stat-label">Active Challenges</div>
     </div>
 
-    <!-- Active Challenges -->
-    <div style="background: white; padding: var(--space-6); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border-bottom: 4px solid var(--color-warning);">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <p style="color: var(--color-gray-600); margin: 0; font-size: var(--text-sm); font-weight: 500;">Active Challenges</p>
-                <h2 style="font-size: var(--text-4xl); margin: var(--space-2) 0 0 0; color: var(--color-gray-900);"><?php echo $active_challenges; ?></h2>
-            </div>
-            <div style="padding: var(--space-3); background: #FFFBEB; border-radius: var(--radius-full); color: var(--color-warning);">
-                <i class="fas fa-trophy fa-lg"></i>
-            </div>
-        </div>
+    <div class="stat-card">
+        <div class="stat-value"><?php echo number_format($items_recycled); ?></div>
+        <div class="stat-label">Items Recycled</div>
     </div>
 
-    <!-- Eco-Moderators -->
-    <div style="background: white; padding: var(--space-6); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border-bottom: 4px solid var(--color-secondary);">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <p style="color: var(--color-gray-600); margin: 0; font-size: var(--text-sm); font-weight: 500;">Eco-Moderators</p>
-                <h2 style="font-size: var(--text-4xl); margin: var(--space-2) 0 0 0; color: var(--color-gray-900);"><?php echo $total_moderators; ?></h2>
-            </div>
-            <div style="padding: var(--space-3); background: #F3E8FF; border-radius: var(--radius-full); color: var(--color-secondary);">
-                <i class="fas fa-user-shield fa-lg"></i>
-            </div>
-        </div>
+    <div class="stat-card">
+        <div class="stat-value"><?php echo number_format($total_mods); ?></div>
+        <div class="stat-label">Eco-Moderators</div>
     </div>
 </div>
 
-<!-- System Shortcuts -->
-<h2 style="font-size: var(--text-xl); color: var(--color-gray-800); margin-bottom: var(--space-4);">System Shortcuts</h2>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-8);">
-    <a href="challenges.php" style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); text-decoration: none; color: var(--color-gray-800); transition: all 0.3s ease;">
-        <div style="padding: var(--space-3); background: #EFF6FF; border-radius: var(--radius-md); color: var(--color-primary);">
-            <i class="fas fa-trophy"></i>
+<div class="actions-grid">
+    
+    <a href="challenges.php" class="action-card">
+        <div class="action-icon-wrapper">
+            <i class="fas fa-trophy action-icon"></i>
         </div>
-        <div>
-            <h4 style="margin: 0; font-size: var(--text-base);">Manage Challenges</h4>
-            <p style="margin: 0; font-size: var(--text-sm); color: var(--color-gray-500);">Create or edit challenges</p>
-        </div>
-        <i class="fas fa-chevron-right" style="margin-left: auto; color: var(--color-gray-400);"></i>
+        <h3 class="action-title">Challenges Management</h3>
+        <p class="action-desc">Create, edit, and manage recycling challenges and competitions.</p>
+        <span class="action-link">
+            Manage Challenges <i class="fas fa-arrow-right"></i>
+        </span>
     </a>
 
-    <a href="moderators.php" style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); text-decoration: none; color: var(--color-gray-800); transition: all 0.3s ease;">
-        <div style="padding: var(--space-3); background: #F3E8FF; border-radius: var(--radius-md); color: var(--color-secondary);">
-            <i class="fas fa-users-cog"></i>
+    <a href="analytics.php" class="action-card">
+        <div class="action-icon-wrapper">
+            <i class="fas fa-chart-pie action-icon"></i>
         </div>
-        <div>
-            <h4 style="margin: 0; font-size: var(--text-base);">Manage Moderators</h4>
-            <p style="margin: 0; font-size: var(--text-sm); color: var(--color-gray-500);">Add or remove staff</p>
-        </div>
-        <i class="fas fa-chevron-right" style="margin-left: auto; color: var(--color-gray-400);"></i>
+        <h3 class="action-title">System Analytics</h3>
+        <p class="action-desc">View campus-wide statistics, trends, and generate reports.</p>
+        <span class="action-link">
+            View Analytics <i class="fas fa-arrow-right"></i>
+        </span>
     </a>
 
-    <a href="reports.php" style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); text-decoration: none; color: var(--color-gray-800); transition: all 0.3s ease;">
-        <div style="padding: var(--space-3); background: #FFFBEB; border-radius: var(--radius-md); color: var(--color-warning);">
-            <i class="fas fa-file-alt"></i>
+    <a href="moderators.php" class="action-card">
+        <div class="action-icon-wrapper">
+            <i class="fas fa-user-shield action-icon"></i>
         </div>
-        <div>
-            <h4 style="margin: 0; font-size: var(--text-base);">View Reports</h4>
-            <p style="margin: 0; font-size: var(--text-sm); color: var(--color-gray-500);">System analytics</p>
-        </div>
-        <i class="fas fa-chevron-right" style="margin-left: auto; color: var(--color-gray-400);"></i>
+        <h3 class="action-title">Eco-Moderator Management</h3>
+        <p class="action-desc">Add, update, or remove eco-moderators from the system.</p>
+        <span class="action-link">
+            Manage Moderators <i class="fas fa-arrow-right"></i>
+        </span>
     </a>
-</div>
 
-<!-- Recent Activity Section (Full Width) -->
-<div>
-    <h2 style="font-size: var(--text-xl); color: var(--color-gray-800); margin-bottom: var(--space-4);">Recent Recycling Activity</h2>
-    <div style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead style="background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-200);">
-                <tr>
-                    <th style="padding: var(--space-4); text-align: left; font-size: var(--text-xs); font-weight: 600; color: var(--color-gray-600); text-transform: uppercase;">User</th>
-                    <th style="padding: var(--space-4); text-align: left; font-size: var(--text-xs); font-weight: 600; color: var(--color-gray-600); text-transform: uppercase;">Material</th>
-                    <th style="padding: var(--space-4); text-align: left; font-size: var(--text-xs); font-weight: 600; color: var(--color-gray-600); text-transform: uppercase;">Date</th>
-                    <th style="padding: var(--space-4); text-align: left; font-size: var(--text-xs); font-weight: 600; color: var(--color-gray-600); text-transform: uppercase;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($recent_activity->num_rows > 0): ?>
-                    <?php while($row = $recent_activity->fetch_assoc()): ?>
-                    <tr style="border-bottom: 1px solid var(--color-gray-100);">
-                        <td style="padding: var(--space-4); font-weight: 500; color: var(--color-gray-900);">
-                            <div style="display: flex; align-items: center; gap: var(--space-3);">
-                                <div style="width: 24px; height: 24px; background: var(--color-gray-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--color-gray-600); font-weight: bold;">
-                                    <?php echo strtoupper(substr($row['username'], 0, 1)); ?>
-                                </div>
-                                <?php echo htmlspecialchars($row['username']); ?>
-                            </div>
-                        </td>
-                        <td style="padding: var(--space-4); color: var(--color-gray-700);"><?php echo htmlspecialchars($row['material_name'] ?? 'Unclassified'); ?></td>
-                        <td style="padding: var(--space-4); color: var(--color-gray-600); font-size: var(--text-sm);"><?php echo date('M d, H:i', strtotime($row['created_at'])); ?></td>
-                        <td style="padding: var(--space-4);">
-                            <span style="display: inline-block; padding: 2px 8px; border-radius: var(--radius-full); font-size: 11px; font-weight: 600; color: var(--color-success); background: #ECFDF5;">Approved</span>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr><td colspan="4" style="padding: var(--space-6); text-align: center; color: var(--color-gray-500);">No recent activity.</td></tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
 </div>
 
 <?php 
-require_once 'includes/footer.php'; 
-$conn->close();
+include 'includes/footer.php'; 
+mysqli_close($conn);
 ?>

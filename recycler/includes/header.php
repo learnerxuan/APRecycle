@@ -46,15 +46,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
         }
 
         .recycler-logo-icon {
-            width: 40px;
+            width: 40px; /* Adjusted to fit logo better */
             height: 40px;
-            background: var(--gradient-primary);
+            background: transparent;
             border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: var(--text-xl);
+        }
+        
+        .recycler-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .recycler-logo-text h1 {
@@ -75,6 +79,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
             gap: var(--space-4);
         }
 
+        /* --- NEW: Profile Link Styling --- */
+        .profile-link {
+            text-decoration: none; /* Removes the underline */
+            color: inherit;
+            display: block;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+
         .recycler-user-profile {
             display: flex;
             align-items: center;
@@ -82,7 +95,24 @@ $current_page = basename($_SERVER['PHP_SELF']);
             padding: var(--space-2) var(--space-4);
             background: var(--color-gray-100);
             border-radius: var(--radius-md);
+            border: 1px solid transparent; /* Placeholder for border transition */
+            transition: all 0.2s ease;
         }
+
+        /* Interactive States */
+        .profile-link:hover .recycler-user-profile {
+            background: var(--color-white);
+            border-color: var(--color-gray-200);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+
+        .profile-link:active .recycler-user-profile {
+            transform: translateY(0);
+            background: var(--color-gray-100);
+            box-shadow: none;
+        }
+        /* -------------------------------- */
 
         .recycler-user-avatar {
             width: 32px;
@@ -242,28 +272,29 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
     <header class="recycler-header">
-        <!-- Top Bar -->
         <div class="recycler-header-top">
             <a href="dashboard.php" class="recycler-logo">
                 <div class="recycler-logo-icon">
-                    <i class="fas fa-recycle"></i>
+                    <img src="../assets/aprecycle-logo.png" alt="Logo">
                 </div>
                 <div class="recycler-logo-text">
                     <h1>APRecycle</h1>
-                    <p>Smart Recycling System</p>
+                    <p>Smart Recycling  for APU</p>
                 </div>
             </a>
 
             <div class="recycler-user-info">
-                <div class="recycler-user-profile">
-                    <div class="recycler-user-avatar">
-                        <?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>
+                <a href="profile.php" class="profile-link">
+                    <div class="recycler-user-profile">
+                        <div class="recycler-user-avatar">
+                            <?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>
+                        </div>
+                        <div class="recycler-user-details">
+                            <span class="recycler-user-name"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <span class="recycler-user-role">Recycler</span>
+                        </div>
                     </div>
-                    <div class="recycler-user-details">
-                        <span class="recycler-user-name"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                        <span class="recycler-user-role">Recycler</span>
-                    </div>
-                </div>
+                </a>
                 <a href="../logout.php" class="btn-logout">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
@@ -271,7 +302,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
         <nav class="recycler-nav">
             <ul class="recycler-nav-tabs">
                 <li class="recycler-nav-tab">
