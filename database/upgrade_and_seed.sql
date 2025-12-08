@@ -31,6 +31,13 @@ PREPARE stmt FROM @alter_sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
+-- Add is_completed to user_challenge table
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'user_challenge' AND COLUMN_NAME = 'is_completed');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `user_challenge` ADD COLUMN `is_completed` BOOLEAN DEFAULT FALSE', 'SELECT "Column is_completed already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
 -- ============================================
 -- STEP 2: SAMPLE DATA - MATERIALS
 -- ============================================
