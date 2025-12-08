@@ -2,6 +2,11 @@
 require_once 'php/config.php';
 
 $error = '';
+$success_msg = '';
+
+if (isset($_GET['success']) && $_GET['success'] == 'registered') {
+    $success_msg = 'Registration successful! Please login with your new account.';
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
@@ -68,8 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Login - APRecycle</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
-        /*@import url('variables.css');*/
-
         body {
             display: flex;
             justify-content: center;
@@ -128,6 +131,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border: 1px solid var(--color-error);
         }
 
+        .alert-success {
+            background: var(--color-success-light); 
+            color: #22543D;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--color-success);
+        }
+
         .form-group{
             margin-bottom: 1.5rem;
         }
@@ -159,6 +171,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php if ($error): ?>
             <div class="alert-error"><?php echo $error; ?></div>
+        <?php endif; ?>
+
+        <?php if ($success_msg): ?>
+            <div class="alert-success"><?php echo $success_msg; ?></div>
         <?php endif; ?>
 
         <form method="POST" action="">
