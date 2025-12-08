@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 // API CONFIGURATION 
-$GEMINI_API_KEY = 'AIzaSyDOGJ2x3QI36Anji26aedXAX5xWjtYRtRc';
+$GEMINI_API_KEY = 'a';
 $GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$GEMINI_API_KEY}";
 
 // Settings for local XAMPP
