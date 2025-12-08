@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="login-container">
         <div class="logo">
-            <img src="assets/aprecycle-logo.png"><h1>APRecycle</h1>
+            <img src="assets/aprecycle-logo.png">
             <p>Smart Recycling System for APU</p>
         </div>
 
