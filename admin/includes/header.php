@@ -250,7 +250,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </div>
                 <div class="admin-logo-text">
                     <h1>APRecycle Admin</h1>
-                    <p>Smart Recycling System</p>
+                    <p>Smart Recycling System for APU</p>
                 </div>
             </a>
 
