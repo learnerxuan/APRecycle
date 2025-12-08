@@ -93,14 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .logo img{
-            width: 60px;
-            height: 60px;
-        }
-
-        .logo h1 {
-            color: var(--color-primary);
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            width: 200px;
+            height: 200px;
         }
 
         .logo p {
@@ -154,23 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-decoration: underline;
         }
 
-        .test-accounts{
-            margin-top: 2rem;
-            padding: 1rem;
-            background: #F7FAFC;
-            border-radius: 8px;
-            font-size: 0.875rem;
-        }
-
-        .test-accounts h3 {
-            color: #2D5D3F;
-            margin-bottom: 0.5rem;
-        }
-
-        .test-accounts p {
-            margin: 0.25rem 0;
-            color: #4A5568;
-        }
     </style>
 </head>
 <body>
@@ -200,13 +177,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="register-link">
             Don't have an account? <a href="register.php">Register here</a>
-        </div>
-
-        <div class="test-accounts">
-            <h3>Test Accounts</h3>
-            <p><strong>Recycler:</strong> recycler1 / password123</p>
-            <p><strong>Moderator:</strong> moderator1 / password123</p>
-            <p><strong>Admin:</strong> admin1 / password123</p>
         </div>
     </div>
 </body>
