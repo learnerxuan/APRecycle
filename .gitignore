@@ -1,0 +1,9 @@
+# Environment variables - DO NOT COMMIT
+.env
+
+# Uploaded waste images
+bin_camera/uploads/
+
+# System files
+.DS_Store
+Thumbs.db

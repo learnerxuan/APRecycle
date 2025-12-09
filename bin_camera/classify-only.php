@@ -6,8 +6,11 @@
 
 header('Content-Type: application/json');
 
+// Load environment variables
+require_once '../php/env.php';
+
 // API CONFIGURATION
-$GEMINI_API_KEY = 'a';
+$GEMINI_API_KEY = env('GEMINI_API_KEY');
 $GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$GEMINI_API_KEY}";
 
 // Initialize response
