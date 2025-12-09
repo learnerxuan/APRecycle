@@ -32,6 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = mysqli_fetch_assoc($result);
 
             if(password_verify($password, $user['password'])){
+
+                if (isset($_POST['remember_me'])) {
+                    // Set cookies for 30 days
+                    setcookie('username', $username, time() + (86400 * 30), "/");
+                    setcookie('password', $password, time() + (86400 * 30), "/");
+                } else{
+                    if (isset($_COOKIE['username'])) {
+                        setcookie('username', '', time() - 3600, "/");
+                    }
+                    if (isset($_COOKIE['password'])) {
+                        setcookie('password', '', time() - 3600, "/");
+                    }
+                }
+
                 // Set session data
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['username'];
@@ -180,14 +194,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST" action="">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required autofocus>
+                <input type="text" id="username" name="username" value="<?php echo isset($_COOKIE['username']) ? $_COOKIE['username'] : ''; ?>" required autofocus>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" value="<?php echo isset($_COOKIE['password']) ? $_COOKIE['password'] : ''; ?>" required>
             </div>
-
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="remember_me" <?php echo isset($_COOKIE['username']) ? 'checked' : ''; ?>> 
+                    Remember me
+                </label>
+            </div>
+            
             <button type="submit" class="btn-primary">Login</button>
         </form>
 
