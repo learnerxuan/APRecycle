@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../php/config.php';
-
 $conn = getDBConnection();
 
 // Role Check
@@ -12,7 +11,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'recycler') {
 
 $user_id = $_SESSION['user_id'];
 
-// 1. Fetch current user's team status
+// Fetch Team Data
 $sql = "SELECT u.team_id, t.team_name, t.description, t.points 
         FROM user u 
         LEFT JOIN team t ON u.team_id = t.team_id 
@@ -22,10 +21,9 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user_data = $stmt->get_result()->fetch_assoc();
 
-// Check if user is in a team (team_id will be NULL if not)
 $has_team = $user_data && !empty($user_data['team_id']);
 
-// 2. If in a team, fetch members
+// Fetch Members if in team
 $members = null;
 if ($has_team) {
     $sql_members = "SELECT username, lifetime_points FROM user WHERE team_id = ? ORDER BY lifetime_points DESC";
@@ -43,32 +41,15 @@ if ($has_team) {
     <title>My Team - APRecycle</title>
     <link rel="stylesheet" href="../css/styles.css">
     <style>
-        /* Split layout for Join/Create */
         .split-container { display: flex; gap: 2rem; margin-top: 2rem; }
-        .split-box { 
-            flex: 1; 
-            background: var(--color-white); 
-            padding: 3rem; 
-            border-radius: var(--radius-lg); 
-            text-align: center; 
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--color-gray-200);
-        }
+        .split-box { flex: 1; background: #fff; padding: 3rem; border-radius: 12px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
         .icon-large { font-size: 3rem; margin-bottom: 1rem; display: block; }
-        
-        /* Dashboard Styles */
-        .team-hero { 
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); 
-            color: white; 
-            padding: 2.5rem; 
-            border-radius: var(--radius-lg); 
-            margin-bottom: 2rem; 
-            box-shadow: var(--shadow-md);
-        }
-        .member-list { background: white; border-radius: var(--radius-lg); padding: 0; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--color-gray-200); }
-        .member-item { display: flex; justify-content: space-between; padding: 1.25rem; border-bottom: 1px solid var(--color-gray-200); }
+        .team-hero { background: linear-gradient(135deg, var(--color-primary) 0%, #1F4129 100%); color: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .member-list { background: white; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        .member-item { display: flex; justify-content: space-between; padding: 1.25rem; border-bottom: 1px solid #e2e8f0; align-items: center; }
         .member-item:last-child { border-bottom: none; }
-        .badge-points { background: var(--color-accent-yellow); color: var(--color-gray-900); padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.9rem; }
+        .badge-points { background: #FFD93D; color: #1A202C; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
+        @media (max-width: 768px) { .split-container { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -76,22 +57,24 @@ if ($has_team) {
 
     <div class="container">
         <?php if ($has_team): ?>
-            <a href="dashboard.php" class="btn btn-secondary mb-4">&larr; Back to Dashboard</a>
+            <div style="margin-bottom: 20px;">
+                <a href="dashboard.php" class="btn btn-secondary">&larr; Back to Dashboard</a>
+            </div>
             
             <div class="team-hero">
-                <h1 style="margin-bottom: 0.5rem;"><?php echo htmlspecialchars($user_data['team_name']); ?></h1>
-                <p style="opacity: 0.9; font-size: 1.1rem; margin-bottom: 1.5rem;"><?php echo htmlspecialchars($user_data['description']); ?></p>
+                <h1 style="margin-bottom: 0.5rem; color: white;"><?php echo htmlspecialchars($user_data['team_name']); ?></h1>
+                <p style="opacity: 0.9; font-size: 1.1rem; margin-bottom: 1.5rem; color: #E2E8F0;"><?php echo htmlspecialchars($user_data['description']); ?></p>
                 <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 8px 16px; border-radius: 8px;">
                     <strong>🏆 Total Team Points:</strong> <?php echo number_format($user_data['points']); ?>
                 </div>
             </div>
 
-            <h3 class="mb-4">Team Members</h3>
+            <h3 style="margin-bottom: 1.5rem;">Team Members</h3>
             <div class="member-list">
                 <?php while($mem = $members->fetch_assoc()): ?>
                     <div class="member-item">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 35px; height: 35px; background: var(--color-gray-200); border-radius: 50%; display: flex; align-items: center; justify-content: center;">👤</div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 40px; height: 40px; background: #EDF2F7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">👤</div>
                             <strong><?php echo htmlspecialchars($mem['username']); ?></strong>
                         </div>
                         <span class="badge-points"><?php echo number_format($mem['lifetime_points']); ?> pts</span>
@@ -100,23 +83,25 @@ if ($has_team) {
             </div>
 
         <?php else: ?>
-            <a href="dashboard.php" class="btn btn-secondary mb-4">&larr; Back to Dashboard</a>
+            <div style="margin-bottom: 20px;">
+                <a href="dashboard.php" class="btn btn-secondary">&larr; Back to Dashboard</a>
+            </div>
             <h2>Team Management</h2>
-            <p class="text-gray-600">You are not part of a team yet. Join forces to recycle more!</p>
+            <p style="color: #718096;">You are not part of a team yet. Join forces to recycle more!</p>
             
             <div class="split-container">
                 <div class="split-box">
                     <span class="icon-large">🤝</span>
                     <h3>Join a Team</h3>
-                    <p class="mb-4 text-gray-600">Find an existing squad and start contributing immediately.</p>
-                    <a href="team_join.php" class="btn btn-primary w-100">Browse Teams</a>
+                    <p style="color: #718096; margin-bottom: 1.5rem;">Browse and join existing teams competing in recycling challenges.</p>
+                    <a href="team_join.php" class="btn btn-primary" style="width: 100%; display: inline-block;">Browse Teams</a>
                 </div>
                 
                 <div class="split-box">
                     <span class="icon-large">🚩</span>
                     <h3>Create a Team</h3>
-                    <p class="mb-4 text-gray-600">Be a leader! Start your own team and invite friends.</p>
-                    <a href="team_create.php" class="btn btn-secondary w-100">Create New Team</a>
+                    <p style="color: #718096; margin-bottom: 1.5rem;">Start your own team and invite others to join your mission.</p>
+                    <a href="team_create.php" class="btn btn-secondary" style="width: 100%; display: inline-block;">Create New Team</a>
                 </div>
             </div>
         <?php endif; ?>

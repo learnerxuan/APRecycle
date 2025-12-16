@@ -1,14 +1,13 @@
 <?php
 session_start();
 require_once '../php/config.php';
-$conn = getDBConnection(); // ✅ FIXED
+$conn = getDBConnection();
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'recycler') {
     header("Location: ../login.php");
     exit();
 }
 
-// Handle Join
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['team_id'])) {
     $team_id = intval($_POST['team_id']);
     $user_id = $_SESSION['user_id'];
@@ -22,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['team_id'])) {
     }
 }
 
-// Fetch Teams (Strict SQL Compatible)
 $search = $_GET['search'] ?? '';
 $search_term = "%$search%";
 
@@ -46,19 +44,19 @@ $teams = $stmt->get_result();
     <title>Join Team - APRecycle</title>
     <link rel="stylesheet" href="../css/styles.css">
     <style>
-        .team-list-item { background: white; padding: 1.5rem; margin-bottom: 1rem; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); border: 1px solid var(--color-gray-200); transition: transform 0.2s; }
-        .team-list-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .team-list-item { background: white; padding: 1.5rem; margin-bottom: 1rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; transition: transform 0.2s; }
+        .team-list-item:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
     <div class="container">
-        <a href="teams.php" class="btn btn-secondary mb-4">&larr; Back</a>
+        <a href="teams.php" class="btn btn-secondary" style="margin-bottom: 1.5rem; display: inline-block;">&larr; Back</a>
         
         <h2>Join a Team</h2>
         
-        <form method="GET" class="mb-4" style="display:flex; gap:10px;">
-            <input type="text" name="search" placeholder="Search teams..." value="<?php echo htmlspecialchars($search); ?>" style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ccc;">
+        <form method="GET" style="display:flex; gap:10px; margin-bottom: 1.5rem;">
+            <input type="text" name="search" placeholder="Search teams..." value="<?php echo htmlspecialchars($search); ?>" style="padding: 10px; width: 300px; border-radius: 6px; border: 1px solid #CBD5E0;">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
 
@@ -67,8 +65,8 @@ $teams = $stmt->get_result();
                 <div class="team-list-item">
                     <div>
                         <h3 style="margin:0; color: var(--color-primary);"><?php echo htmlspecialchars($team['team_name']); ?></h3>
-                        <small class="text-gray-500">👥 <?php echo $team['member_count']; ?> members &bull; 🏆 <?php echo number_format($team['points']); ?> pts</small>
-                        <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--color-gray-600);"><?php echo htmlspecialchars($team['description']); ?></p>
+                        <small style="color: #718096;">👥 <?php echo $team['member_count']; ?> members &bull; 🏆 <?php echo number_format($team['points']); ?> pts</small>
+                        <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: #4A5568;"><?php echo htmlspecialchars($team['description']); ?></p>
                     </div>
                     <form method="POST">
                         <input type="hidden" name="team_id" value="<?php echo $team['team_id']; ?>">
