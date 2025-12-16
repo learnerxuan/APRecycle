@@ -22,8 +22,6 @@ PREPARE stmt FROM @alter_sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
-DEALLOCATE PREPARE stmt;
-
 -- Add created_at to challenge table
 SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'challenge' AND COLUMN_NAME = 'created_at');
 SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `challenge` ADD COLUMN `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP', 'SELECT "Column created_at already exists"');
@@ -254,29 +252,29 @@ INSERT INTO `user_reward` (`user_id`, `reward_id`, `date_earned`) VALUES
 -- STEP 12: SAMPLE DATA - RECYCLING SUBMISSIONS
 -- ============================================
 
-INSERT INTO `recycling_submission` (`submission_id`, `user_id`, `bin_id`, `image_url`, `ai_confidence`, `status`, `moderator_feedback`, `created_at`) VALUES
+INSERT INTO `recycling_submission` (`submission_id`, `user_id`, `bin_id`, `image_url`, `ai_confidence`, `status`, `moderator_feedback`) VALUES
 -- Approved submissions
-(1, 6, 1, '/uploads/submissions/sub_001.jpg', 95.50, 'approved', 'Great job! Clear plastic bottle, properly cleaned.', '2024-11-01 09:00:00'),
-(2, 6, 2, '/uploads/submissions/sub_002.jpg', 92.30, 'approved', 'Perfect aluminum can recycling!', '2024-11-02 10:00:00'),
-(3, 7, 1, '/uploads/submissions/sub_003.jpg', 88.70, 'approved', 'Good work on the cardboard box.', '2024-11-01 11:00:00'),
-(4, 8, 3, '/uploads/submissions/sub_004.jpg', 96.20, 'approved', 'Excellent glass bottle condition.', '2024-11-02 12:00:00'),
-(5, 9, 2, '/uploads/submissions/sub_005.jpg', 91.50, 'approved', 'Nice plastic container!', '2024-11-01 15:00:00'),
-(6, 10, 4, '/uploads/submissions/sub_006.jpg', 94.80, 'approved', 'Great paper recycling.', '2024-11-03 11:00:00'),
+(1, 6, 1, '/uploads/submissions/sub_001.jpg', 95.50, 'approved', 'Great job! Clear plastic bottle, properly cleaned.'),
+(2, 6, 2, '/uploads/submissions/sub_002.jpg', 92.30, 'approved', 'Perfect aluminum can recycling!'),
+(3, 7, 1, '/uploads/submissions/sub_003.jpg', 88.70, 'approved', 'Good work on the cardboard box.'),
+(4, 8, 3, '/uploads/submissions/sub_004.jpg', 96.20, 'approved', 'Excellent glass bottle condition.'),
+(5, 9, 2, '/uploads/submissions/sub_005.jpg', 91.50, 'approved', 'Nice plastic container!'),
+(6, 10, 4, '/uploads/submissions/sub_006.jpg', 94.80, 'approved', 'Great paper recycling.'),
 
 -- Pending review (low AI confidence)
-(7, 11, 1, '/uploads/submissions/sub_007.jpg', 65.30, 'pending', NULL, '2024-11-10 09:00:00'),
-(8, 12, 2, '/uploads/submissions/sub_008.jpg', 72.10, 'pending', NULL, '2024-11-11 10:00:00'),
-(9, 13, 3, '/uploads/submissions/sub_009.jpg', 68.90, 'pending', NULL, '2024-11-12 11:00:00'),
+(7, 11, 1, '/uploads/submissions/sub_007.jpg', 65.30, 'pending', NULL),
+(8, 12, 2, '/uploads/submissions/sub_008.jpg', 72.10, 'pending', NULL),
+(9, 13, 3, '/uploads/submissions/sub_009.jpg', 68.90, 'pending', NULL),
 
 -- Rejected submission
-(10, 14, 1, '/uploads/submissions/sub_010.jpg', 45.20, 'rejected', 'Sorry, this item is not recyclable. Please check our educational content for proper waste identification.', '2024-11-05 14:00:00'),
+(10, 14, 1, '/uploads/submissions/sub_010.jpg', 45.20, 'rejected', 'Sorry, this item is not recyclable. Please check our educational content for proper waste identification.'),
 
 -- More approved submissions for variety
-(11, 6, 5, '/uploads/submissions/sub_011.jpg', 97.10, 'approved', 'Perfect e-waste submission!', '2024-11-15 10:00:00'),
-(12, 7, 6, '/uploads/submissions/sub_012.jpg', 93.40, 'approved', 'Good aluminum recycling.', '2024-11-16 11:00:00'),
-(13, 9, 7, '/uploads/submissions/sub_013.jpg', 89.80, 'approved', 'Great metal scrap!', '2024-11-17 12:00:00'),
-(14, 12, 8, '/uploads/submissions/sub_014.jpg', 95.60, 'approved', 'Excellent cardboard condition.', '2024-11-18 13:00:00'),
-(15, 15, 1, '/uploads/submissions/sub_015.jpg', 90.20, 'approved', 'Well done!', '2024-11-19 14:00:00');
+(11, 6, 5, '/uploads/submissions/sub_011.jpg', 97.10, 'approved', 'Perfect e-waste submission!'),
+(12, 7, 6, '/uploads/submissions/sub_012.jpg', 93.40, 'approved', 'Good aluminum recycling.'),
+(13, 9, 7, '/uploads/submissions/sub_013.jpg', 89.80, 'approved', 'Great metal scrap!'),
+(14, 12, 8, '/uploads/submissions/sub_014.jpg', 95.60, 'approved', 'Excellent cardboard condition.'),
+(15, 15, 1, '/uploads/submissions/sub_015.jpg', 90.20, 'approved', 'Well done!');
 
 -- ============================================
 -- STEP 13: SAMPLE DATA - SUBMISSION MATERIALS

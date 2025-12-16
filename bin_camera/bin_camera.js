@@ -33,7 +33,7 @@ function startCamera() {
     }
 
     navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-        .then(function(s) {
+        .then(function (s) {
             console.log('Camera started successfully');
             stream = s;
             video.srcObject = stream;
@@ -42,7 +42,7 @@ function startCamera() {
             captureBtn.textContent = 'Capture Waste Item';
             statusText.textContent = '✅ Camera ready! Position your waste item and click capture.';
         })
-        .catch(function(err) {
+        .catch(function (err) {
             console.error('Camera error:', err);
             statusText.textContent = '❌ Cannot access camera. Please allow camera permission.';
             captureBtn.disabled = false;
@@ -61,13 +61,13 @@ function sendToClassify(base64Image) {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.timeout = 60000; // 60 second timeout
 
-    xhr.ontimeout = function() {
+    xhr.ontimeout = function () {
         captureBtn.disabled = false;
         captureBtn.textContent = 'Capture Waste Item';
         statusText.textContent = '⏱️ Request timed out. Please try again.';
     };
 
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             try {
                 const response = JSON.parse(xhr.responseText);
@@ -104,7 +104,7 @@ function sendToClassify(base64Image) {
         }
     };
 
-    xhr.onerror = function() {
+    xhr.onerror = function () {
         captureBtn.disabled = false;
         captureBtn.textContent = 'Capture Waste Item';
         statusText.textContent = '❌ Connection failed. Check server.';
@@ -172,7 +172,7 @@ function verifyQR(qrCode) {
     xhr.open('POST', 'scan-user-qr.php', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             try {
                 const response = JSON.parse(xhr.responseText);
@@ -181,10 +181,10 @@ function verifyQR(qrCode) {
                 if (response.status === 'success') {
                     qrStatus.innerHTML = `✅ <strong>SUCCESS!</strong> Welcome ${response.username}!<br>+${response.points_awarded} points awarded! 🎉`;
 
-                    // Reset after 3 seconds
+                    // Reset after 5 seconds
                     setTimeout(() => {
                         resetToStart();
-                    }, 3000);
+                    }, 5000);
                 } else {
                     qrStatus.textContent = `❌ ${response.message}`;
                     // Restart QR scanner
@@ -228,11 +228,11 @@ function resetToStart() {
 }
 
 // Start on load
-window.onload = function() {
+window.onload = function () {
     initElements();
 
     // Setup capture button listener
-    captureBtn.addEventListener('click', function() {
+    captureBtn.addEventListener('click', function () {
         captureBtn.disabled = true;
         captureBtn.textContent = 'Processing...';
         statusText.textContent = '📸 Capturing and analyzing...';
