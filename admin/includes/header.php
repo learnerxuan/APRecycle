@@ -1,4 +1,5 @@
 <?php
+// Security Check: Ensure user is logged in and is an administrator
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrator') {
     header('Location: ../login.php');
     exit();
@@ -59,7 +60,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         .admin-logo-icon img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* or cover if you prefer */
+            object-fit: contain;
         }
 
         .admin-logo-text h1 {
@@ -247,11 +248,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
     <header class="admin-header">
-        <!-- Top Bar -->
         <div class="admin-header-top">
             <a href="dashboard.php" class="admin-logo">
                 <div class="admin-logo-icon">
-                    <img src="../assets/aprecycle-logo.png">
+                    <img src="../assets/aprecycle-logo.png" alt="APRecycle Logo">
                 </div>
                 <div class="admin-logo-text">
                     <h1>APRecycle Admin</h1>
@@ -276,7 +276,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
         <nav class="admin-nav">
             <ul class="admin-nav-tabs">
                 <li class="admin-nav-tab">
@@ -285,36 +284,58 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <span>Dashboard</span>
                     </a>
                 </li>
+                
                 <li class="admin-nav-tab">
                     <a href="challenges.php" class="admin-nav-link <?php echo $current_page == 'challenges.php' ? 'active' : ''; ?>">
                         <i class="fas fa-trophy admin-nav-icon"></i>
                         <span>Challenges</span>
                     </a>
                 </li>
+                
+                <?php 
+                    // Check if current page is Overview or any sub-page of Leaderboard
+                    $is_leaderboard = in_array($current_page, [
+                        'leaderboard_overview.php', 
+                        'leaderboard_individual.php', 
+                        'leaderboard_team.php', 
+                        'leaderboard_challenges.php' 
+                    ]); 
+                ?>
+                <li class="admin-nav-tab">
+                    <a href="leaderboard_overview.php" class="admin-nav-link <?php echo $is_leaderboard ? 'active' : ''; ?>">
+                        <i class="fas fa-medal admin-nav-icon"></i>
+                        <span>Leaderboard</span>
+                    </a>
+                </li>
+
                 <li class="admin-nav-tab">
                     <a href="moderators.php" class="admin-nav-link <?php echo $current_page == 'moderators.php' ? 'active' : ''; ?>">
                         <i class="fas fa-user-shield admin-nav-icon"></i>
                         <span>Moderators</span>
                     </a>
                 </li>
+
                 <li class="admin-nav-tab">
                     <a href="analytics.php" class="admin-nav-link <?php echo $current_page == 'analytics.php' ? 'active' : ''; ?>">
                         <i class="fas fa-chart-line admin-nav-icon"></i>
                         <span>Analytics</span>
                     </a>
                 </li>
+                
                 <li class="admin-nav-tab">
                     <a href="reports.php" class="admin-nav-link <?php echo $current_page == 'reports.php' ? 'active' : ''; ?>">
                         <i class="fas fa-file-alt admin-nav-icon"></i>
                         <span>Reports</span>
                     </a>
                 </li>
+                
                 <li class="admin-nav-tab">
                     <a href="users.php" class="admin-nav-link <?php echo $current_page == 'users.php' ? 'active' : ''; ?>">
                         <i class="fas fa-users admin-nav-icon"></i>
                         <span>Users</span>
                     </a>
                 </li>
+                
                 <li class="admin-nav-tab">
                     <a href="settings.php" class="admin-nav-link <?php echo $current_page == 'settings.php' ? 'active' : ''; ?>">
                         <i class="fas fa-cog admin-nav-icon"></i>
