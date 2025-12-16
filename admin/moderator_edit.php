@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if($error) echo "<p style='color: red;'>$error</p>"; ?>
             
             <form method="POST">
-                <label>Full Name</label>
+                <label>Username</label>
                 <input type="text" name="username" value="<?php echo htmlspecialchars($mod['username']); ?>" style="width:100%; padding:10px; margin-bottom:15px;" required>
                 
                 <label>Email Address</label>
