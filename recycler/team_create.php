@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../php/config.php';
+$conn = getDBConnection(); // ✅ FIXED
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'recycler') {
     header("Location: ../login.php");
@@ -59,10 +60,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <form method="POST">
                 <label>Team Name *</label>
-                <input type="text" name="team_name" class="form-control mb-4" required style="width:100%; padding:10px;">
+                <input type="text" name="team_name" class="form-control mb-4" required style="width:100%; padding:10px; margin-bottom:15px;">
                 
                 <label>Description</label>
-                <textarea name="description" class="form-control mb-4" rows="4" style="width:100%; padding:10px;"></textarea>
+                <textarea name="description" class="form-control mb-4" rows="4" style="width:100%; padding:10px; margin-bottom:15px;"></textarea>
                 
                 <button type="submit" class="btn btn-primary w-100">Create Team</button>
             </form>
