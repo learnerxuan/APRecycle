@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../php/config.php';
+$conn = getDBConnection(); // ✅ FIXED
 
 $error = '';
 
@@ -8,7 +9,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    // Generate a placeholder QR code string for now
     $qr_code = "QR_MOD_" . uniqid(); 
 
     // Check if email exists
@@ -48,14 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if($error) echo "<p style='color: red;'>$error</p>"; ?>
             
             <form method="POST">
-                <label>Full Name / Username</label>
-                <input type="text" name="username" class="form-control mb-4" style="width:100%; padding:10px;" required>
+                <label>Full Name</label>
+                <input type="text" name="username" style="width:100%; padding:10px; margin-bottom:15px;" required>
                 
                 <label>Email Address</label>
-                <input type="email" name="email" class="form-control mb-4" style="width:100%; padding:10px;" required>
+                <input type="email" name="email" style="width:100%; padding:10px; margin-bottom:15px;" required>
                 
                 <label>Password</label>
-                <input type="password" name="password" class="form-control mb-4" style="width:100%; padding:10px;" required>
+                <input type="password" name="password" style="width:100%; padding:10px; margin-bottom:15px;" required>
                 
                 <button type="submit" class="btn btn-primary w-100">Add Moderator</button>
             </form>

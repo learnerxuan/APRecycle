@@ -1,9 +1,7 @@
 <?php
 session_start();
 require_once '../php/config.php';
-
-// Check Admin Role (Assuming session check logic)
-// if ($_SESSION['role'] !== 'administrator') header("Location: ../login.php");
+$conn = getDBConnection(); // ✅ FIXED
 
 // Handle Remove Logic
 if (isset($_GET['delete'])) {
@@ -15,7 +13,6 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
-// Fetch Moderators
 $sql = "SELECT * FROM user WHERE role = 'eco-moderator' ORDER BY created_at DESC";
 $result = $conn->query($sql);
 ?>
@@ -34,12 +31,12 @@ $result = $conn->query($sql);
 <body>
     <?php include 'includes/header.php'; ?>
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4" style="display:flex; justify-content:space-between;">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
             <h2>Eco-Moderator Management</h2>
             <a href="moderator_add.php" class="btn btn-primary">+ Add New Moderator</a>
         </div>
 
-        <?php if ($result->num_rows > 0): ?>
+        <?php if ($result && $result->num_rows > 0): ?>
             <?php while($row = $result->fetch_assoc()): ?>
                 <div class="mod-card">
                     <div style="display: flex; gap: 1rem; align-items: center;">
@@ -51,7 +48,7 @@ $result = $conn->query($sql);
                     </div>
                     <div>
                         <a href="moderator_edit.php?id=<?php echo $row['user_id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
-                        <a href="?delete=<?php echo $row['user_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Remove this moderator? This cannot be undone.')">Remove</a>
+                        <a href="?delete=<?php echo $row['user_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Remove this moderator?')">Remove</a>
                     </div>
                 </div>
             <?php endwhile; ?>

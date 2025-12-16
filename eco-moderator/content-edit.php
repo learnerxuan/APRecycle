@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../php/config.php';
+$conn = getDBConnection(); // ✅ FIXED
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'eco-moderator') {
     header("Location: ../login.php");
@@ -10,16 +11,13 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'eco-moderator') {
 $id = $_GET['id'] ?? 0;
 $message = '';
 
-// Fetch existing data
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    $stmt = $conn->prepare("SELECT * FROM educational_content WHERE content_id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $content = $stmt->get_result()->fetch_assoc();
-    if (!$content) die("Content not found.");
-}
+// Fetch Data
+$stmt = $conn->prepare("SELECT * FROM educational_content WHERE content_id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$content = $stmt->get_result()->fetch_assoc();
+if (!$content) die("Content not found.");
 
-// Update data
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'];
     $body = $_POST['content_body'];

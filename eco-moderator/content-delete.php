@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../php/config.php';
+$conn = getDBConnection();
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'eco-moderator') {
     header("Location: ../login.php");

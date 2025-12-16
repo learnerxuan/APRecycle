@@ -1,8 +1,8 @@
 <?php
 session_start();
 require_once '../php/config.php';
+$conn = getDBConnection(); // ✅ FIXED
 
-// Handle Search and Filter
 $search = $_GET['search'] ?? '';
 $filter = $_GET['filter'] ?? 'All';
 
@@ -17,7 +17,6 @@ if ($filter !== 'All') {
 }
 
 $sql .= " ORDER BY created_at DESC";
-
 $stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$params);
 $stmt->execute();
@@ -28,73 +27,16 @@ $result = $stmt->get_result();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Educational Content - APRecycle</title>
     <link rel="stylesheet" href="../css/styles.css">
     <style>
-        .search-container {
-            background: var(--color-white);
-            padding: var(--space-6);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: var(--space-6);
-        }
-        
-        .filter-tags {
-            display: flex;
-            gap: var(--space-2);
-            flex-wrap: wrap;
-            margin-top: var(--space-4);
-        }
-
-        .filter-tag {
-            padding: var(--space-2) var(--space-4);
-            border: 1px solid var(--color-gray-300);
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            color: var(--color-gray-700);
-            transition: all 0.3s;
-        }
-
-        .filter-tag:hover, .filter-tag.active {
-            background: var(--color-primary-light);
-            color: white;
-            border-color: var(--color-primary-light);
-        }
-
-        .article-card {
-            background: var(--color-white);
-            padding: var(--space-4);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: var(--space-4);
-            display: flex;
-            gap: var(--space-4);
-            transition: transform 0.2s;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .article-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .article-thumb {
-            width: 100px;
-            height: 100px;
-            border-radius: var(--radius-md);
-            object-fit: cover;
-            background-color: var(--color-gray-100);
-        }
-
-        .article-badge {
-            background: var(--color-gray-200);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: var(--text-xs);
-            font-weight: 600;
-        }
+        .search-container { background: var(--color-white); padding: var(--space-6); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); margin-bottom: var(--space-6); }
+        .filter-tags { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-4); }
+        .filter-tag { padding: 8px 16px; border: 1px solid #ccc; border-radius: 8px; text-decoration: none; color: #333; transition: all 0.3s; }
+        .filter-tag:hover, .filter-tag.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .article-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 20px; text-decoration: none; color: inherit; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .article-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .article-thumb { width: 100px; height: 100px; border-radius: 8px; object-fit: cover; background: #eee; }
     </style>
 </head>
 <body>
@@ -106,7 +48,7 @@ $result = $stmt->get_result();
         <div class="search-container">
             <p class="mb-4 text-gray-600">Learn about recycling best practices and environmental impact.</p>
             <form action="" method="GET">
-                <input type="text" name="search" class="form-control" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px;" placeholder="Search articles..." value="<?php echo htmlspecialchars($search); ?>">
+                <input type="text" name="search" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px;" placeholder="Search articles..." value="<?php echo htmlspecialchars($search); ?>">
                 
                 <div class="filter-tags">
                     <?php 
@@ -124,7 +66,7 @@ $result = $stmt->get_result();
 
         <h3>Featured Articles</h3>
         <div class="articles-list">
-            <?php if ($result->num_rows > 0): ?>
+            <?php if ($result && $result->num_rows > 0): ?>
                 <?php while($row = $result->fetch_assoc()): ?>
                     <a href="educational_content_view.php?id=<?php echo $row['content_id']; ?>" class="article-card">
                         <?php 
@@ -133,12 +75,12 @@ $result = $stmt->get_result();
                         <img src="<?php echo htmlspecialchars($imgSrc); ?>" alt="Thumbnail" class="article-thumb">
                         
                         <div>
-                            <h4><?php echo htmlspecialchars($row['title']); ?></h4>
-                            <div class="mb-2">
-                                <span class="article-badge"><?php echo htmlspecialchars($row['tags']); ?></span>
-                                <small class="text-gray-500 ml-2">Published <?php echo date('M d, Y', strtotime($row['created_at'])); ?></small>
+                            <h4 style="margin: 0 0 10px 0;"><?php echo htmlspecialchars($row['title']); ?></h4>
+                            <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
+                                <span style="background: #eee; padding: 2px 8px; border-radius: 4px;"><?php echo htmlspecialchars($row['tags']); ?></span>
+                                &bull; Published <?php echo date('M d, Y', strtotime($row['created_at'])); ?>
                             </div>
-                            <p style="font-size: 0.9rem; color: var(--color-gray-600);">
+                            <p style="font-size: 0.9rem; color: var(--color-gray-600); margin: 0;">
                                 <?php echo substr(htmlspecialchars(strip_tags($row['content_body'])), 0, 120); ?>...
                             </p>
                         </div>
@@ -149,7 +91,6 @@ $result = $stmt->get_result();
             <?php endif; ?>
         </div>
     </div>
-
     <?php include 'includes/footer.php'; ?>
 </body>
 </html>
