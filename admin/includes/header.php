@@ -291,19 +291,40 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <span>Challenges</span>
                     </a>
                 </li>
-                
-                <?php 
+
+                <li class="admin-nav-tab">
+                    <a href="badges.php" class="admin-nav-link <?php echo $current_page == 'badges.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-medal admin-nav-icon"></i>
+                        <span>Badges</span>
+                    </a>
+                </li>
+
+                <li class="admin-nav-tab">
+                    <a href="rewards.php" class="admin-nav-link <?php echo $current_page == 'rewards.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-gift admin-nav-icon"></i>
+                        <span>Rewards</span>
+                    </a>
+                </li>
+
+                <li class="admin-nav-tab">
+                    <a href="materials.php" class="admin-nav-link <?php echo $current_page == 'materials.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-recycle admin-nav-icon"></i>
+                        <span>Materials</span>
+                    </a>
+                </li>
+
+                <?php
                     // Check if current page is Overview or any sub-page of Leaderboard
                     $is_leaderboard = in_array($current_page, [
-                        'leaderboard_overview.php', 
-                        'leaderboard_individual.php', 
-                        'leaderboard_team.php', 
-                        'leaderboard_challenges.php' 
-                    ]); 
+                        'leaderboard_overview.php',
+                        'leaderboard_individual.php',
+                        'leaderboard_team.php',
+                        'leaderboard_challenges.php'
+                    ]);
                 ?>
                 <li class="admin-nav-tab">
                     <a href="leaderboard_overview.php" class="admin-nav-link <?php echo $is_leaderboard ? 'active' : ''; ?>">
-                        <i class="fas fa-medal admin-nav-icon"></i>
+                        <i class="fas fa-ranking-star admin-nav-icon"></i>
                         <span>Leaderboard</span>
                     </a>
                 </li>
