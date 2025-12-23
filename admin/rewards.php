@@ -50,7 +50,7 @@ $rewards_query = "SELECT r.*,
                   LEFT JOIN user_reward ur ON r.reward_id = ur.reward_id
                   LEFT JOIN challenge c ON r.reward_id = c.reward_id
                   GROUP BY r.reward_id
-                  ORDER BY r.point_required ASC";
+                  ORDER BY r.reward_name ASC";
 $rewards_result = mysqli_query($conn, $rewards_query);
 
 // Get total count
@@ -355,9 +355,9 @@ include 'includes/header.php';
 
                 <div class="reward-meta">
                     <div class="reward-meta-item">
-                        <i class="fas fa-star"></i>
-                        <strong>Points:</strong>
-                        <span class="points-badge"><?php echo number_format($reward['point_required']); ?> pts</span>
+                        <i class="fas fa-trophy"></i>
+                        <strong>Type:</strong>
+                        <span>Challenge-only reward</span>
                     </div>
                     <div class="reward-meta-item">
                         <i class="fas fa-users"></i>

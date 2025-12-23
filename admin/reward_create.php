@@ -33,25 +33,21 @@ $page_title = $is_edit ? 'Edit Reward' : 'Create New Reward';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $reward_name = trim($_POST['reward_name']);
     $description = trim($_POST['description']);
-    $point_required = intval($_POST['point_required']);
 
     // Validation
     if (empty($reward_name) || empty($description)) {
         $error_message = "Please fill in all required fields.";
-    } elseif ($point_required < 0) {
-        $error_message = "Points required must be 0 or greater.";
     } else {
         if ($is_edit) {
             // Update existing reward
-            $update_query = "UPDATE reward SET reward_name = ?, point_required = ?, description = ? WHERE reward_id = ?";
+            $update_query = "UPDATE reward SET reward_name = ?, description = ? WHERE reward_id = ?";
             $stmt = mysqli_prepare($conn, $update_query);
-            mysqli_stmt_bind_param($stmt, "sisi", $reward_name, $point_required, $description, $reward_id);
+            mysqli_stmt_bind_param($stmt, "ssi", $reward_name, $description, $reward_id);
 
             if (mysqli_stmt_execute($stmt)) {
                 $success_message = "Reward updated successfully!";
                 // Refresh reward data
                 $reward['reward_name'] = $reward_name;
-                $reward['point_required'] = $point_required;
                 $reward['description'] = $description;
             } else {
                 $error_message = "Error updating reward: " . mysqli_error($conn);
@@ -59,15 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             mysqli_stmt_close($stmt);
         } else {
             // Insert new reward
-            $insert_query = "INSERT INTO reward (reward_name, point_required, description) VALUES (?, ?, ?)";
+            $insert_query = "INSERT INTO reward (reward_name, description) VALUES (?, ?)";
             $stmt = mysqli_prepare($conn, $insert_query);
-            mysqli_stmt_bind_param($stmt, "sis", $reward_name, $point_required, $description);
+            mysqli_stmt_bind_param($stmt, "ss", $reward_name, $description);
 
             if (mysqli_stmt_execute($stmt)) {
                 $success_message = "Reward created successfully!";
                 // Clear form
                 $reward_name = $description = '';
-                $point_required = 0;
             } else {
                 $error_message = "Error creating reward: " . mysqli_error($conn);
             }
@@ -286,7 +281,7 @@ include 'includes/header.php';
 <div class="info-box">
     <p>
         <i class="fas fa-info-circle"></i>
-        <span>Rewards can be redeemed by recyclers for their points. Create attractive rewards to keep your community engaged!</span>
+        <span>Rewards are ONLY awarded when completing challenges. Create physical prizes (e.g., tote bags, water bottles) that motivate users to join challenges!</span>
     </p>
 </div>
 
@@ -297,29 +292,17 @@ include 'includes/header.php';
             <label for="reward_name" class="required">Reward Name</label>
             <input type="text" id="reward_name" name="reward_name"
                 value="<?php echo $reward ? htmlspecialchars($reward['reward_name']) : (isset($reward_name) ? htmlspecialchars($reward_name) : ''); ?>"
-                placeholder="e.g., Free Coffee Voucher, Eco-Friendly Water Bottle" required>
-            <small>Choose an attractive name for this reward</small>
+                placeholder="e.g., APU Eco Tote Bag, Stainless Steel Water Bottle" required>
+            <small>Choose an attractive name for this challenge reward</small>
         </div>
 
         <!-- Description -->
         <div class="form-group">
             <label for="description" class="required">Description</label>
             <textarea id="description" name="description"
-                placeholder="Describe what this reward includes, terms and conditions, how to redeem..."
+                placeholder="Describe what this reward includes and how winners can claim it..."
                 required><?php echo $reward ? htmlspecialchars($reward['description']) : (isset($description) ? htmlspecialchars($description) : ''); ?></textarea>
-            <small>Provide clear details about what the reward is and how to claim it</small>
-        </div>
-
-        <!-- Point Requirement -->
-        <div class="form-group">
-            <label for="point_required" class="required">Points Required</label>
-            <input type="number" id="point_required" name="point_required"
-                value="<?php echo $reward ? $reward['point_required'] : (isset($point_required) ? $point_required : '100'); ?>"
-                min="0" step="10" required>
-            <small>
-                <i class="fas fa-star"></i>
-                Number of points needed to redeem this reward (e.g., 50, 200, 500)
-            </small>
+            <small>Provide clear details about the physical reward and collection process</small>
         </div>
 
         <!-- Form Actions -->
@@ -335,16 +318,7 @@ include 'includes/header.php';
 </div>
 
 <script>
-    // Form validation
-    document.querySelector('form').addEventListener('submit', function (e) {
-        const pointRequired = parseInt(document.getElementById('point_required').value);
-
-        if (pointRequired < 0) {
-            e.preventDefault();
-            alert('Points required must be 0 or greater!');
-            return false;
-        }
-    });
+    // No additional validation needed - rewards are challenge-only now
 </script>
 
 <?php

@@ -467,6 +467,21 @@ include 'includes/header.php';
                             <strong>Material:</strong>
                             <span><?php echo htmlspecialchars($challenge['material_name'] ?? 'All Materials'); ?></span>
                         </div>
+                        <div class="challenge-meta-item" style="border-top: 1px solid var(--color-gray-300); padding-top: var(--space-3); margin-top: var(--space-3);">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Complete By:</strong>
+                            <span>
+                                <?php
+                                if ($challenge['completion_type'] == 'quantity') {
+                                    echo "Recycle <strong>{$challenge['target_quantity']}</strong> items";
+                                } elseif ($challenge['completion_type'] == 'points') {
+                                    echo "Earn <strong>{$challenge['target_points']}</strong> points";
+                                } else {
+                                    echo "<strong>Just participate!</strong> (Submit 1 item)";
+                                }
+                                ?>
+                            </span>
+                        </div>
                         <?php if ($challenge['badge_name']): ?>
                             <div class="challenge-meta-item">
                                 <i class="fas fa-medal"></i>
@@ -549,6 +564,21 @@ include 'includes/header.php';
                             <i class="fas fa-recycle"></i>
                             <strong>Material:</strong>
                             <span><?php echo htmlspecialchars($challenge['material_name'] ?? 'All Materials'); ?></span>
+                        </div>
+                        <div class="challenge-meta-item" style="border-top: 1px solid var(--color-gray-300); padding-top: var(--space-3); margin-top: var(--space-3);">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Complete By:</strong>
+                            <span>
+                                <?php
+                                if ($challenge['completion_type'] == 'quantity') {
+                                    echo "Recycle <strong>{$challenge['target_quantity']}</strong> items";
+                                } elseif ($challenge['completion_type'] == 'points') {
+                                    echo "Earn <strong>{$challenge['target_points']}</strong> points";
+                                } else {
+                                    echo "<strong>Just participate!</strong> (Submit 1 item)";
+                                }
+                                ?>
+                            </span>
                         </div>
                         <?php if ($challenge['badge_name']): ?>
                             <div class="challenge-meta-item">

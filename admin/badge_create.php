@@ -33,24 +33,30 @@ $page_title = $is_edit ? 'Edit Badge' : 'Create New Badge';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $badge_name = trim($_POST['badge_name']);
     $description = trim($_POST['description']);
+    $badge_type = $_POST['badge_type'];
     $point_required = intval($_POST['point_required']);
 
     // Validation
-    if (empty($badge_name) || empty($description)) {
+    if (empty($badge_name) || empty($description) || empty($badge_type)) {
         $error_message = "Please fill in all required fields.";
     } elseif ($point_required < 0) {
         $error_message = "Points required must be 0 or greater.";
+    } elseif ($badge_type == 'milestone' && $point_required == 0) {
+        $error_message = "Milestone badges must have points required greater than 0.";
+    } elseif ($badge_type == 'challenge' && $point_required != 0) {
+        $error_message = "Challenge badges must have points required set to 0.";
     } else {
         if ($is_edit) {
             // Update existing badge
-            $update_query = "UPDATE badge SET badge_name = ?, point_required = ?, description = ? WHERE badge_id = ?";
+            $update_query = "UPDATE badge SET badge_name = ?, badge_type = ?, point_required = ?, description = ? WHERE badge_id = ?";
             $stmt = mysqli_prepare($conn, $update_query);
-            mysqli_stmt_bind_param($stmt, "sisi", $badge_name, $point_required, $description, $badge_id);
+            mysqli_stmt_bind_param($stmt, "ssisi", $badge_name, $badge_type, $point_required, $description, $badge_id);
 
             if (mysqli_stmt_execute($stmt)) {
                 $success_message = "Badge updated successfully!";
                 // Refresh badge data
                 $badge['badge_name'] = $badge_name;
+                $badge['badge_type'] = $badge_type;
                 $badge['point_required'] = $point_required;
                 $badge['description'] = $description;
             } else {
@@ -59,14 +65,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             mysqli_stmt_close($stmt);
         } else {
             // Insert new badge
-            $insert_query = "INSERT INTO badge (badge_name, point_required, description) VALUES (?, ?, ?)";
+            $insert_query = "INSERT INTO badge (badge_name, badge_type, point_required, description) VALUES (?, ?, ?, ?)";
             $stmt = mysqli_prepare($conn, $insert_query);
-            mysqli_stmt_bind_param($stmt, "sis", $badge_name, $point_required, $description);
+            mysqli_stmt_bind_param($stmt, "ssis", $badge_name, $badge_type, $point_required, $description);
 
             if (mysqli_stmt_execute($stmt)) {
                 $success_message = "Badge created successfully!";
                 // Clear form
                 $badge_name = $description = '';
+                $badge_type = 'challenge';
                 $point_required = 0;
             } else {
                 $error_message = "Error creating badge: " . mysqli_error($conn);
@@ -242,6 +249,23 @@ include 'includes/header.php';
         margin-top: 2px;
     }
 
+    select {
+        width: 100%;
+        padding: var(--space-3);
+        border: 2px solid var(--color-gray-300);
+        border-radius: var(--radius-md);
+        font-size: var(--text-base);
+        font-family: var(--font-sans);
+        transition: border-color 0.3s ease;
+        background: white;
+    }
+
+    select:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(45, 93, 63, 0.1);
+    }
+
     @media (max-width: 768px) {
         .form-actions {
             flex-direction: column;
@@ -286,7 +310,7 @@ include 'includes/header.php';
 <div class="info-box">
     <p>
         <i class="fas fa-info-circle"></i>
-        <span>Badges are awarded to recyclers who reach certain milestones. Create meaningful achievements to motivate your community!</span>
+        <span><strong>Milestone badges</strong> are auto-unlocked when users reach lifetime points. <strong>Challenge badges</strong> are only earned by completing specific challenges.</span>
     </p>
 </div>
 
@@ -297,8 +321,25 @@ include 'includes/header.php';
             <label for="badge_name" class="required">Badge Name</label>
             <input type="text" id="badge_name" name="badge_name"
                 value="<?php echo $badge ? htmlspecialchars($badge['badge_name']) : (isset($badge_name) ? htmlspecialchars($badge_name) : ''); ?>"
-                placeholder="e.g., Eco Warrior, Recycling Hero" required>
+                placeholder="e.g., Bronze Recycler, Plastic Free November Winner" required>
             <small>Choose a catchy, memorable name for this badge</small>
+        </div>
+
+        <!-- Badge Type -->
+        <div class="form-group">
+            <label for="badge_type" class="required">Badge Type</label>
+            <select id="badge_type" name="badge_type" required>
+                <option value="milestone" <?php echo ($badge && $badge['badge_type'] == 'milestone') || (isset($badge_type) && $badge_type == 'milestone') ? 'selected' : ''; ?>>
+                    Milestone Badge (Long-term, auto-unlock at points)
+                </option>
+                <option value="challenge" <?php echo ($badge && $badge['badge_type'] == 'challenge') || (isset($badge_type) && $badge_type == 'challenge') || !$badge ? 'selected' : ''; ?>>
+                    Challenge Badge (Short-term, only from challenges)
+                </option>
+            </select>
+            <small>
+                <i class="fas fa-trophy"></i>
+                <strong>Milestone:</strong> Auto-unlocked at lifetime points | <strong>Challenge:</strong> Only from completing specific challenges
+            </small>
         </div>
 
         <!-- Description -->
@@ -311,14 +352,14 @@ include 'includes/header.php';
         </div>
 
         <!-- Point Requirement -->
-        <div class="form-group">
-            <label for="point_required" class="required">Points Required</label>
+        <div class="form-group" id="point-required-group">
+            <label for="point_required" class="required">Points Required (for Milestone badges only)</label>
             <input type="number" id="point_required" name="point_required"
                 value="<?php echo $badge ? $badge['point_required'] : (isset($point_required) ? $point_required : '100'); ?>"
                 min="0" step="10" required>
-            <small>
+            <small id="point-help-text">
                 <i class="fas fa-star"></i>
-                Number of points a recycler needs to earn this badge (e.g., 100, 500, 1000)
+                Number of lifetime points needed to auto-unlock this milestone badge (e.g., 100, 500, 1000)
             </small>
         </div>
 
@@ -335,13 +376,49 @@ include 'includes/header.php';
 </div>
 
 <script>
+    // Dynamic form behavior based on badge type
+    const badgeTypeSelect = document.getElementById('badge_type');
+    const pointRequiredInput = document.getElementById('point_required');
+    const pointRequiredGroup = document.getElementById('point-required-group');
+    const pointHelpText = document.getElementById('point-help-text');
+
+    function updatePointField() {
+        const badgeType = badgeTypeSelect.value;
+
+        if (badgeType === 'milestone') {
+            pointRequiredInput.value = pointRequiredInput.value == '0' ? '100' : pointRequiredInput.value;
+            pointRequiredInput.min = '1';
+            pointHelpText.innerHTML = '<i class="fas fa-star"></i> Number of lifetime points needed to auto-unlock this milestone badge (e.g., 100, 500, 1000)';
+        } else {
+            pointRequiredInput.value = '0';
+            pointRequiredInput.min = '0';
+            pointHelpText.innerHTML = '<i class="fas fa-trophy"></i> Challenge badges are awarded when completing specific challenges (points should be 0)';
+        }
+    }
+
+    badgeTypeSelect.addEventListener('change', updatePointField);
+    updatePointField(); // Run on page load
+
     // Form validation
     document.querySelector('form').addEventListener('submit', function (e) {
-        const pointRequired = parseInt(document.getElementById('point_required').value);
+        const badgeType = badgeTypeSelect.value;
+        const pointRequired = parseInt(pointRequiredInput.value);
 
         if (pointRequired < 0) {
             e.preventDefault();
             alert('Points required must be 0 or greater!');
+            return false;
+        }
+
+        if (badgeType === 'milestone' && pointRequired === 0) {
+            e.preventDefault();
+            alert('Milestone badges must have points required greater than 0!');
+            return false;
+        }
+
+        if (badgeType === 'challenge' && pointRequired !== 0) {
+            e.preventDefault();
+            alert('Challenge badges must have points required set to 0!');
             return false;
         }
     });

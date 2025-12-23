@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_challenge_id']))
     $check->bind_param("ii", $user_id, $challenge_id);
     $check->execute();
     if ($check->get_result()->num_rows == 0) {
-        $stmt = $conn->prepare("INSERT INTO user_challenge (user_id, challenge_id, challenge_point, is_completed) VALUES (?, ?, 0, 0)");
+        $stmt = $conn->prepare("INSERT INTO user_challenge (user_id, challenge_id, challenge_point, challenge_quantity, is_completed) VALUES (?, ?, 0, 0, 0)");
         $stmt->bind_param("ii", $user_id, $challenge_id);
         if ($stmt->execute()) {
             $message = "You have successfully joined the challenge!";
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_challenge_id']))
     $check->close();
 }
 
-$my_sql = "SELECT c.*, uc.challenge_point, uc.is_completed, b.badge_name, b.point_required AS target_points, r.reward_name, m.material_name
+$my_sql = "SELECT c.*, uc.challenge_point, uc.challenge_quantity, uc.is_completed, b.badge_name, r.reward_name, m.material_name
            FROM user_challenge uc
            JOIN challenge c ON uc.challenge_id = c.challenge_id
            LEFT JOIN badge b ON c.badge_id = b.badge_id
@@ -346,19 +346,45 @@ require_once 'includes/header.php';
                     <?php echo htmlspecialchars($row['description']); ?>
                 </p>
 
-                <div class="progress-container">
-                    <div class="progress-info">
-                        <span>Progress</span>
-                        <span><strong><?php echo $row['challenge_point']; ?></strong> / <?php echo $row['target_points']; ?> pts</span>
+                <?php if ($row['completion_type'] == 'participation'): ?>
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span>Progress</span>
+                            <span><strong>✓ Joined!</strong> Submit 1 item to complete</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%;"></div>
+                        </div>
                     </div>
-                    <?php
-                    $target = $row['target_points'] > 0 ? $row['target_points'] : 100;
-                    $percent = min(100, ($row['challenge_point'] / $target) * 100);
-                    ?>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: <?php echo $percent; ?>%;"></div>
+                <?php elseif ($row['completion_type'] == 'quantity'): ?>
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span>Progress</span>
+                            <span><strong><?php echo $row['challenge_quantity']; ?></strong> / <?php echo $row['target_quantity']; ?> items</span>
+                        </div>
+                        <?php
+                        $target = $row['target_quantity'] > 0 ? $row['target_quantity'] : 10;
+                        $percent = min(100, ($row['challenge_quantity'] / $target) * 100);
+                        ?>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: <?php echo $percent; ?>%;"></div>
+                        </div>
                     </div>
-                </div>
+                <?php else: // points-based ?>
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span>Progress</span>
+                            <span><strong><?php echo $row['challenge_point']; ?></strong> / <?php echo $row['target_points']; ?> pts</span>
+                        </div>
+                        <?php
+                        $target = $row['target_points'] > 0 ? $row['target_points'] : 100;
+                        $percent = min(100, ($row['challenge_point'] / $target) * 100);
+                        ?>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: <?php echo $percent; ?>%;"></div>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <div class="challenge-meta">
                     <?php if ($row['material_name']): ?>
@@ -379,10 +405,20 @@ require_once 'includes/header.php';
                     </div>
                 </div>
 
-                <?php if ($row['reward_name']): ?>
+                <?php if ($row['reward_name'] || $row['badge_name']): ?>
                     <div class="challenge-reward">
-                        <i class="fas fa-gift"></i>
-                        Reward: <?php echo htmlspecialchars($row['reward_name']); ?>
+                        <?php if ($row['badge_name']): ?>
+                            <div style="margin-bottom: 4px;">
+                                <i class="fas fa-medal"></i>
+                                Badge: <?php echo htmlspecialchars($row['badge_name']); ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($row['reward_name']): ?>
+                            <div>
+                                <i class="fas fa-gift"></i>
+                                Reward: <?php echo htmlspecialchars($row['reward_name']); ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -426,12 +462,34 @@ require_once 'includes/header.php';
                         <i class="fas fa-calendar-alt"></i>
                         Ends <?php echo date('M d', strtotime($row['end_date'])); ?>
                     </div>
+                    <div class="meta-item">
+                        <i class="fas fa-check-circle"></i>
+                        <?php
+                        if ($row['completion_type'] == 'quantity') {
+                            echo "Recycle {$row['target_quantity']} items";
+                        } elseif ($row['completion_type'] == 'points') {
+                            echo "Earn {$row['target_points']} pts";
+                        } else {
+                            echo "Just participate!";
+                        }
+                        ?>
+                    </div>
                 </div>
 
-                <?php if ($row['reward_name']): ?>
+                <?php if ($row['reward_name'] || $row['badge_name']): ?>
                     <div class="challenge-reward">
-                        <i class="fas fa-gift"></i>
-                        Reward: <?php echo htmlspecialchars($row['reward_name']); ?>
+                        <?php if ($row['badge_name']): ?>
+                            <div style="margin-bottom: 4px;">
+                                <i class="fas fa-medal"></i>
+                                Badge: <?php echo htmlspecialchars($row['badge_name']); ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($row['reward_name']): ?>
+                            <div>
+                                <i class="fas fa-gift"></i>
+                                Reward: <?php echo htmlspecialchars($row['reward_name']); ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
 

@@ -25,6 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $badge_id = !empty($_POST['badge_id']) ? intval($_POST['badge_id']) : null;
     $reward_id = !empty($_POST['reward_id']) ? intval($_POST['reward_id']) : null;
     $target_material_id = !empty($_POST['target_material_id']) ? intval($_POST['target_material_id']) : null;
+    $completion_type = $_POST['completion_type'];
+    $target_quantity = intval($_POST['target_quantity']);
+    $target_points = intval($_POST['target_points']);
 
     // Validation
     if (empty($title) || empty($description) || empty($start_date) || empty($end_date)) {
@@ -33,21 +36,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error_message = "End date must be after start date.";
     } elseif ($point_multiplier <= 0) {
         $error_message = "Point multiplier must be greater than 0.";
+    } elseif ($completion_type == 'quantity' && $target_quantity <= 0) {
+        $error_message = "Target quantity must be greater than 0 for quantity-based challenges.";
+    } elseif ($completion_type == 'points' && $target_points <= 0) {
+        $error_message = "Target points must be greater than 0 for points-based challenges.";
     } else {
         // Update challenge
-        $update_query = "UPDATE challenge SET 
-                        title = ?, 
-                        description = ?, 
-                        start_date = ?, 
-                        end_date = ?, 
-                        point_multiplier = ?, 
-                        badge_id = ?, 
-                        reward_id = ?, 
-                        target_material_id = ? 
+        $update_query = "UPDATE challenge SET
+                        title = ?,
+                        description = ?,
+                        start_date = ?,
+                        end_date = ?,
+                        point_multiplier = ?,
+                        badge_id = ?,
+                        reward_id = ?,
+                        target_material_id = ?,
+                        target_quantity = ?,
+                        target_points = ?,
+                        completion_type = ?
                         WHERE challenge_id = ?";
 
         $stmt = mysqli_prepare($conn, $update_query);
-        mysqli_stmt_bind_param($stmt, "ssssdiisi", $title, $description, $start_date, $end_date, $point_multiplier, $badge_id, $reward_id, $target_material_id, $challenge_id);
+        mysqli_stmt_bind_param($stmt, "ssssdiiiiisi", $title, $description, $start_date, $end_date, $point_multiplier, $badge_id, $reward_id, $target_material_id, $target_quantity, $target_points, $completion_type, $challenge_id);
 
         if (mysqli_stmt_execute($stmt)) {
             $success_message = "Challenge updated successfully!";
@@ -82,6 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     $badge_id = $challenge['badge_id'];
     $reward_id = $challenge['reward_id'];
     $target_material_id = $challenge['target_material_id'];
+    $completion_type = $challenge['completion_type'];
+    $target_quantity = $challenge['target_quantity'];
+    $target_points = $challenge['target_points'];
 }
 
 // Fetch available badges
@@ -405,6 +418,58 @@ include 'includes/header.php';
             </small>
         </div>
 
+        <!-- Completion Criteria Section -->
+        <div style="background: var(--color-gray-50); padding: var(--space-6); border-radius: var(--radius-lg); margin-bottom: var(--space-6); border: 2px solid var(--color-gray-200);">
+            <h3 style="margin: 0 0 var(--space-4) 0; color: var(--color-gray-800); font-size: var(--text-lg); display: flex; align-items: center; gap: var(--space-2);">
+                <i class="fas fa-check-circle" style="color: var(--color-success);"></i>
+                Challenge Completion Criteria
+            </h3>
+
+            <!-- Completion Type -->
+            <div class="form-group">
+                <label for="completion_type" class="required">How do users complete this challenge?</label>
+                <select id="completion_type" name="completion_type" required>
+                    <option value="quantity" <?php echo (isset($completion_type) && $completion_type == 'quantity') ? 'selected' : ''; ?>>
+                        Quantity-Based (Recycle X number of items)
+                    </option>
+                    <option value="points" <?php echo (isset($completion_type) && $completion_type == 'points') ? 'selected' : ''; ?>>
+                        Points-Based (Earn X points during challenge)
+                    </option>
+                    <option value="participation" <?php echo (isset($completion_type) && $completion_type == 'participation') ? 'selected' : ''; ?>>
+                        Participation (Just submit 1 item)
+                    </option>
+                </select>
+                <small>
+                    <i class="fas fa-info-circle"></i>
+                    Choose how users will complete this challenge to earn the badge/reward
+                </small>
+            </div>
+
+            <!-- Target Quantity -->
+            <div class="form-group" id="target-quantity-group">
+                <label for="target_quantity">Target Quantity (number of items)</label>
+                <input type="number" id="target_quantity" name="target_quantity"
+                    value="<?php echo isset($target_quantity) ? $target_quantity : '10'; ?>"
+                    min="1" step="1">
+                <small>
+                    <i class="fas fa-hashtag"></i>
+                    How many items must users recycle to complete this challenge?
+                </small>
+            </div>
+
+            <!-- Target Points -->
+            <div class="form-group" id="target-points-group">
+                <label for="target_points">Target Points (during challenge period)</label>
+                <input type="number" id="target_points" name="target_points"
+                    value="<?php echo isset($target_points) ? $target_points : '100'; ?>"
+                    min="1" step="10">
+                <small>
+                    <i class="fas fa-star"></i>
+                    How many points must users earn DURING the challenge period to complete it?
+                </small>
+            </div>
+        </div>
+
         <!-- Form Actions -->
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">
@@ -418,11 +483,49 @@ include 'includes/header.php';
 </div>
 
 <script>
+    // Dynamic form behavior based on completion type
+    const completionTypeSelect = document.getElementById('completion_type');
+    const targetQuantityGroup = document.getElementById('target-quantity-group');
+    const targetPointsGroup = document.getElementById('target-points-group');
+    const targetQuantityInput = document.getElementById('target_quantity');
+    const targetPointsInput = document.getElementById('target_points');
+
+    function updateCompletionFields() {
+        const completionType = completionTypeSelect.value;
+
+        if (completionType === 'quantity') {
+            targetQuantityGroup.style.display = 'block';
+            targetPointsGroup.style.display = 'none';
+            targetQuantityInput.required = true;
+            targetPointsInput.required = false;
+            targetPointsInput.value = '0';
+        } else if (completionType === 'points') {
+            targetQuantityGroup.style.display = 'none';
+            targetPointsGroup.style.display = 'block';
+            targetQuantityInput.required = false;
+            targetPointsInput.required = true;
+            targetQuantityInput.value = '0';
+        } else { // participation
+            targetQuantityGroup.style.display = 'none';
+            targetPointsGroup.style.display = 'none';
+            targetQuantityInput.required = false;
+            targetPointsInput.required = false;
+            targetQuantityInput.value = '0';
+            targetPointsInput.value = '0';
+        }
+    }
+
+    completionTypeSelect.addEventListener('change', updateCompletionFields);
+    updateCompletionFields(); // Run on page load
+
     // Form validation
     document.querySelector('form').addEventListener('submit', function (e) {
         const startDate = new Date(document.getElementById('start_date').value);
         const endDate = new Date(document.getElementById('end_date').value);
         const multiplier = parseFloat(document.getElementById('point_multiplier').value);
+        const completionType = completionTypeSelect.value;
+        const targetQuantity = parseInt(targetQuantityInput.value);
+        const targetPoints = parseInt(targetPointsInput.value);
 
         if (endDate <= startDate) {
             e.preventDefault();
@@ -433,6 +536,18 @@ include 'includes/header.php';
         if (multiplier <= 0 || multiplier > 10) {
             e.preventDefault();
             alert('Point multiplier must be between 0.1 and 10!');
+            return false;
+        }
+
+        if (completionType === 'quantity' && targetQuantity <= 0) {
+            e.preventDefault();
+            alert('Target quantity must be greater than 0 for quantity-based challenges!');
+            return false;
+        }
+
+        if (completionType === 'points' && targetPoints <= 0) {
+            e.preventDefault();
+            alert('Target points must be greater than 0 for points-based challenges!');
             return false;
         }
     });

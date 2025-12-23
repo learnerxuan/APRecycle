@@ -50,7 +50,7 @@ $badges_query = "SELECT b.*,
                  LEFT JOIN user_badge ub ON b.badge_id = ub.badge_id
                  LEFT JOIN challenge c ON b.badge_id = c.badge_id
                  GROUP BY b.badge_id
-                 ORDER BY b.point_required ASC";
+                 ORDER BY b.badge_type ASC, b.point_required ASC";
 $badges_result = mysqli_query($conn, $badges_query);
 
 // Get total count
@@ -269,6 +269,26 @@ include 'includes/header.php';
         font-size: var(--text-sm);
     }
 
+    .badge-type-tag {
+        display: inline-block;
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-full);
+        font-weight: 700;
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        margin-bottom: var(--space-3);
+    }
+
+    .badge-type-milestone {
+        background: linear-gradient(135deg, #FCD34D, #F59E0B);
+        color: #78350F;
+    }
+
+    .badge-type-challenge {
+        background: linear-gradient(135deg, #A78BFA, #8B5CF6);
+        color: #4C1D95;
+    }
+
     .empty-state {
         text-align: center;
         padding: var(--space-12) var(--space-8);
@@ -343,6 +363,9 @@ include 'includes/header.php';
         <?php while ($badge = mysqli_fetch_assoc($badges_result)): ?>
             <div class="badge-card">
                 <div class="badge-card-header">
+                    <span class="badge-type-tag badge-type-<?php echo $badge['badge_type']; ?>">
+                        <?php echo $badge['badge_type'] == 'milestone' ? '⭐ Milestone' : '🏆 Challenge'; ?>
+                    </span>
                     <div class="badge-icon">
                         <i class="fas fa-medal"></i>
                     </div>
@@ -354,11 +377,19 @@ include 'includes/header.php';
                 </p>
 
                 <div class="badge-meta">
-                    <div class="badge-meta-item">
-                        <i class="fas fa-star"></i>
-                        <strong>Points:</strong>
-                        <span class="points-badge"><?php echo number_format($badge['point_required']); ?> pts</span>
-                    </div>
+                    <?php if ($badge['badge_type'] == 'milestone'): ?>
+                        <div class="badge-meta-item">
+                            <i class="fas fa-star"></i>
+                            <strong>Points:</strong>
+                            <span class="points-badge"><?php echo number_format($badge['point_required']); ?> pts</span>
+                        </div>
+                    <?php else: ?>
+                        <div class="badge-meta-item">
+                            <i class="fas fa-trophy"></i>
+                            <strong>Type:</strong>
+                            <span>Challenge-only badge</span>
+                        </div>
+                    <?php endif; ?>
                     <div class="badge-meta-item">
                         <i class="fas fa-users"></i>
                         <strong>Users Earned:</strong>

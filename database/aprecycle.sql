@@ -31,7 +31,8 @@ DROP TABLE IF EXISTS `badge`;
 CREATE TABLE IF NOT EXISTS `badge` (
   `badge_id` int NOT NULL AUTO_INCREMENT,
   `badge_name` varchar(100) NOT NULL,
-  `point_required` int NOT NULL,
+  `point_required` int NOT NULL DEFAULT '0' COMMENT '0 = challenge-only badge, >0 = milestone badge (auto-unlock at this lifetime points)',
+  `badge_type` enum('milestone','challenge') NOT NULL DEFAULT 'challenge' COMMENT 'milestone = auto-unlock at points, challenge = only from completing challenges',
   `description` text NOT NULL,
   PRIMARY KEY (`badge_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -49,12 +50,18 @@ CREATE TABLE IF NOT EXISTS `challenge` (
   `description` text NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
-  `badge_id` int DEFAULT NULL,
-  `reward_id` int DEFAULT NULL,
-  `point_multiplier` int NOT NULL,
+  `badge_id` int DEFAULT NULL COMMENT 'Challenge-specific badge (awarded on completion)',
+  `reward_id` int DEFAULT NULL COMMENT 'Challenge-specific reward (awarded on completion)',
+  `point_multiplier` decimal(3,1) NOT NULL DEFAULT '1.0',
+  `target_material_id` int DEFAULT NULL COMMENT 'Specific material for smart challenges',
+  `target_quantity` int NOT NULL DEFAULT '0' COMMENT 'Number of items to recycle (for quantity-based challenges)',
+  `target_points` int NOT NULL DEFAULT '0' COMMENT 'Points to earn during challenge period (for points-based challenges)',
+  `completion_type` enum('quantity','points','participation') NOT NULL DEFAULT 'quantity' COMMENT 'How to complete: quantity=recycle X items, points=earn X points, participation=join+submit 1 item',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`challenge_id`),
   KEY `badge_id` (`badge_id`),
-  KEY `reward_id` (`reward_id`)
+  KEY `reward_id` (`reward_id`),
+  KEY `target_material_id` (`target_material_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -135,10 +142,9 @@ DROP TABLE IF EXISTS `reward`;
 CREATE TABLE IF NOT EXISTS `reward` (
   `reward_id` int NOT NULL AUTO_INCREMENT,
   `reward_name` varchar(100) NOT NULL,
-  `point_required` int NOT NULL,
-  `description` text NOT NULL,
+  `description` text NOT NULL COMMENT 'Physical items awarded when completing challenges',
   PRIMARY KEY (`reward_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Rewards are ONLY from challenges (no point_required)';
 
 -- --------------------------------------------------------
 
@@ -218,7 +224,9 @@ DROP TABLE IF EXISTS `user_challenge`;
 CREATE TABLE IF NOT EXISTS `user_challenge` (
   `user_id` int NOT NULL,
   `challenge_id` int NOT NULL,
-  `challenge_point` int NOT NULL DEFAULT '0',
+  `challenge_point` int NOT NULL DEFAULT '0' COMMENT 'Points earned during this challenge period',
+  `challenge_quantity` int NOT NULL DEFAULT '0' COMMENT 'Number of items recycled during this challenge',
+  `is_completed` tinyint(1) NOT NULL DEFAULT '0',
   `date_joined` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`,`challenge_id`),
   KEY `challenge_id` (`challenge_id`)
@@ -248,7 +256,8 @@ CREATE TABLE IF NOT EXISTS `user_reward` (
 --
 ALTER TABLE `challenge`
   ADD CONSTRAINT `challenge_ibfk_1` FOREIGN KEY (`badge_id`) REFERENCES `badge` (`badge_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `challenge_ibfk_2` FOREIGN KEY (`reward_id`) REFERENCES `reward` (`reward_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `challenge_ibfk_2` FOREIGN KEY (`reward_id`) REFERENCES `reward` (`reward_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `challenge_ibfk_3` FOREIGN KEY (`target_material_id`) REFERENCES `material` (`material_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `educational_content`

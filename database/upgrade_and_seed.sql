@@ -36,6 +36,48 @@ PREPARE stmt FROM @alter_sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
+-- Add challenge_quantity to user_challenge table (tracks items recycled during challenge)
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'user_challenge' AND COLUMN_NAME = 'challenge_quantity');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `user_challenge` ADD COLUMN `challenge_quantity` INT NOT NULL DEFAULT 0 COMMENT "Number of items recycled during this challenge" AFTER `challenge_point`', 'SELECT "Column challenge_quantity already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Add target_quantity to challenge table (for quantity-based challenges)
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'challenge' AND COLUMN_NAME = 'target_quantity');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `challenge` ADD COLUMN `target_quantity` INT NOT NULL DEFAULT 0 COMMENT "Number of items to recycle for completion"', 'SELECT "Column target_quantity already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Add target_points to challenge table (for points-based challenges)
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'challenge' AND COLUMN_NAME = 'target_points');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `challenge` ADD COLUMN `target_points` INT NOT NULL DEFAULT 0 COMMENT "Points needed during challenge period for completion"', 'SELECT "Column target_points already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Add completion_type to challenge table
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'challenge' AND COLUMN_NAME = 'completion_type');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `challenge` ADD COLUMN `completion_type` ENUM("quantity", "points", "participation") NOT NULL DEFAULT "quantity" COMMENT "How to complete: quantity=recycle X items, points=earn X points, participation=join+submit 1 item"', 'SELECT "Column completion_type already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Remove point_required from reward table (rewards only from challenges)
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'reward' AND COLUMN_NAME = 'point_required');
+SET @alter_sql = IF(@col_exists = 1, 'ALTER TABLE `reward` DROP COLUMN `point_required`', 'SELECT "Column point_required already removed"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Add badge_type to badge table
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'badge' AND COLUMN_NAME = 'badge_type');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `badge` ADD COLUMN `badge_type` ENUM("milestone", "challenge") NOT NULL DEFAULT "challenge" COMMENT "milestone=auto-unlock at points, challenge=only from completing challenges" AFTER `point_required`', 'SELECT "Column badge_type already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
 -- ============================================
 -- STEP 2: SAMPLE DATA - MATERIALS
 -- ============================================
@@ -69,34 +111,42 @@ INSERT INTO `recycling_bin` (`bin_id`, `bin_name`, `bin_location`) VALUES
 -- ============================================
 -- STEP 4: SAMPLE DATA - BADGES
 -- ============================================
+-- NOTE: Two types of badges:
+-- 1. MILESTONE (badge_type='milestone', point_required > 0): Auto-unlock when user reaches lifetime points
+-- 2. CHALLENGE (badge_type='challenge', point_required = 0): Only earned by completing specific challenges
 
-INSERT INTO `badge` (`badge_id`, `badge_name`, `point_required`, `description`) VALUES
-(1, 'Eco Warrior', 100, 'Earned by recycling your first 100 points worth of materials'),
-(2, 'Green Champion', 500, 'Awarded for reaching 500 lifetime points - a true environmental champion!'),
-(3, 'Sustainability Hero', 1000, 'Elite status achieved at 1000 points - leading the way to a greener future'),
-(4, 'Plastic Crusher', 200, 'Specialized in plastic recycling - 50+ plastic items recycled'),
-(5, 'Metal Master', 200, 'Expert in metal recycling - 30+ metal items recycled'),
-(6, 'Paper Pioneer', 150, 'Dedicated paper recycler - 40+ paper items recycled'),
-(7, 'Week Streak', 50, '7-day recycling streak maintained'),
-(8, 'Month Streak', 200, '30-day recycling streak maintained'),
-(9, 'Team Player', 100, 'Active team member contributing 100+ team points'),
-(10, 'Challenge Master', 300, 'Completed 5 recycling challenges successfully');
+INSERT INTO `badge` (`badge_id`, `badge_name`, `point_required`, `badge_type`, `description`) VALUES
+-- MILESTONE BADGES (Auto-unlock at lifetime points)
+(1, 'Bronze Recycler', 100, 'milestone', 'Earned by reaching 100 lifetime points - your recycling journey begins!'),
+(2, 'Silver Recycler', 500, 'milestone', 'Reached 500 lifetime points - a dedicated environmental champion!'),
+(3, 'Gold Recycler', 1000, 'milestone', 'Elite status achieved at 1000 lifetime points - leading the green revolution!'),
+(4, 'Platinum Recycler', 2500, 'milestone', 'Legendary status! 2500+ lifetime points - ultimate recycling master'),
+
+-- CHALLENGE-SPECIFIC BADGES (Only from completing challenges)
+(5, 'Plastic Free November Winner', 0, 'challenge', 'Completed the Plastic Free November challenge'),
+(6, 'E-Waste Hero', 0, 'challenge', 'Successfully completed the E-Waste Drive challenge'),
+(7, 'Earth Week Champion', 0, 'challenge', 'Participated and completed Earth Week Challenge'),
+(8, 'Paper Saving Pioneer', 0, 'challenge', 'Completed the Paper Recycling Month challenge'),
+(9, 'Aluminum Can Crusher', 0, 'challenge', 'Completed the Aluminum Can Drive challenge'),
+(10, 'Welcome Badge', 0, 'challenge', 'Completed your first challenge - welcome to APRecycle!');
 
 -- ============================================
 -- STEP 5: SAMPLE DATA - REWARDS
 -- ============================================
+-- NOTE: Rewards are ONLY from challenges (no point_required)
+-- They are physical items awarded when users complete specific challenges
 
-INSERT INTO `reward` (`reward_id`, `reward_name`, `point_required`, `description`) VALUES
-(1, 'APU Eco Tote Bag', 100, 'Reusable canvas tote bag with APU Recycle logo'),
-(2, 'Stainless Steel Water Bottle', 250, 'Premium 500ml stainless steel water bottle'),
-(3, 'Bamboo Cutlery Set', 150, 'Eco-friendly bamboo cutlery with carrying case'),
-(4, 'APU Hoodie (Recycled Material)', 500, 'Limited edition hoodie made from recycled plastic bottles'),
-(5, 'Wireless Earbuds', 1000, 'Premium wireless earbuds - top tier reward!'),
-(6, 'Plant Starter Kit', 80, 'Mini indoor plant kit with pot and seeds'),
-(7, 'Eco Journal & Pen', 120, 'Recycled paper journal with bamboo pen'),
-(8, 'Campus Cafeteria Voucher (RM20)', 200, 'RM20 credit for campus cafeteria'),
-(9, 'Portable Solar Charger', 400, 'Compact solar-powered phone charger'),
-(10, 'APU Laptop Backpack', 600, 'Durable laptop backpack with recycled materials');
+INSERT INTO `reward` (`reward_id`, `reward_name`, `description`) VALUES
+(1, 'APU Eco Tote Bag', 'Reusable canvas tote bag with APU Recycle logo'),
+(2, 'Stainless Steel Water Bottle', 'Premium 500ml stainless steel water bottle'),
+(3, 'Bamboo Cutlery Set', 'Eco-friendly bamboo cutlery with carrying case'),
+(4, 'APU Hoodie (Recycled Material)', 'Limited edition hoodie made from recycled plastic bottles'),
+(5, 'Wireless Earbuds', 'Premium wireless earbuds - top tier reward!'),
+(6, 'Plant Starter Kit', 'Mini indoor plant kit with pot and seeds'),
+(7, 'Eco Journal & Pen', 'Recycled paper journal with bamboo pen'),
+(8, 'Campus Cafeteria Voucher (RM20)', 'RM20 credit for campus cafeteria'),
+(9, 'Portable Solar Charger', 'Compact solar-powered phone charger'),
+(10, 'APU Laptop Backpack', 'Durable laptop backpack with recycled materials');
 
 -- ============================================
 -- STEP 6: SAMPLE DATA - TEAMS
@@ -165,20 +215,23 @@ WHERE role = 'recycler';
 -- ============================================
 -- STEP 9: SAMPLE DATA - CHALLENGES
 -- ============================================
+-- NOTE: Two types of badges/rewards in this system:
+-- 1. MILESTONE BADGES/REWARDS - Auto-unlocked when user reaches point_required (e.g., badge.point_required = 500)
+-- 2. CHALLENGE BADGES/REWARDS - Awarded when challenge is completed (based on target_quantity/target_points/completion_type)
 
-INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `end_date`, `badge_id`, `reward_id`, `point_multiplier`, `target_material_id`) VALUES
--- Active Challenges
-(1, 'Plastic Free November', 'Join us in reducing plastic waste this November! Recycle at least 20 plastic items to complete this challenge and earn double points on all plastic recycling.', '2024-11-01', '2024-11-30', 4, 2, 2.0, 1),
-(2, 'E-Waste Drive December', 'Bring your old electronics! This month we focus on e-waste recycling. Recycle any e-waste item and get 1.5x points plus a chance to win awesome rewards.', '2024-12-01', '2024-12-31', 6, 5, 1.5, 6),
+INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `end_date`, `badge_id`, `reward_id`, `point_multiplier`, `target_material_id`, `target_quantity`, `target_points`, `completion_type`) VALUES
+-- Active Challenges (quantity-based)
+(1, 'Plastic Free November', 'Join us in reducing plastic waste this November! Recycle at least 20 plastic items to complete this challenge and earn the Plastic Free November Winner badge plus Stainless Steel Water Bottle reward!', '2024-11-01', '2024-11-30', 5, 2, 2.0, 1, 20, 0, 'quantity'),
+(2, 'E-Waste Drive December', 'Bring your old electronics! Recycle 5 e-waste items this month to win the E-Waste Hero badge and Premium Wireless Earbuds. Plus 1.5x points on all e-waste!', '2024-12-01', '2024-12-31', 6, 5, 1.5, 6, 5, 0, 'quantity'),
 
--- Upcoming Challenges
-(3, 'Earth Week Challenge 2025', 'Celebrate Earth Week by recycling daily! Maintain a 7-day streak during Earth Week and earn the exclusive Week Streak badge plus bonus points.', '2025-01-15', '2025-01-22', 7, 3, 2.5, NULL),
-(4, 'Paper Recycling Month', 'February is Paper Month! Help us save trees by recycling paper products. Triple points for all paper items!', '2025-02-01', '2025-02-28', 6, 4, 3.0, 5),
-(5, 'Aluminum Can Drive', 'Crush it! Recycle aluminum cans and help reduce energy consumption. Every can counts!', '2025-03-01', '2025-03-15', 5, 1, 1.8, 2),
+-- Upcoming Challenges (mixed types)
+(3, 'Earth Week Challenge 2025', 'Celebrate Earth Week by earning 300 points! Complete this points-based challenge to earn the Earth Week Champion badge and Bamboo Cutlery Set. 2.5x multiplier active!', '2025-01-15', '2025-01-22', 7, 3, 2.5, NULL, 0, 300, 'points'),
+(4, 'Paper Recycling Month', 'February is Paper Month! Recycle 40 paper items to save trees and earn the Paper Saving Pioneer badge plus APU Hoodie. Triple points for all paper!', '2025-02-01', '2025-02-28', 8, 4, 3.0, 5, 40, 0, 'quantity'),
+(5, 'Aluminum Can Drive', 'Crush it! Recycle 25 aluminum cans to complete the challenge and earn the Aluminum Can Crusher badge plus APU Eco Tote Bag. 1.8x points boost!', '2025-03-01', '2025-03-15', 9, 1, 1.8, 2, 25, 0, 'quantity'),
 
 -- Past Challenges
-(6, 'October Kickoff Challenge', 'Start your recycling journey this October! First challenge of the semester with 1.5x points on all materials.', '2024-10-01', '2024-10-31', 1, 1, 1.5, NULL),
-(7, 'Back to School Recycle', 'Welcome back! Start the semester green by recycling old school supplies and materials.', '2024-09-01', '2024-09-30', 1, NULL, 1.2, NULL);
+(6, 'October Kickoff Challenge', 'Start your recycling journey this October! Just participate by submitting any 1 item to earn the Welcome Badge and Eco Tote Bag. 1.5x points for everyone!', '2024-10-01', '2024-10-31', 10, 1, 1.5, NULL, 1, 0, 'participation'),
+(7, 'Back to School Recycle', 'Welcome back! Simple participation challenge - recycle 1 item to get started with the Welcome Badge. Perfect for beginners!', '2024-09-01', '2024-09-30', 10, NULL, 1.2, NULL, 1, 0, 'participation');
 
 -- ============================================
 -- STEP 10: SAMPLE DATA - USER CHALLENGES
@@ -333,6 +386,26 @@ INSERT INTO `educational_content` (`content_id`, `title`, `content_body`, `image
 -- ============================================
 
 SELECT '✅ Database upgrade and sample data insertion completed successfully!' AS Status;
+SELECT '' AS '';
+SELECT '📝 IMPORTANT: Badge & Reward System Explanation' AS Notice;
+SELECT '' AS '';
+SELECT '🎯 This database now supports TWO types of badge/reward systems:' AS '';
+SELECT '' AS '';
+SELECT '1️⃣  MILESTONE SYSTEM (Auto-unlock):' AS '';
+SELECT '   - Badges/rewards have point_required field' AS '';
+SELECT '   - Auto-awarded when user reaches lifetime points threshold' AS '';
+SELECT '   - Example: "Green Champion" badge at 500 lifetime points' AS '';
+SELECT '' AS '';
+SELECT '2️⃣  CHALLENGE SYSTEM (Completion-based):' AS '';
+SELECT '   - Challenges have completion criteria (quantity/points/participation)' AS '';
+SELECT '   - Badge/reward awarded when challenge is completed' AS '';
+SELECT '   - Example: "Recycle 20 plastic bottles → Get Plastic Crusher badge"' AS '';
+SELECT '' AS '';
+SELECT '📊 Challenge Completion Types:' AS '';
+SELECT '   - QUANTITY: Recycle X items (target_quantity)' AS '';
+SELECT '   - POINTS: Earn X points during challenge (target_points)' AS '';
+SELECT '   - PARTICIPATION: Just join + submit 1 item (easiest)' AS '';
+SELECT '' AS '';
 SELECT CONCAT('Materials: ', COUNT(*), ' records') AS Summary FROM material
 UNION ALL
 SELECT CONCAT('Bins: ', COUNT(*), ' records') FROM recycling_bin
