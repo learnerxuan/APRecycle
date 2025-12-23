@@ -82,6 +82,20 @@ if ($has_team) {
                 <?php endwhile; ?>
             </div>
 
+            <div style="margin-top: 2rem; text-align: center;">
+                <button onclick="confirmLeaveTeam()" style="background-color: #DC2626; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                    Leave Team
+                </button>
+            </div>
+
+            <script>
+            function confirmLeaveTeam() {
+                if (confirm("Are you sure you want to leave your team?")) {
+                    window.location.href = 'leave_team_process.php';
+                }
+            }
+            </script>
+
         <?php else: ?>
             <div style="margin-bottom: 20px;">
                 <a href="dashboard.php" class="btn btn-secondary">&larr; Back to Dashboard</a>
