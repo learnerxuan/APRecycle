@@ -181,10 +181,10 @@ function verifyQR(qrCode) {
                 if (response.status === 'success') {
                     qrStatus.innerHTML = `✅ <strong>SUCCESS!</strong> Welcome ${response.username}!<br>+${response.points_awarded} points awarded! 🎉`;
 
-                    // Reset after 5 seconds
+                    // Refresh page after 3 seconds
                     setTimeout(() => {
-                        resetToStart();
-                    }, 5000);
+                        location.reload();
+                    }, 3000);
                 } else {
                     qrStatus.textContent = `❌ ${response.message}`;
                     // Restart QR scanner

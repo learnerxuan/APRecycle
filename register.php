@@ -41,12 +41,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             // Hash password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
+            // Insert user first to get user_id
             $insert_sql = "INSERT INTO user (username, password, email, role)
                     VALUES (?, ?, ?, ?)";
             $insert_stmt = mysqli_prepare($conn, $insert_sql);
             mysqli_stmt_bind_param($insert_stmt, "ssss", $username, $hashed_password, $email, $role);
 
             if (mysqli_stmt_execute($insert_stmt)) {
+                    $new_user_id = mysqli_insert_id($conn);
+
+                    // Generate QR code in format: RECYCLER:user_id:hash
+                    $secret_key = "APRecycle2024SecretKey";
+                    $verification_hash = substr(hash('sha256', $new_user_id . $username . $secret_key), 0, 16);
+                    $qr_data = "RECYCLER:{$new_user_id}:{$verification_hash}";
+
+                    // Update user with QR code
+                    $update_qr = mysqli_prepare($conn, "UPDATE user SET qr_code = ? WHERE user_id = ?");
+                    mysqli_stmt_bind_param($update_qr, "si", $qr_data, $new_user_id);
+                    mysqli_stmt_execute($update_qr);
+                    mysqli_stmt_close($update_qr);
+
                     header("Location: login.php?success=registered");
                     exit();
             } else {

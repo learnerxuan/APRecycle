@@ -153,7 +153,17 @@ INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `role`, `qr_code
 (20, 'peter_fresh', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'peter@student.apu.edu.my', 'recycler', 'QR_USR020', 60, '2024-11-15 16:00:00', NULL);
 
 -- ============================================
--- STEP 8: SAMPLE DATA - CHALLENGES
+-- STEP 8: FIX RECYCLER QR CODES
+-- ============================================
+-- Update all recycler QR codes to use the correct format: RECYCLER:user_id:hash
+-- This ensures QR codes match the format expected by bin_camera system
+
+UPDATE `user`
+SET qr_code = CONCAT('RECYCLER:', user_id, ':', SUBSTRING(SHA2(CONCAT(user_id, username, 'APRecycle2024SecretKey'), 256), 1, 16))
+WHERE role = 'recycler';
+
+-- ============================================
+-- STEP 9: SAMPLE DATA - CHALLENGES
 -- ============================================
 
 INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `end_date`, `badge_id`, `reward_id`, `point_multiplier`, `target_material_id`) VALUES
@@ -171,7 +181,7 @@ INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `
 (7, 'Back to School Recycle', 'Welcome back! Start the semester green by recycling old school supplies and materials.', '2024-09-01', '2024-09-30', 1, NULL, 1.2, NULL);
 
 -- ============================================
--- STEP 9: SAMPLE DATA - USER CHALLENGES
+-- STEP 10: SAMPLE DATA - USER CHALLENGES
 -- ============================================
 
 INSERT INTO `user_challenge` (`user_id`, `challenge_id`, `challenge_point`, `date_joined`) VALUES
@@ -197,7 +207,7 @@ INSERT INTO `user_challenge` (`user_id`, `challenge_id`, `challenge_point`, `dat
 (10, 6, 180, '2024-10-03 14:00:00');
 
 -- ============================================
--- STEP 10: SAMPLE DATA - USER BADGES
+-- STEP 11: SAMPLE DATA - USER BADGES
 -- ============================================
 
 INSERT INTO `user_badge` (`user_id`, `badge_id`, `date_awarded`) VALUES
@@ -229,7 +239,7 @@ INSERT INTO `user_badge` (`user_id`, `badge_id`, `date_awarded`) VALUES
 (13, 1, '2024-10-05 10:00:00');
 
 -- ============================================
--- STEP 11: SAMPLE DATA - USER REWARDS
+-- STEP 12: SAMPLE DATA - USER REWARDS
 -- ============================================
 
 INSERT INTO `user_reward` (`user_id`, `reward_id`, `date_earned`) VALUES
@@ -249,7 +259,7 @@ INSERT INTO `user_reward` (`user_id`, `reward_id`, `date_earned`) VALUES
 (12, 6, '2024-11-05 11:00:00');  -- Plant Starter Kit
 
 -- ============================================
--- STEP 12: SAMPLE DATA - RECYCLING SUBMISSIONS
+-- STEP 13: SAMPLE DATA - RECYCLING SUBMISSIONS
 -- ============================================
 
 INSERT INTO `recycling_submission` (`submission_id`, `user_id`, `bin_id`, `image_url`, `ai_confidence`, `status`, `moderator_feedback`) VALUES
@@ -277,7 +287,7 @@ INSERT INTO `recycling_submission` (`submission_id`, `user_id`, `bin_id`, `image
 (15, 15, 1, '/uploads/submissions/sub_015.jpg', 90.20, 'approved', 'Well done!');
 
 -- ============================================
--- STEP 13: SAMPLE DATA - SUBMISSION MATERIALS
+-- STEP 14: SAMPLE DATA - SUBMISSION MATERIALS
 -- ============================================
 
 INSERT INTO `submission_material` (`submission_id`, `material_id`, `quantity`) VALUES
@@ -298,7 +308,7 @@ INSERT INTO `submission_material` (`submission_id`, `material_id`, `quantity`) V
 (15, 5, 15); -- 15 papers
 
 -- ============================================
--- STEP 14: SAMPLE DATA - EDUCATIONAL CONTENT
+-- STEP 15: SAMPLE DATA - EDUCATIONAL CONTENT
 -- ============================================
 
 INSERT INTO `educational_content` (`content_id`, `title`, `content_body`, `image`, `tags`, `created_at`, `author_id`) VALUES

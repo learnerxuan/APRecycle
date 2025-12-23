@@ -311,12 +311,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
-                    <a href="submit.php" class="recycler-nav-link <?php echo $current_page == 'submit.php' ? 'active' : ''; ?>">
-                        <i class="fas fa-upload recycler-nav-icon"></i>
-                        <span>Submit Item</span>
-                    </a>
-                </li>
-                <li class="recycler-nav-tab">
                     <a href="challenges.php" class="recycler-nav-link <?php echo $current_page == 'challenges.php' ? 'active' : ''; ?>">
                         <i class="fas fa-trophy recycler-nav-icon"></i>
                         <span>Challenges</span>

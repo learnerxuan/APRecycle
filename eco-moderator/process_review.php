@@ -15,19 +15,48 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $conn = getDBConnection();
 
 $submission_id = intval($_POST['submission_id']);
+$user_id = intval($_POST['user_id']);
 $action = $_POST['action'];
 $material_id = intval($_POST['material_id']);
-$moderator_feedback = "Manual Review by Moderator"; // Could extend to allow custom feedback
 
 if ($action === 'reject') {
+    // Get rejection details
+    $reject_reason = $_POST['reject_reason'] ?? 'Manual Review';
+    $reject_feedback = $_POST['reject_feedback'] ?? 'Your submission was rejected by our eco-moderator.';
+
+    // Create moderator feedback message
+    $moderator_feedback = "Reason: " . $reject_reason . "\n\nFeedback: " . $reject_feedback;
+
+    // Update submission status
     $stmt = $conn->prepare("UPDATE recycling_submission SET status='rejected', moderator_feedback=? WHERE submission_id=?");
     $stmt->bind_param("si", $moderator_feedback, $submission_id);
     $stmt->execute();
     $stmt->close();
-    header('Location: review-queue.php?msg=Submission rejected.');
+
+    // Send notification to recycler's inbox
+    $notification_title = "❌ Submission Rejected - #" . $submission_id;
+    $notification_message = "**Reason:** " . $reject_reason . "\n\n**Feedback:**\n" . $reject_feedback . "\n\n*Please review our educational materials and try again. Learn from this experience to improve your recycling submissions!*";
+
+    // Insert notification using recycling_submission table for storage
+    // We'll store it in moderator_feedback and mark status as 'rejected'
+    // The inbox will read from this
+
+    // Optional: Create notification table entry if it exists
+    $check_notification_table = $conn->query("SHOW TABLES LIKE 'notification'");
+    if ($check_notification_table->num_rows > 0) {
+        $stmt_notif = $conn->prepare("INSERT INTO notification (user_id, title, message, type, submission_id, is_read) VALUES (?, ?, ?, 'error', ?, FALSE)");
+        $stmt_notif->bind_param("issi", $user_id, $notification_title, $notification_message, $submission_id);
+        $stmt_notif->execute();
+        $stmt_notif->close();
+    }
+
+    header('Location: review-queue.php?msg=' . urlencode('Submission #' . $submission_id . ' rejected. Feedback sent to recycler.'));
     exit();
 
 } elseif ($action === 'approve') {
+    // Create approval feedback
+    $moderator_feedback = "✅ Approved by eco-moderator. Great job recycling!";
+
     // 1. Update Submission Status
     $stmt = $conn->prepare("UPDATE recycling_submission SET status='approved', moderator_feedback=? WHERE submission_id=?");
     $stmt->bind_param("si", $moderator_feedback, $submission_id);
@@ -35,65 +64,86 @@ if ($action === 'reject') {
     $stmt->close();
 
     // 2. Update/Fix Material if needed
-    // First check if submission_material exists
     $check_mat = $conn->query("SELECT * FROM submission_material WHERE submission_id = $submission_id");
     if ($check_mat->num_rows > 0) {
         $update_mat = $conn->prepare("UPDATE submission_material SET material_id=? WHERE submission_id=?");
         $update_mat->bind_param("ii", $material_id, $submission_id);
         $update_mat->execute();
+        $update_mat->close();
     } else {
         $insert_mat = $conn->prepare("INSERT INTO submission_material (submission_id, material_id, quantity) VALUES (?, ?, 1)");
         $insert_mat->bind_param("ii", $submission_id, $material_id);
         $insert_mat->execute();
+        $insert_mat->close();
     }
 
-    // 3. Award Points (Logic copied from scan-user-qr.php)
-    // Fetch User ID
-    $user_res = $conn->query("SELECT user_id FROM recycling_submission WHERE submission_id = $submission_id");
-    $user_row = $user_res->fetch_assoc();
-    $recycler_id = $user_row['user_id'];
+    // 3. Award Points
+    // Get material points
+    $mat_result = $conn->query("SELECT points_per_item FROM material WHERE material_id = $material_id");
+    $mat_row = $mat_result->fetch_assoc();
+    $base_points = $mat_row['points_per_item'] ?? 15;
 
-    if ($recycler_id) {
-        $points_awarded = 15; // Base points
-        $total_multiplier = 1.0;
+    $total_multiplier = 1.0;
 
-        // Check active challenges
-        $challenge_sql = "SELECT uc.challenge_id, c.target_material_id, c.point_multiplier 
-                          FROM user_challenge uc 
-                          JOIN challenge c ON uc.challenge_id = c.challenge_id 
-                          WHERE uc.user_id = ? AND c.end_date >= CURDATE() AND c.start_date <= CURDATE()";
+    // Check active challenges
+    $challenge_sql = "SELECT uc.challenge_id, c.target_material_id, c.point_multiplier
+                      FROM user_challenge uc
+                      JOIN challenge c ON uc.challenge_id = c.challenge_id
+                      WHERE uc.user_id = ? AND c.end_date >= CURDATE() AND c.start_date <= CURDATE()";
 
-        $stmt_ch = $conn->prepare($challenge_sql);
-        $stmt_ch->bind_param("i", $recycler_id);
-        $stmt_ch->execute();
-        $challenges = $stmt_ch->get_result();
+    $stmt_ch = $conn->prepare($challenge_sql);
+    $stmt_ch->bind_param("i", $user_id);
+    $stmt_ch->execute();
+    $challenges = $stmt_ch->get_result();
 
-        while ($ch = $challenges->fetch_assoc()) {
-            // Check if material matches (or if it's a generic challenge)
-            if (is_null($ch['target_material_id']) || $ch['target_material_id'] == $material_id) {
-                // Update challenge progress
-                $update_ch = $conn->prepare("UPDATE user_challenge SET challenge_point = challenge_point + 1 WHERE user_id = ? AND challenge_id = ?");
-                $update_ch->bind_param("ii", $recycler_id, $ch['challenge_id']);
-                $update_ch->execute();
+    while ($ch = $challenges->fetch_assoc()) {
+        // Check if material matches (or if it's a generic challenge)
+        if (is_null($ch['target_material_id']) || $ch['target_material_id'] == $material_id) {
+            // Update challenge progress
+            $update_ch = $conn->prepare("UPDATE user_challenge SET challenge_point = challenge_point + ? WHERE user_id = ? AND challenge_id = ?");
+            $update_ch->bind_param("iii", $base_points, $user_id, $ch['challenge_id']);
+            $update_ch->execute();
+            $update_ch->close();
 
-                if ($ch['point_multiplier'] > $total_multiplier) {
-                    $total_multiplier = $ch['point_multiplier'];
-                }
+            if ($ch['point_multiplier'] > $total_multiplier) {
+                $total_multiplier = $ch['point_multiplier'];
             }
         }
+    }
+    $stmt_ch->close();
 
-        // Apply Multiplier
-        $final_points = floor($points_awarded * $total_multiplier);
+    // Apply Multiplier
+    $final_points = floor($base_points * $total_multiplier);
 
-        // Update User Points
-        if ($final_points > 0) {
-            $update_pts = $conn->prepare("UPDATE user SET lifetime_points = lifetime_points + ? WHERE user_id = ?");
-            $update_pts->bind_param("ii", $final_points, $recycler_id);
-            $update_pts->execute();
-        }
+    // Update User Points
+    if ($final_points > 0) {
+        $update_pts = $conn->prepare("UPDATE user SET lifetime_points = lifetime_points + ? WHERE user_id = ?");
+        $update_pts->bind_param("ii", $final_points, $user_id);
+        $update_pts->execute();
+        $update_pts->close();
     }
 
-    header('Location: review-queue.php?msg=Submission approved and points awarded.');
+    // Send success notification to recycler
+    $notification_title = "✅ Submission Approved - #" . $submission_id;
+    $notification_message = "Congratulations! Your submission has been approved.\n\n**Points Awarded:** " . $final_points . " points\n**Material:** " . ($mat_row['material_name'] ?? 'Recyclable Material') . "\n\n*Keep up the great work! You're making a difference!*";
+
+    // Check if notification table exists
+    $check_notification_table = $conn->query("SHOW TABLES LIKE 'notification'");
+    if ($check_notification_table->num_rows > 0) {
+        // Get material name for notification
+        $mat_result2 = $conn->query("SELECT material_name FROM material WHERE material_id = $material_id");
+        $mat_row2 = $mat_result2->fetch_assoc();
+        $material_name = $mat_row2['material_name'] ?? 'Recyclable Material';
+
+        $notification_message_full = "Congratulations! Your submission has been approved.\n\n**Points Awarded:** " . $final_points . " points\n**Material:** " . $material_name . "\n\n*Keep up the great work! You're making a difference!*";
+
+        $stmt_notif = $conn->prepare("INSERT INTO notification (user_id, title, message, type, submission_id, is_read) VALUES (?, ?, ?, 'success', ?, FALSE)");
+        $stmt_notif->bind_param("issi", $user_id, $notification_title, $notification_message_full, $submission_id);
+        $stmt_notif->execute();
+        $stmt_notif->close();
+    }
+
+    header('Location: review-queue.php?msg=' . urlencode('Submission #' . $submission_id . ' approved! ' . $final_points . ' points awarded.'));
     exit();
 }
 
