@@ -419,8 +419,10 @@ include 'includes/header.php';
         </div>
 
         <!-- Completion Criteria Section -->
-        <div style="background: var(--color-gray-50); padding: var(--space-6); border-radius: var(--radius-lg); margin-bottom: var(--space-6); border: 2px solid var(--color-gray-200);">
-            <h3 style="margin: 0 0 var(--space-4) 0; color: var(--color-gray-800); font-size: var(--text-lg); display: flex; align-items: center; gap: var(--space-2);">
+        <div
+            style="background: var(--color-gray-50); padding: var(--space-6); border-radius: var(--radius-lg); margin-bottom: var(--space-6); border: 2px solid var(--color-gray-200);">
+            <h3
+                style="margin: 0 0 var(--space-4) 0; color: var(--color-gray-800); font-size: var(--text-lg); display: flex; align-items: center; gap: var(--space-2);">
                 <i class="fas fa-check-circle" style="color: var(--color-success);"></i>
                 Challenge Completion Criteria
             </h3>
@@ -449,8 +451,7 @@ include 'includes/header.php';
             <div class="form-group" id="target-quantity-group">
                 <label for="target_quantity">Target Quantity (number of items)</label>
                 <input type="number" id="target_quantity" name="target_quantity"
-                    value="<?php echo isset($target_quantity) ? $target_quantity : '10'; ?>"
-                    min="1" step="1">
+                    value="<?php echo isset($target_quantity) ? $target_quantity : '10'; ?>" min="1" step="1">
                 <small>
                     <i class="fas fa-hashtag"></i>
                     How many items must users recycle to complete this challenge?
@@ -461,8 +462,7 @@ include 'includes/header.php';
             <div class="form-group" id="target-points-group">
                 <label for="target_points">Target Points (during challenge period)</label>
                 <input type="number" id="target_points" name="target_points"
-                    value="<?php echo isset($target_points) ? $target_points : '100'; ?>"
-                    min="1" step="10">
+                    value="<?php echo isset($target_points) ? $target_points : '100'; ?>" min="10" step="10">
                 <small>
                     <i class="fas fa-star"></i>
                     How many points must users earn DURING the challenge period to complete it?
@@ -493,25 +493,25 @@ include 'includes/header.php';
     function updateCompletionFields() {
         const completionType = completionTypeSelect.value;
 
+        // Reset requirements first
+        targetQuantityInput.required = false;
+        targetPointsInput.required = false;
+
         if (completionType === 'quantity') {
             targetQuantityGroup.style.display = 'block';
             targetPointsGroup.style.display = 'none';
             targetQuantityInput.required = true;
-            targetPointsInput.required = false;
-            targetPointsInput.value = '0';
+            targetPointsInput.value = '';
         } else if (completionType === 'points') {
             targetQuantityGroup.style.display = 'none';
             targetPointsGroup.style.display = 'block';
-            targetQuantityInput.required = false;
             targetPointsInput.required = true;
-            targetQuantityInput.value = '0';
+            targetQuantityInput.value = '';
         } else { // participation
             targetQuantityGroup.style.display = 'none';
             targetPointsGroup.style.display = 'none';
-            targetQuantityInput.required = false;
-            targetPointsInput.required = false;
-            targetQuantityInput.value = '0';
-            targetPointsInput.value = '0';
+            targetQuantityInput.value = '';
+            targetPointsInput.value = '';
         }
     }
 

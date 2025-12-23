@@ -402,7 +402,8 @@ include 'includes/header.php';
 
         <!-- Completion Criteria Section -->
         <div style="border-top: 3px solid var(--color-primary); margin: var(--space-8) 0; padding-top: var(--space-6);">
-            <h3 style="color: var(--color-primary); margin-bottom: var(--space-4); display: flex; align-items: center; gap: var(--space-2);">
+            <h3
+                style="color: var(--color-primary); margin-bottom: var(--space-4); display: flex; align-items: center; gap: var(--space-2);">
                 <i class="fas fa-check-circle"></i> Challenge Completion Criteria
             </h3>
             <p style="color: var(--color-gray-600); margin-bottom: var(--space-6); font-size: var(--text-sm);">
@@ -415,11 +416,13 @@ include 'includes/header.php';
                 <select id="completion_type" name="completion_type" required>
                     <option value="quantity" <?php echo (isset($completion_type) && $completion_type == 'quantity') ? 'selected' : ''; ?>>Quantity-Based (Recycle X items)</option>
                     <option value="points" <?php echo (isset($completion_type) && $completion_type == 'points') ? 'selected' : ''; ?>>Points-Based (Earn X points during challenge)</option>
-                    <option value="participation" <?php echo (isset($completion_type) && $completion_type == 'participation') ? 'selected' : ''; ?>>Participation (Just join + submit 1 item)</option>
+                    <option value="participation" <?php echo (isset($completion_type) && $completion_type == 'participation') ? 'selected' : ''; ?>>Participation (Just join + submit 1
+                        item)</option>
                 </select>
                 <small>
                     <i class="fas fa-info-circle"></i>
-                    <strong>Quantity:</strong> "Recycle 20 plastic bottles" | <strong>Points:</strong> "Earn 300 points this week" | <strong>Participation:</strong> "Join Earth Day event"
+                    <strong>Quantity:</strong> "Recycle 20 plastic bottles" | <strong>Points:</strong> "Earn 300 points
+                    this week" | <strong>Participation:</strong> "Join Earth Day event"
                 </small>
             </div>
 
@@ -427,8 +430,8 @@ include 'includes/header.php';
             <div class="form-group" id="quantity-field">
                 <label for="target_quantity">Target Quantity</label>
                 <input type="number" id="target_quantity" name="target_quantity"
-                    value="<?php echo isset($target_quantity) ? $target_quantity : '10'; ?>"
-                    min="1" max="1000" step="1">
+                    value="<?php echo isset($target_quantity) ? $target_quantity : '10'; ?>" min="1" max="1000"
+                    step="1">
                 <small>
                     <i class="fas fa-hashtag"></i>
                     How many items users must recycle to complete this challenge (e.g., 20 bottles, 50 cans)
@@ -439,8 +442,8 @@ include 'includes/header.php';
             <div class="form-group" id="points-field" style="display: none;">
                 <label for="target_points">Target Points</label>
                 <input type="number" id="target_points" name="target_points"
-                    value="<?php echo isset($target_points) ? $target_points : '100'; ?>"
-                    min="1" max="10000" step="10">
+                    value="<?php echo isset($target_points) ? $target_points : '100'; ?>" min="10" max="10000"
+                    step="10">
                 <small>
                     <i class="fas fa-star"></i>
                     How many points users must earn during the challenge period to complete it (e.g., 300 points)
@@ -450,7 +453,9 @@ include 'includes/header.php';
             <div class="info-box" style="margin-top: var(--space-4);">
                 <p>
                     <i class="fas fa-lightbulb"></i>
-                    <span><strong>Note:</strong> Badge/Reward will be automatically awarded when users meet the completion criteria. Point multiplier applies during the challenge period but is separate from completion requirements.</span>
+                    <span><strong>Note:</strong> Badge/Reward will be automatically awarded when users meet the
+                        completion criteria. Point multiplier applies during the challenge period but is separate from
+                        completion requirements.</span>
                 </p>
             </div>
         </div>
@@ -499,16 +504,20 @@ include 'includes/header.php';
             pointsField.style.display = 'none';
             targetQuantityInput.required = true;
             targetPointsInput.required = false;
+            if (targetPointsInput.value !== '') targetPointsInput.value = ''; // Clear hidden
         } else if (type === 'points') {
             quantityField.style.display = 'none';
             pointsField.style.display = 'block';
             targetQuantityInput.required = false;
             targetPointsInput.required = true;
+            if (targetQuantityInput.value !== '') targetQuantityInput.value = ''; // Clear hidden
         } else if (type === 'participation') {
             quantityField.style.display = 'none';
             pointsField.style.display = 'none';
             targetQuantityInput.required = false;
             targetPointsInput.required = false;
+            if (targetQuantityInput.value !== '') targetQuantityInput.value = ''; // Clear hidden
+            if (targetPointsInput.value !== '') targetPointsInput.value = ''; // Clear hidden
         }
     }
 

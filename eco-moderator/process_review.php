@@ -86,7 +86,9 @@ if ($action === 'reject') {
     $total_multiplier = 1.0;
 
     // Check active challenges
-    $challenge_sql = "SELECT uc.challenge_id, c.target_material_id, c.point_multiplier
+    $challenge_sql = "SELECT uc.challenge_id, uc.challenge_quantity, uc.challenge_point, uc.is_completed,
+                      c.target_material_id, c.point_multiplier,
+                      c.target_quantity, c.target_points, c.completion_type, c.badge_id, c.reward_id
                       FROM user_challenge uc
                       JOIN challenge c ON uc.challenge_id = c.challenge_id
                       WHERE uc.user_id = ? AND c.end_date >= CURDATE() AND c.start_date <= CURDATE()";
@@ -99,11 +101,54 @@ if ($action === 'reject') {
     while ($ch = $challenges->fetch_assoc()) {
         // Check if material matches (or if it's a generic challenge)
         if (is_null($ch['target_material_id']) || $ch['target_material_id'] == $material_id) {
+
+            // Calculate new values
+            $points_to_add = floor($base_points * $ch['point_multiplier']);
+            $new_quantity = $ch['challenge_quantity'] + 1;
+            $new_points = $ch['challenge_point'] + $points_to_add;
+
             // Update challenge progress
-            $update_ch = $conn->prepare("UPDATE user_challenge SET challenge_point = challenge_point + ? WHERE user_id = ? AND challenge_id = ?");
-            $update_ch->bind_param("iii", $base_points, $user_id, $ch['challenge_id']);
+            $update_ch = $conn->prepare("UPDATE user_challenge SET challenge_quantity = ?, challenge_point = ? WHERE user_id = ? AND challenge_id = ?");
+            $update_ch->bind_param("iiii", $new_quantity, $new_points, $user_id, $ch['challenge_id']);
             $update_ch->execute();
             $update_ch->close();
+
+            // Check for completion (if not already completed)
+            if ($ch['is_completed'] == 0) {
+                $completed = false;
+
+                if ($ch['completion_type'] == 'quantity' && $new_quantity >= $ch['target_quantity']) {
+                    $completed = true;
+                } elseif ($ch['completion_type'] == 'points' && $new_points >= $ch['target_points']) {
+                    $completed = true;
+                } elseif ($ch['completion_type'] == 'participation' && $new_quantity >= 1) {
+                    $completed = true;
+                }
+
+                if ($completed) {
+                    // Mark as completed
+                    $mark_complete = $conn->prepare("UPDATE user_challenge SET is_completed = 1 WHERE user_id = ? AND challenge_id = ?");
+                    $mark_complete->bind_param("ii", $user_id, $ch['challenge_id']);
+                    $mark_complete->execute();
+                    $mark_complete->close();
+
+                    // Award Badge
+                    if (!empty($ch['badge_id'])) {
+                        $award_badge = $conn->prepare("INSERT IGNORE INTO user_badge (user_id, badge_id) VALUES (?, ?)");
+                        $award_badge->bind_param("ii", $user_id, $ch['badge_id']);
+                        $award_badge->execute();
+                        $award_badge->close();
+                    }
+
+                    // Award Reward
+                    if (!empty($ch['reward_id'])) {
+                        $award_reward = $conn->prepare("INSERT IGNORE INTO user_reward (user_id, reward_id) VALUES (?, ?)");
+                        $award_reward->bind_param("ii", $user_id, $ch['reward_id']);
+                        $award_reward->execute();
+                        $award_reward->close();
+                    }
+                }
+            }
 
             if ($ch['point_multiplier'] > $total_multiplier) {
                 $total_multiplier = $ch['point_multiplier'];

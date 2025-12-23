@@ -39,7 +39,7 @@ $my_sql = "SELECT c.*, uc.challenge_point, uc.challenge_quantity, uc.is_complete
            LEFT JOIN badge b ON c.badge_id = b.badge_id
            LEFT JOIN reward r ON c.reward_id = r.reward_id
            LEFT JOIN material m ON c.target_material_id = m.material_id
-           WHERE uc.user_id = ? AND c.end_date >= CURDATE()
+           WHERE uc.user_id = ? AND c.end_date >= CURDATE() AND uc.is_completed = 0
            ORDER BY c.end_date ASC";
 $stmt = $conn->prepare($my_sql);
 $stmt->bind_param("i", $user_id);
@@ -60,6 +60,21 @@ $stmt = $conn->prepare($avail_sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $available_challenges = $stmt->get_result();
+$stmt->close();
+
+// Fetch Past Challenges (Completed or Expired)
+$past_sql = "SELECT c.*, uc.challenge_point, uc.challenge_quantity, uc.is_completed, b.badge_name, r.reward_name, m.material_name
+             FROM user_challenge uc
+             JOIN challenge c ON uc.challenge_id = c.challenge_id
+             LEFT JOIN badge b ON c.badge_id = b.badge_id
+             LEFT JOIN reward r ON c.reward_id = r.reward_id
+             LEFT JOIN material m ON c.target_material_id = m.material_id
+             WHERE uc.user_id = ? AND (uc.is_completed = 1 OR c.end_date < CURDATE())
+             ORDER BY c.end_date DESC";
+$stmt = $conn->prepare($past_sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$past_challenges = $stmt->get_result();
 $stmt->close();
 
 $page_title = 'Challenges';
@@ -109,6 +124,7 @@ require_once 'includes/header.php';
             opacity: 0;
             transform: translateY(-20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -207,7 +223,7 @@ require_once 'includes/header.php';
         height: 10px;
         border-radius: var(--radius-full);
         overflow: hidden;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .progress-fill {
@@ -360,7 +376,8 @@ require_once 'includes/header.php';
                     <div class="progress-container">
                         <div class="progress-info">
                             <span>Progress</span>
-                            <span><strong><?php echo $row['challenge_quantity']; ?></strong> / <?php echo $row['target_quantity']; ?> items</span>
+                            <span><strong><?php echo $row['challenge_quantity']; ?></strong> /
+                                <?php echo $row['target_quantity']; ?> items</span>
                         </div>
                         <?php
                         $target = $row['target_quantity'] > 0 ? $row['target_quantity'] : 10;
@@ -374,7 +391,8 @@ require_once 'includes/header.php';
                     <div class="progress-container">
                         <div class="progress-info">
                             <span>Progress</span>
-                            <span><strong><?php echo $row['challenge_point']; ?></strong> / <?php echo $row['target_points']; ?> pts</span>
+                            <span><strong><?php echo $row['challenge_point']; ?></strong> / <?php echo $row['target_points']; ?>
+                                pts</span>
                         </div>
                         <?php
                         $target = $row['target_points'] > 0 ? $row['target_points'] : 100;
@@ -505,6 +523,71 @@ require_once 'includes/header.php';
         <div class="empty-state">
             <i class="fas fa-calendar-times"></i>
             <p>No new challenges available right now. Come back later!</p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Past Challenges Section -->
+<h2 class="section-header"
+    style="color: var(--color-gray-600); border-top: 1px solid var(--color-gray-200); padding-top: var(--space-8);">
+    <i class="fas fa-history" style="color: var(--color-gray-500);"></i> Past Challenges
+</h2>
+
+<div class="challenges-grid">
+    <?php if ($past_challenges->num_rows > 0): ?>
+        <?php while ($row = $past_challenges->fetch_assoc()): ?>
+            <div class="challenge-card"
+                style="border-top-color: <?php echo $row['is_completed'] ? 'var(--color-success)' : 'var(--color-gray-400)'; ?>; opacity: 0.8; filter: grayscale(<?php echo $row['is_completed'] ? '0' : '0.5'; ?>);">
+                <div class="challenge-header">
+                    <h3 class="challenge-title" style="color: var(--color-gray-700);">
+                        <?php echo htmlspecialchars($row['title']); ?>
+                    </h3>
+                    <?php if ($row['is_completed']): ?>
+                        <span class="multiplier-badge" style="background: var(--color-success);">
+                            <i class="fas fa-check"></i> Completed
+                        </span>
+                    <?php else: ?>
+                        <span class="multiplier-badge" style="background: var(--color-gray-500);">
+                            Expired
+                        </span>
+                    <?php endif; ?>
+                </div>
+
+                <p class="challenge-description" style="color: var(--color-gray-500);">
+                    <?php echo htmlspecialchars($row['description']); ?>
+                </p>
+
+                <div class="challenge-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-times"></i>
+                        Ended <?php echo date('M d', strtotime($row['end_date'])); ?>
+                    </div>
+                    <?php if ($row['completion_type'] == 'points'): ?>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <?php echo $row['challenge_point']; ?> / <?php echo $row['target_points']; ?> pts
+                        </div>
+                    <?php else: ?>
+                        <div class="meta-item">
+                            <i class="fas fa-hashtag"></i>
+                            <?php echo $row['challenge_quantity']; ?> / <?php echo $row['target_quantity']; ?> items
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <?php if ($row['is_completed']): ?>
+                    <div class="success-message"
+                        style="margin-top: var(--space-4); margin-bottom: 0; font-size: var(--text-sm); background: rgba(34, 197, 94, 0.1); color: var(--color-success);">
+                        <i class="fas fa-trophy"></i>
+                        Challenge Completed!
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <div class="empty-state">
+            <i class="fas fa-history"></i>
+            <p>You don't have any past challenges yet.</p>
         </div>
     <?php endif; ?>
 </div>
