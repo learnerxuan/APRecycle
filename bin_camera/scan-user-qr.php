@@ -125,51 +125,71 @@ if (!file_put_contents($target_file_path, $image_data_binary)) {
     exit;
 }
 
-// Determine status and points based on confidence
+// Pre-process classification for matching
 $class_lower = strtolower($classification);
 $is_valid_waste = true;
 
+// Check if AI explicitly says it's not waste
 if (strpos($class_lower, 'not a waste') !== false || strpos($class_lower, 'non-recyclable') !== false) {
     $is_valid_waste = false;
 }
 
-if ($confidence >= 0.80 && $is_valid_waste) {
-    $status = 'Approved';
-    $points_awarded = 15;
-} elseif ($confidence >= 0.80 && !$is_valid_waste) {
-    $status = 'Rejected';
-    $points_awarded = 0;
-} else {
-    $status = 'Pending';
-    $points_awarded = 0;
-}
-
 $simulated_bin_id = 1;
 
-// Map Classification to Material ID
-$material_map = [
-    'plastic bottle' => 1,
-    'plastic' => 1,
-    'aluminum can' => 2,
-    'can' => 2,
-    'glass bottle' => 3,
-    'glass' => 3,
-    'cardboard box' => 4,
-    'cardboard' => 4,
-    'paper' => 5,
-    'e-waste' => 6,
-    'metal' => 8,
-    'metal scrap' => 8,
-    'plastic container' => 9,
-    'tetra pak' => 10
-];
+// Fetch all materials from database dynamically
+$materials_query = "SELECT material_id, material_name, points_per_item FROM material ORDER BY material_name ASC";
+$materials_result = mysqli_query($conn, $materials_query);
 
+if (!$materials_result) {
+    $response['message'] = 'Database error: Failed to fetch materials.';
+    echo json_encode($response);
+    $conn->close();
+    exit;
+}
+
+// Build material map from database
+$material_map = [];
+while ($mat = mysqli_fetch_assoc($materials_result)) {
+    $mat_name_lower = strtolower($mat['material_name']);
+    $material_map[$mat_name_lower] = [
+        'id' => $mat['material_id'],
+        'points' => $mat['points_per_item']
+    ];
+}
+
+// Try to match classification to a material in database
 $detected_material_id = null;
-foreach ($material_map as $key => $id) {
-    if (strpos($class_lower, $key) !== false) {
-        $detected_material_id = $id;
+$material_points = 0;
+
+foreach ($material_map as $mat_name => $mat_data) {
+    // Check if classification contains the material name (flexible matching)
+    if (strpos($class_lower, $mat_name) !== false) {
+        $detected_material_id = $mat_data['id'];
+        $material_points = $mat_data['points'];
         break;
     }
+}
+
+// Determine status and points based on validation
+$status = 'Rejected';
+$points_awarded = 0;
+
+if (!$is_valid_waste) {
+    // AI says it's not waste - reject
+    $status = 'Rejected';
+    $points_awarded = 0;
+} elseif ($detected_material_id === null) {
+    // Item not in materials list - reject
+    $status = 'Rejected';
+    $points_awarded = 0;
+} elseif ($confidence >= 0.80) {
+    // High confidence AND material found - approve with material points
+    $status = 'Approved';
+    $points_awarded = $material_points;
+} else {
+    // Low confidence but material found - pending review
+    $status = 'Pending';
+    $points_awarded = 0;
 }
 
 // Default multiplier

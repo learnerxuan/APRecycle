@@ -51,6 +51,62 @@ function startCamera() {
 }
 
 
+// Fetch material points from database
+function fetchMaterialPoints(classification) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'get-material-points.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            try {
+                const response = JSON.parse(xhr.responseText);
+                console.log('Material Points Response:', response);
+
+                if (response.material_found) {
+                    // Material found in database - show points
+                    pointsBadge.textContent = `${response.points} points`;
+                    pointsBadge.style.background = 'linear-gradient(135deg, #FFD93D, #FFC107)';
+
+                    // Move to QR scanning
+                    showQRScanner();
+                } else {
+                    // Material NOT found - will be rejected
+                    pointsBadge.textContent = `0 points - NOT IN LIST`;
+                    pointsBadge.style.background = 'linear-gradient(135deg, #FC8181, #F56565)';
+                    classificationText.textContent = `❌ "${classification}" is not in our recyclable materials list`;
+
+                    // Show rejection message
+                    statusText.textContent = '❌ This item will be REJECTED. Only items in our materials list are accepted.';
+
+                    // Reset after 5 seconds
+                    setTimeout(() => {
+                        captureBtn.disabled = false;
+                        captureBtn.textContent = 'Capture Waste Item';
+                        statusText.textContent = 'Ready! Position your waste item and click capture.';
+                    }, 5000);
+                }
+            } catch (e) {
+                console.error('Parse error:', e);
+                pointsBadge.textContent = '? points';
+                showQRScanner(); // Continue anyway
+            }
+        } else {
+            console.error('Failed to fetch material points');
+            pointsBadge.textContent = '? points';
+            showQRScanner(); // Continue anyway
+        }
+    };
+
+    xhr.onerror = function () {
+        console.error('Connection error');
+        pointsBadge.textContent = '? points';
+        showQRScanner(); // Continue anyway
+    };
+
+    xhr.send(JSON.stringify({ classification: classification }));
+}
+
 // Send image to classification API (classification only, no DB save)
 function sendToClassify(base64Image) {
     // Store the image for later submission
@@ -82,10 +138,9 @@ function sendToClassify(base64Image) {
 
                     // Show results
                     classificationText.textContent = `✅ ${response.classification} (${Math.round(response.confidence * 100)}% confidence)`;
-                    pointsBadge.textContent = `15 points`; // Always show potential points
 
-                    // Move to QR scanning
-                    showQRScanner();
+                    // Fetch dynamic points from materials database
+                    fetchMaterialPoints(response.classification);
                 } else {
                     captureBtn.disabled = false;
                     captureBtn.textContent = 'Capture Waste Item';
