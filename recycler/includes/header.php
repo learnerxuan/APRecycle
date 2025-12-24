@@ -348,6 +348,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
+                    <a href="achievements.php" 
+                    class="recycler-nav-link <?php echo $current_page == 'achievements.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-medal recycler-nav-icon"></i>
+                        <span>Achievements</span>
+                    </a>
+                </li>
+                <li class="recycler-nav-tab">
                     <a href="profile.php"
                         class="recycler-nav-link <?php echo $current_page == 'profile.php' ? 'active' : ''; ?>">
                         <i class="fas fa-user-circle recycler-nav-icon"></i>
