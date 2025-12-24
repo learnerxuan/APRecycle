@@ -150,8 +150,9 @@ if ($action === 'reject') {
                 }
             }
 
-            // Only apply multiplier if challenge is not completed
-            if ($ch['is_completed'] == 0 && $ch['point_multiplier'] > $total_multiplier) {
+            // Apply multiplier for pending submissions even if challenge is now completed
+            // (The submission was made while the challenge was active)
+            if ($ch['point_multiplier'] > $total_multiplier) {
                 $total_multiplier = $ch['point_multiplier'];
             }
         }
