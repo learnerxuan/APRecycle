@@ -150,7 +150,8 @@ if ($action === 'reject') {
                 }
             }
 
-            if ($ch['point_multiplier'] > $total_multiplier) {
+            // Only apply multiplier if challenge is not completed
+            if ($ch['is_completed'] == 0 && $ch['point_multiplier'] > $total_multiplier) {
                 $total_multiplier = $ch['point_multiplier'];
             }
         }

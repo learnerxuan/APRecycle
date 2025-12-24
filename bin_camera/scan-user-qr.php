@@ -110,9 +110,10 @@ if ($provided_hash !== $expected_hash) {
 }
 
 // QR code is valid! Now save the image and create the submission
-$target_dir = "uploads/";
+$target_dir = "../uploads/";
 $file_name = "waste_" . uniqid() . ".jpg";
 $target_file_path = $target_dir . $file_name;
+$db_image_path = "uploads/" . $file_name; // Path stored in DB should be relative to web root
 $image_data_binary = base64_decode($base64Image);
 
 if (!is_dir($target_dir))
@@ -262,7 +263,8 @@ if ($detected_material_id) {
             }
 
             // Apply highest multiplier (for immediate points calculation)
-            if ($ch['point_multiplier'] > $total_multiplier) {
+            // Only apply multiplier if challenge is not completed
+            if ($ch['is_completed'] == 0 && $ch['point_multiplier'] > $total_multiplier) {
                 $total_multiplier = $ch['point_multiplier'];
             }
         }
@@ -275,7 +277,7 @@ $points_awarded = floor($points_awarded * $total_multiplier);
 
 // Insert submission with user_id
 $stmt = $conn->prepare("INSERT INTO recycling_submission (user_id, bin_id, image_url, ai_confidence, status) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("iisds", $user['user_id'], $simulated_bin_id, $target_file_path, $confidence, $status);
+$stmt->bind_param("iisds", $user['user_id'], $simulated_bin_id, $db_image_path, $confidence, $status);
 
 if ($stmt->execute()) {
     $submission_id = $conn->insert_id;
