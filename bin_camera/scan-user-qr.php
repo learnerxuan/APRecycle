@@ -6,11 +6,8 @@
 
 header('Content-Type: application/json');
 
-// Database configuration
-$DB_HOST = 'localhost';
-$DB_USER = 'root';
-$DB_PASS = '';
-$DB_NAME = 'aprecycle';
+// Include config for database connection
+require_once '../php/config.php';
 
 // Initialize response
 $response = [
@@ -74,11 +71,11 @@ if (count($parts) !== 3 || $parts[0] !== 'RECYCLER') {
 $scanned_user_id = intval($parts[1]);
 $provided_hash = $parts[2];
 
-// Connect to database
-$conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+// Connect to database using config
+$conn = getDBConnection();
 
-if ($conn->connect_error) {
-    $response['message'] = "Database connection failed: " . $conn->connect_error;
+if (!$conn) {
+    $response['message'] = "Database connection failed.";
     echo json_encode($response);
     exit;
 }

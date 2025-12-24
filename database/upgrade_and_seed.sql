@@ -324,11 +324,6 @@ INSERT INTO `recycling_submission` (`submission_id`, `user_id`, `bin_id`, `image
 (5, 9, 2, '/uploads/submissions/sub_005.jpg', 91.50, 'approved', 'Nice plastic container!'),
 (6, 10, 4, '/uploads/submissions/sub_006.jpg', 94.80, 'approved', 'Great paper recycling.'),
 
--- Pending review (low AI confidence)
-(7, 11, 1, '/uploads/submissions/sub_007.jpg', 65.30, 'pending', NULL),
-(8, 12, 2, '/uploads/submissions/sub_008.jpg', 72.10, 'pending', NULL),
-(9, 13, 3, '/uploads/submissions/sub_009.jpg', 68.90, 'pending', NULL),
-
 -- Rejected submission
 (10, 14, 1, '/uploads/submissions/sub_010.jpg', 45.20, 'rejected', 'Sorry, this item is not recyclable. Please check our educational content for proper waste identification.'),
 
@@ -350,9 +345,6 @@ INSERT INTO `submission_material` (`submission_id`, `material_id`, `quantity`) V
 (4, 3, 1),   -- 1 glass bottle
 (5, 9, 2),   -- 2 plastic containers
 (6, 5, 10),  -- 10 papers
-(7, 1, 2),   -- Pending: 2 plastic bottles
-(8, 8, 1),   -- Pending: 1 metal scrap
-(9, 4, 3),   -- Pending: 3 cardboard boxes
 (10, 1, 1),  -- Rejected: 1 item
 (11, 6, 1),  -- 1 small e-waste
 (12, 2, 8),  -- 8 aluminum cans

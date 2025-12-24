@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../php/config.php';
 
 // Check if user is logged in and is a recycler
@@ -70,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_bind_param($check_stmt, "si", $new_username, $user_id);
         mysqli_stmt_execute($check_stmt);
         $check_result = mysqli_stmt_get_result($check_stmt);
-        
+
         if (mysqli_num_rows($check_result) > 0) {
             $error_message = "Username already taken. Please choose another.";
         } else {
@@ -98,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
                         $update_stmt = mysqli_prepare($conn, "UPDATE user SET username = ?, email = ?, password = ? WHERE user_id = ?");
                         mysqli_stmt_bind_param($update_stmt, "sssi", $new_username, $new_email, $hashed_password, $user_id);
-                        
+
                         if (mysqli_stmt_execute($update_stmt)) {
                             $_SESSION['username'] = $new_username;
                             $_SESSION['email'] = $new_email;
@@ -115,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Update without password change
                 $update_stmt = mysqli_prepare($conn, "UPDATE user SET username = ?, email = ? WHERE user_id = ?");
                 mysqli_stmt_bind_param($update_stmt, "ssi", $new_username, $new_email, $user_id);
-                
+
                 if (mysqli_stmt_execute($update_stmt)) {
                     $_SESSION['username'] = $new_username;
                     $_SESSION['email'] = $new_email;
@@ -138,7 +139,7 @@ include 'includes/header.php';
 
 <style>
     /* Mobile-First Responsive Design */
-    
+
     .profile-container {
         display: grid;
         grid-template-columns: 1fr;
@@ -495,7 +496,7 @@ include 'includes/header.php';
             </div>
             <div class="user-name"><?php echo htmlspecialchars($user['username']); ?></div>
             <div class="user-role">Recycler</div>
-            
+
             <div class="member-badge">
                 <i class="fas fa-calendar"></i>
                 Member since <?php echo date('M Y', strtotime($user['created_at'])); ?>
@@ -533,7 +534,8 @@ include 'includes/header.php';
         <div class="info-box">
             <p>
                 <i class="fas fa-info-circle"></i>
-                <span>You have <?php echo $stats['pending_submissions']; ?> pending submission(s) awaiting review.</span>
+                <span>You have <?php echo $stats['pending_submissions']; ?> pending submission(s) awaiting
+                    review.</span>
             </p>
         </div>
     </div>
@@ -551,29 +553,21 @@ include 'includes/header.php';
             <!-- Basic Information -->
             <div class="form-group">
                 <label for="username" class="required">Username</label>
-                <input type="text" 
-                       id="username" 
-                       name="username" 
-                       value="<?php echo htmlspecialchars($user['username']); ?>"
-                       required>
+                <input type="text" id="username" name="username"
+                    value="<?php echo htmlspecialchars($user['username']); ?>" required>
                 <small>Choose a unique username for your account</small>
             </div>
 
             <div class="form-group">
                 <label for="email" class="required">Email Address</label>
-                <input type="email" 
-                       id="email" 
-                       name="email" 
-                       value="<?php echo htmlspecialchars($user['email']); ?>"
-                       required>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>"
+                    required>
                 <small>We'll use this email for important notifications</small>
             </div>
 
             <div class="form-group">
                 <label>User ID</label>
-                <input type="text" 
-                       value="<?php echo $user['user_id']; ?>" 
-                       disabled>
+                <input type="text" value="<?php echo $user['user_id']; ?>" disabled>
                 <small>Your unique identifier in the system</small>
             </div>
 
@@ -586,28 +580,21 @@ include 'includes/header.php';
 
                 <div class="form-group">
                     <label for="current_password">Current Password</label>
-                    <input type="password" 
-                           id="current_password" 
-                           name="current_password"
-                           placeholder="Enter current password">
+                    <input type="password" id="current_password" name="current_password"
+                        placeholder="Enter current password">
                     <small>Required only if changing password</small>
                 </div>
 
                 <div class="form-group">
                     <label for="new_password">New Password</label>
-                    <input type="password" 
-                           id="new_password" 
-                           name="new_password"
-                           placeholder="Enter new password">
+                    <input type="password" id="new_password" name="new_password" placeholder="Enter new password">
                     <small>Minimum 6 characters</small>
                 </div>
 
                 <div class="form-group">
                     <label for="confirm_password">Confirm New Password</label>
-                    <input type="password" 
-                           id="confirm_password" 
-                           name="confirm_password"
-                           placeholder="Confirm new password">
+                    <input type="password" id="confirm_password" name="confirm_password"
+                        placeholder="Confirm new password">
                 </div>
             </div>
 
@@ -628,9 +615,9 @@ include 'includes/header.php';
 
 <script>
     // Clear password fields if user clicks cancel
-    document.querySelector('.btn-secondary').addEventListener('click', function(e) {
-        if (document.getElementById('new_password').value || 
-            document.getElementById('current_password').value || 
+    document.querySelector('.btn-secondary').addEventListener('click', function (e) {
+        if (document.getElementById('new_password').value ||
+            document.getElementById('current_password').value ||
             document.getElementById('confirm_password').value) {
             if (!confirm('Discard password changes?')) {
                 e.preventDefault();
@@ -639,7 +626,7 @@ include 'includes/header.php';
     });
 
     // Form validation
-    document.querySelector('form').addEventListener('submit', function(e) {
+    document.querySelector('form').addEventListener('submit', function (e) {
         const newPassword = document.getElementById('new_password').value;
         const currentPassword = document.getElementById('current_password').value;
         const confirmPassword = document.getElementById('confirm_password').value;

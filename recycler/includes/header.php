@@ -8,6 +8,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,7 +47,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
         }
 
         .recycler-logo-icon {
-            width: 40px; /* Adjusted to fit logo better */
+            width: 40px;
+            /* Adjusted to fit logo better */
             height: 40px;
             background: transparent;
             border-radius: var(--radius-md);
@@ -54,7 +56,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             align-items: center;
             justify-content: center;
         }
-        
+
         .recycler-logo-icon img {
             width: 100%;
             height: 100%;
@@ -81,7 +83,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         /* --- NEW: Profile Link Styling --- */
         .profile-link {
-            text-decoration: none; /* Removes the underline */
+            text-decoration: none;
+            /* Removes the underline */
             color: inherit;
             display: block;
             border-radius: var(--radius-md);
@@ -95,7 +98,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             padding: var(--space-2) var(--space-4);
             background: var(--color-gray-100);
             border-radius: var(--radius-md);
-            border: 1px solid transparent; /* Placeholder for border transition */
+            border: 1px solid transparent;
+            /* Placeholder for border transition */
             transition: all 0.2s ease;
         }
 
@@ -104,7 +108,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             background: var(--color-white);
             border-color: var(--color-gray-200);
             box-shadow: var(--shadow-sm);
-            transform: translateY(-2px); /* Slight lift effect */
+            transform: translateY(-2px);
+            /* Slight lift effect */
         }
 
         .profile-link:active .recycler-user-profile {
@@ -112,6 +117,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             background: var(--color-gray-100);
             box-shadow: none;
         }
+
         /* -------------------------------- */
 
         .recycler-user-avatar {
@@ -270,6 +276,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         }
     </style>
 </head>
+
 <body>
     <header class="recycler-header">
         <div class="recycler-header-top">
@@ -279,7 +286,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </div>
                 <div class="recycler-logo-text">
                     <h1>APRecycle</h1>
-                    <p>Smart Recycling  for APU</p>
+                    <p>Smart Recycling for APU</p>
                 </div>
             </a>
 
@@ -290,7 +297,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             <?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>
                         </div>
                         <div class="recycler-user-details">
-                            <span class="recycler-user-name"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <span
+                                class="recycler-user-name"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
                             <span class="recycler-user-role">Recycler</span>
                         </div>
                     </div>
@@ -305,33 +313,45 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <nav class="recycler-nav">
             <ul class="recycler-nav-tabs">
                 <li class="recycler-nav-tab">
-                    <a href="dashboard.php" class="recycler-nav-link <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
+                    <a href="dashboard.php"
+                        class="recycler-nav-link <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
                         <i class="fas fa-home recycler-nav-icon"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
-                    <a href="challenges.php" class="recycler-nav-link <?php echo $current_page == 'challenges.php' ? 'active' : ''; ?>">
+                    <a href="challenges.php"
+                        class="recycler-nav-link <?php echo $current_page == 'challenges.php' ? 'active' : ''; ?>">
                         <i class="fas fa-trophy recycler-nav-icon"></i>
                         <span>Challenges</span>
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
-                    <a href="teams.php" class="recycler-nav-link <?php echo $current_page == 'teams.php' ? 'active' : ''; ?>">
+                    <a href="teams.php"
+                        class="recycler-nav-link <?php echo $current_page == 'teams.php' ? 'active' : ''; ?>">
                         <i class="fas fa-users recycler-nav-icon"></i>
                         <span>Teams</span>
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
-                    <a href="leaderboard.php" class="recycler-nav-link <?php echo $current_page == 'leaderboard.php' ? 'active' : ''; ?>">
+                    <a href="leaderboard.php"
+                        class="recycler-nav-link <?php echo $current_page == 'leaderboard.php' ? 'active' : ''; ?>">
                         <i class="fas fa-chart-line recycler-nav-icon"></i>
                         <span>Leaderboard</span>
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
-                    <a href="inbox.php" class="recycler-nav-link <?php echo $current_page == 'inbox.php' ? 'active' : ''; ?>">
+                    <a href="inbox.php"
+                        class="recycler-nav-link <?php echo $current_page == 'inbox.php' ? 'active' : ''; ?>">
                         <i class="fas fa-inbox recycler-nav-icon"></i>
                         <span>Inbox</span>
+                    </a>
+                </li>
+                <li class="recycler-nav-tab">
+                    <a href="profile.php"
+                        class="recycler-nav-link <?php echo $current_page == 'profile.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-user-circle recycler-nav-icon"></i>
+                        <span>Profile</span>
                     </a>
                 </li>
             </ul>

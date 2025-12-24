@@ -9,6 +9,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -246,6 +247,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         }
     </style>
 </head>
+
 <body>
     <header class="admin-header">
         <div class="admin-header-top">
@@ -279,86 +281,89 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <nav class="admin-nav">
             <ul class="admin-nav-tabs">
                 <li class="admin-nav-tab">
-                    <a href="dashboard.php" class="admin-nav-link <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
+                    <a href="dashboard.php"
+                        class="admin-nav-link <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
                         <i class="fas fa-home admin-nav-icon"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-                
+
                 <li class="admin-nav-tab">
-                    <a href="challenges.php" class="admin-nav-link <?php echo $current_page == 'challenges.php' ? 'active' : ''; ?>">
+                    <a href="challenges.php"
+                        class="admin-nav-link <?php echo $current_page == 'challenges.php' ? 'active' : ''; ?>">
                         <i class="fas fa-trophy admin-nav-icon"></i>
                         <span>Challenges</span>
                     </a>
                 </li>
 
                 <li class="admin-nav-tab">
-                    <a href="badges.php" class="admin-nav-link <?php echo $current_page == 'badges.php' ? 'active' : ''; ?>">
+                    <a href="badges.php"
+                        class="admin-nav-link <?php echo $current_page == 'badges.php' ? 'active' : ''; ?>">
                         <i class="fas fa-medal admin-nav-icon"></i>
                         <span>Badges</span>
                     </a>
                 </li>
 
                 <li class="admin-nav-tab">
-                    <a href="rewards.php" class="admin-nav-link <?php echo $current_page == 'rewards.php' ? 'active' : ''; ?>">
+                    <a href="rewards.php"
+                        class="admin-nav-link <?php echo $current_page == 'rewards.php' ? 'active' : ''; ?>">
                         <i class="fas fa-gift admin-nav-icon"></i>
                         <span>Rewards</span>
                     </a>
                 </li>
 
                 <li class="admin-nav-tab">
-                    <a href="materials.php" class="admin-nav-link <?php echo $current_page == 'materials.php' ? 'active' : ''; ?>">
+                    <a href="materials.php"
+                        class="admin-nav-link <?php echo $current_page == 'materials.php' ? 'active' : ''; ?>">
                         <i class="fas fa-recycle admin-nav-icon"></i>
                         <span>Materials</span>
                     </a>
                 </li>
 
                 <?php
-                    // Check if current page is Overview or any sub-page of Leaderboard
-                    $is_leaderboard = in_array($current_page, [
-                        'leaderboard_overview.php',
-                        'leaderboard_individual.php',
-                        'leaderboard_team.php',
-                        'leaderboard_challenges.php'
-                    ]);
+                // Check if current page is Overview or any sub-page of Leaderboard
+                $is_leaderboard = in_array($current_page, [
+                    'leaderboard_overview.php',
+                    'leaderboard_individual.php',
+                    'leaderboard_team.php',
+                    'leaderboard_challenges.php'
+                ]);
                 ?>
                 <li class="admin-nav-tab">
-                    <a href="leaderboard_overview.php" class="admin-nav-link <?php echo $is_leaderboard ? 'active' : ''; ?>">
+                    <a href="leaderboard_overview.php"
+                        class="admin-nav-link <?php echo $is_leaderboard ? 'active' : ''; ?>">
                         <i class="fas fa-ranking-star admin-nav-icon"></i>
                         <span>Leaderboard</span>
                     </a>
                 </li>
 
                 <li class="admin-nav-tab">
-                    <a href="moderators.php" class="admin-nav-link <?php echo $current_page == 'moderators.php' ? 'active' : ''; ?>">
+                    <a href="moderators.php"
+                        class="admin-nav-link <?php echo $current_page == 'moderators.php' ? 'active' : ''; ?>">
                         <i class="fas fa-user-shield admin-nav-icon"></i>
                         <span>Moderators</span>
                     </a>
                 </li>
 
                 <li class="admin-nav-tab">
-                    <a href="analytics.php" class="admin-nav-link <?php echo $current_page == 'analytics.php' ? 'active' : ''; ?>">
+                    <a href="analytics.php"
+                        class="admin-nav-link <?php echo $current_page == 'analytics.php' ? 'active' : ''; ?>">
                         <i class="fas fa-chart-line admin-nav-icon"></i>
                         <span>Analytics</span>
                     </a>
                 </li>
-                
+
                 <li class="admin-nav-tab">
-                    <a href="reports.php" class="admin-nav-link <?php echo $current_page == 'reports.php' ? 'active' : ''; ?>">
-                        <i class="fas fa-file-alt admin-nav-icon"></i>
-                        <span>Reports</span>
-                    </a>
-                </li>
-                
-                <li class="admin-nav-tab">
-                    <a href="users.php" class="admin-nav-link <?php echo $current_page == 'users.php' ? 'active' : ''; ?>">
+                    <a href="users.php"
+                        class="admin-nav-link <?php echo $current_page == 'users.php' ? 'active' : ''; ?>">
                         <i class="fas fa-users admin-nav-icon"></i>
                         <span>Users</span>
                     </a>
                 </li>
-                
+
                 <li class="admin-nav-tab">
-                    <a href="settings.php" class="admin-nav-link <?php echo $current_page == 'settings.php' ? 'active' : ''; ?>">
+                    <a href="settings.php"
+                        class="admin-nav-link <?php echo $current_page == 'settings.php' ? 'active' : ''; ?>">
                         <i class="fas fa-cog admin-nav-icon"></i>
                         <span>Settings</span>
                     </a>
