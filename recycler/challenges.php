@@ -368,8 +368,12 @@ require_once 'includes/header.php';
                             <span>Progress</span>
                             <span><strong>✓ Joined!</strong> Submit 1 item to complete</span>
                         </div>
+                        <?php
+                        // For participation: 0% if no submissions, 100% if at least 1 submission
+                        $participation_percent = ($row['challenge_quantity'] >= 1) ? 100 : 0;
+                        ?>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 50%;"></div>
+                            <div class="progress-fill" style="width: <?php echo $participation_percent; ?>%;"></div>
                         </div>
                     </div>
                 <?php elseif ($row['completion_type'] == 'quantity'): ?>
