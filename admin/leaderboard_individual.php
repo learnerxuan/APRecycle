@@ -153,8 +153,8 @@ $result = mysqli_query($conn, $sql);
     }
 
     .points-badge {
-        background: var(--color-primary-light, #e0f2fe);
-        color: var(--color-primary);
+        background: #dcfce7; /* Light Green */
+        color: #166534;       /* Dark Green */
         padding: 4px 12px;
         border-radius: 999px;
         font-weight: 700;
@@ -190,9 +190,18 @@ $result = mysqli_query($conn, $sql);
     }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">Individual Leaderboard</h1>
-    <p class="page-description">Ranking of all recyclers based on lifetime points.</p>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 class="page-title">Individual Leaderboard</h1>
+        <p class="page-description">Ranking of all recyclers based on lifetime points.</p>
+    </div>
+    <a href="leaderboard_overview.php"
+        style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"
+        onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';"
+        onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+    </a>
 </div>
 
 <div class="toolbar">

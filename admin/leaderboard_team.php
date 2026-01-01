@@ -202,9 +202,18 @@ $result = mysqli_query($conn, $sql);
     }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">Team Leaderboard</h1>
-    <p class="page-description">Ranking of recycling teams based on combined member points.</p>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 class="page-title">Team Leaderboard</h1>
+        <p class="page-description">Ranking of recycling teams based on combined member points.</p>
+    </div>
+    <a href="leaderboard_overview.php"
+        style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"
+        onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';"
+        onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+    </a>
 </div>
 
 <div class="toolbar">

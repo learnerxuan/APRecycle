@@ -11,7 +11,7 @@ $conn = getDBConnection();
 
 // 4. Pagination Setup
 $limit = 10; // Challenges per page
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
 // 5. Query to get Past Challenges
@@ -48,8 +48,13 @@ $total_pages = ceil($total_records / $limit);
         transition: background 0.2s;
     }
 
-    .challenge-row:last-child { border-bottom: none; }
-    .challenge-row:hover { background: var(--color-gray-50); }
+    .challenge-row:last-child {
+        border-bottom: none;
+    }
+
+    .challenge-row:hover {
+        background: var(--color-gray-50);
+    }
 
     /* Date Box */
     .date-box {
@@ -60,18 +65,41 @@ $total_pages = ceil($total_records / $limit);
         min-width: 80px;
         border: 1px solid var(--color-gray-200);
     }
-    
-    .date-month { font-size: var(--text-xs); text-transform: uppercase; color: var(--color-gray-600); font-weight: 700; display: block; }
-    .date-year { font-size: var(--text-sm); color: var(--color-gray-500); }
+
+    .date-month {
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        color: var(--color-gray-600);
+        font-weight: 700;
+        display: block;
+    }
+
+    .date-year {
+        font-size: var(--text-sm);
+        color: var(--color-gray-500);
+    }
 
     /* Challenge Info */
-    .challenge-info { flex: 1; }
-    .challenge-title { font-size: var(--text-lg); font-weight: 700; color: var(--color-gray-800); margin-bottom: var(--space-1); }
-    .challenge-meta { font-size: var(--text-sm); color: var(--color-gray-500); }
+    .challenge-info {
+        flex: 1;
+    }
+
+    .challenge-title {
+        font-size: var(--text-lg);
+        font-weight: 700;
+        color: var(--color-gray-800);
+        margin-bottom: var(--space-1);
+    }
+
+    .challenge-meta {
+        font-size: var(--text-sm);
+        color: var(--color-gray-500);
+    }
 
     /* Winner Section */
     .winner-card {
-        background: #fffbeb; /* Light Yellow */
+        background: #fffbeb;
+        /* Light Yellow */
         border: 1px solid #fcd34d;
         border-radius: var(--radius-lg);
         padding: var(--space-3) var(--space-5);
@@ -82,21 +110,39 @@ $total_pages = ceil($total_records / $limit);
     }
 
     .winner-icon {
-        width: 40px; 
-        height: 40px; 
-        background: #fbbf24; 
-        color: white; 
-        border-radius: 50%; 
-        display: flex; 
-        align-items: center; 
+        width: 40px;
+        height: 40px;
+        background: #fbbf24;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
         justify-content: center;
         font-size: var(--text-lg);
     }
 
-    .winner-details { display: flex; flex-direction: column; }
-    .winner-label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.5px; color: #92400e; font-weight: 700; }
-    .winner-name { font-weight: 600; color: var(--color-gray-800); }
-    .winner-score { font-size: var(--text-sm); color: var(--color-gray-600); }
+    .winner-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .winner-label {
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #92400e;
+        font-weight: 700;
+    }
+
+    .winner-name {
+        font-weight: 600;
+        color: var(--color-gray-800);
+    }
+
+    .winner-score {
+        font-size: var(--text-sm);
+        color: var(--color-gray-600);
+    }
 
     .no-winner {
         color: var(--color-gray-400);
@@ -130,23 +176,46 @@ $total_pages = ceil($total_records / $limit);
 
     /* Mobile Responsive */
     @media (max-width: 768px) {
-        .challenge-row { flex-direction: column; align-items: flex-start; }
-        .winner-card { width: 100%; margin-top: var(--space-3); }
-        .date-box { display: flex; gap: 10px; width: 100%; align-items: center; justify-content: center; }
+        .challenge-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .winner-card {
+            width: 100%;
+            margin-top: var(--space-3);
+        }
+
+        .date-box {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+        }
     }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">Past Challenge Results</h1>
-    <p class="page-description">Archive of completed challenges and their top performers.</p>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 class="page-title">Past Challenge Results</h1>
+        <p class="page-description">Archive of completed challenges and their top performers.</p>
+    </div>
+    <a href="leaderboard_overview.php"
+        style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"
+        onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';"
+        onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+    </a>
 </div>
 
 <div class="results-container">
     <?php if (mysqli_num_rows($result) > 0): ?>
-        <?php while ($challenge = mysqli_fetch_assoc($result)): 
+        <?php while ($challenge = mysqli_fetch_assoc($result)):
             $start_date = $challenge['start_date'];
             $end_date = $challenge['end_date'];
-            
+
             // FIX: Changed SUM(points) to COUNT(*) because 'points' column does not exist
             // This now calculates the winner based on NUMBER OF APPROVED SUBMISSIONS
             $winner_sql = "SELECT u.username, COUNT(*) as score
@@ -157,22 +226,24 @@ $total_pages = ceil($total_records / $limit);
                            GROUP BY rs.user_id
                            ORDER BY score DESC
                            LIMIT 1";
-            
+
             $winner_result = mysqli_query($conn, $winner_sql);
             $winner = ($winner_result) ? mysqli_fetch_assoc($winner_result) : null;
-        ?>
+            ?>
             <div class="challenge-row">
                 <div class="date-box">
                     <span class="date-month"><?php echo date('M', strtotime($end_date)); ?></span>
-                    <span style="font-size: var(--text-xl); font-weight: 800; display:block;"><?php echo date('d', strtotime($end_date)); ?></span>
+                    <span
+                        style="font-size: var(--text-xl); font-weight: 800; display:block;"><?php echo date('d', strtotime($end_date)); ?></span>
                     <span class="date-year"><?php echo date('Y', strtotime($end_date)); ?></span>
                 </div>
 
                 <div class="challenge-info">
                     <h3 class="challenge-title"><?php echo htmlspecialchars($challenge['title']); ?></h3>
                     <div class="challenge-meta">
-                        <i class="far fa-calendar-alt"></i> 
-                        <?php echo date('M d, Y', strtotime($start_date)); ?> — <?php echo date('M d, Y', strtotime($end_date)); ?>
+                        <i class="far fa-calendar-alt"></i>
+                        <?php echo date('M d, Y', strtotime($start_date)); ?> —
+                        <?php echo date('M d, Y', strtotime($end_date)); ?>
                     </div>
                     <p style="margin-top: var(--space-2); color: var(--color-gray-600); font-size: var(--text-sm);">
                         <?php echo htmlspecialchars($challenge['description']); ?>
@@ -212,21 +283,21 @@ $total_pages = ceil($total_records / $limit);
 </div>
 
 <?php if ($total_pages > 1): ?>
-<div class="pagination">
-    <?php if ($page > 1): ?>
-        <a href="?page=<?php echo ($page - 1); ?>" class="page-link">&laquo; Prev</a>
-    <?php endif; ?>
+    <div class="pagination">
+        <?php if ($page > 1): ?>
+            <a href="?page=<?php echo ($page - 1); ?>" class="page-link">&laquo; Prev</a>
+        <?php endif; ?>
 
-    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-        <a href="?page=<?php echo $i; ?>" class="page-link <?php echo ($i == $page) ? 'active' : ''; ?>">
-            <?php echo $i; ?>
-        </a>
-    <?php endfor; ?>
+        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+            <a href="?page=<?php echo $i; ?>" class="page-link <?php echo ($i == $page) ? 'active' : ''; ?>">
+                <?php echo $i; ?>
+            </a>
+        <?php endfor; ?>
 
-    <?php if ($page < $total_pages): ?>
-        <a href="?page=<?php echo ($page + 1); ?>" class="page-link">Next &raquo;</a>
-    <?php endif; ?>
-</div>
+        <?php if ($page < $total_pages): ?>
+            <a href="?page=<?php echo ($page + 1); ?>" class="page-link">Next &raquo;</a>
+        <?php endif; ?>
+    </div>
 <?php endif; ?>
 
 <?php
