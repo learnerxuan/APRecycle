@@ -11,68 +11,76 @@ include('includes/header.php'); // Ensures user is 'recycler'
     </p>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-8); margin-bottom: var(--space-12);">
-    
-    <div class="card" style="display: flex; flex-direction: column; transition: transform 0.3s ease; border-top: 5px solid var(--color-primary);">
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-8); margin-bottom: var(--space-12);">
+
+    <div class="card"
+        style="display: flex; flex-direction: column; transition: transform 0.3s ease; border-top: 5px solid var(--color-primary);">
         <div style="padding: var(--space-6); flex-grow: 1; text-align: center;">
-            <div style="background: var(--color-gray-50); width: 80px; height: 80px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2.5rem;">
+            <div
+                style="background: var(--color-gray-50); width: 80px; height: 80px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2.5rem;">
                 🥇
             </div>
-            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-3); color: var(--color-gray-800);">Individual Rankings</h2>
+            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-3); color: var(--color-gray-800);">
+                Individual Rankings</h2>
             <p style="color: var(--color-gray-600); font-size: var(--text-sm); line-height: 1.6;">
                 Compete with fellow students to become the top recycler at APU. View monthly and lifetime high scores.
             </p>
         </div>
         <div style="padding: var(--space-6); border-top: 1px solid var(--color-gray-100);">
-            <a href="leaderboard_individual.php" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+            <a href="leaderboard_individual.php" class="btn btn-primary"
+                style="width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-2); text-decoration: none;">
                 <span>View Rankings</span>
                 <i class="fas fa-chevron-right" style="font-size: var(--text-xs);"></i>
             </a>
         </div>
     </div>
 
-    <div class="card" style="display: flex; flex-direction: column; transition: transform 0.3s ease; border-top: 5px solid var(--color-secondary);">
+    <div class="card"
+        style="display: flex; flex-direction: column; transition: transform 0.3s ease; border-top: 5px solid var(--color-secondary);">
         <div style="padding: var(--space-6); flex-grow: 1; text-align: center;">
-            <div style="background: var(--color-gray-50); width: 80px; height: 80px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2.5rem;">
+            <div
+                style="background: var(--color-gray-50); width: 80px; height: 80px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2.5rem;">
                 👥
             </div>
-            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-3); color: var(--color-gray-800);">Team Rankings</h2>
+            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-3); color: var(--color-gray-800);">Team
+                Rankings</h2>
             <p style="color: var(--color-gray-600); font-size: var(--text-sm); line-height: 1.6;">
-                Sustainability is a team effort! Check how your team stands against others in the collective points table.
+                Sustainability is a team effort! Check how your team stands against others in the collective points
+                table.
             </p>
         </div>
         <div style="padding: var(--space-6); border-top: 1px solid var(--color-gray-100);">
-            <a href="leaderboard_team.php" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+            <a href="leaderboard_team.php" class="btn btn-primary"
+                style="width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-2); text-decoration: none;">
                 <span>View Rankings</span>
                 <i class="fas fa-chevron-right" style="font-size: var(--text-xs);"></i>
             </a>
         </div>
     </div>
 
-    <div class="card" style="display: flex; flex-direction: column; transition: transform 0.3s ease; border-top: 5px solid var(--color-accent-yellow);">
+    <div class="card"
+        style="display: flex; flex-direction: column; transition: transform 0.3s ease; border-top: 5px solid var(--color-accent-yellow);">
         <div style="padding: var(--space-6); flex-grow: 1; text-align: center;">
-            <div style="background: var(--color-gray-50); width: 80px; height: 80px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2.5rem;">
+            <div
+                style="background: var(--color-gray-50); width: 80px; height: 80px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2.5rem;">
                 🏆
             </div>
-            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-3); color: var(--color-gray-800);">Challenge Standings</h2>
+            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-3); color: var(--color-gray-800);">
+                Challenge Standings</h2>
             <p style="color: var(--color-gray-600); font-size: var(--text-sm); line-height: 1.6;">
                 The race for badges! See current leaders for active monthly challenges and special recycling events.
             </p>
         </div>
         <div style="padding: var(--space-6); border-top: 1px solid var(--color-gray-100);">
-            <a href="leaderboard_challenges.php" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+            <a href="leaderboard_challenges.php" class="btn btn-primary"
+                style="width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-2); text-decoration: none;">
                 <span>View Rankings</span>
                 <i class="fas fa-chevron-right" style="font-size: var(--text-xs);"></i>
             </a>
         </div>
     </div>
 
-</div>
-
-<div class="card" style="background: var(--gradient-primary); color: white; padding: var(--space-8); text-align: center; border: none;">
-    <h3 style="margin-bottom: var(--space-2); color: white;">Want to climb the ranks?</h3>
-    <p style="opacity: 0.9; margin-bottom: var(--space-6);">Every item counts! Consistent recycling increases your streak and earns you bonus points.</p>
-    <a href="submit.php" class="btn" style="background: white; color: var(--color-primary); border: none;">Start Recycling Now</a>
 </div>
 
 <?php include('includes/footer.php'); ?>

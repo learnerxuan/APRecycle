@@ -45,16 +45,28 @@ if ($rank_result) {
 $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM challenge ORDER BY end_date DESC");
 ?>
 
-<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
+<div style="margin-bottom: var(--space-6); text-align: right;">
+    <a href="leaderboard.php"
+        style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"
+        onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';"
+        onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+    </a>
+</div>
+
+<div class="page-header"
+    style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
     <div>
         <h1 class="page-title">Team Leaderboard</h1>
         <p class="page-description">Collaboration is key. See which teams are making the biggest impact.</p>
     </div>
     <div style="background: var(--color-gray-100); padding: var(--space-2); border-radius: var(--radius-md);">
         <form method="GET">
-            <select name="challenge_id" onchange="this.form.submit()" style="padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); border: 1px solid var(--color-gray-300); background: white; font-weight: 500; color: var(--color-gray-700); cursor: pointer; min-width: 200px;">
+            <select name="challenge_id" onchange="this.form.submit()"
+                style="padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); border: 1px solid var(--color-gray-300); background: white; font-weight: 500; color: var(--color-gray-700); cursor: pointer; min-width: 200px;">
                 <option value="0">🏆 Overall Lifetime Rankings</option>
-                <?php while($c = mysqli_fetch_assoc($challenges)): ?>
+                <?php while ($c = mysqli_fetch_assoc($challenges)): ?>
                     <option value="<?php echo $c['challenge_id']; ?>" <?php echo ($challenge_id == $c['challenge_id']) ? 'selected' : ''; ?>>
                         Event: <?php echo htmlspecialchars($c['title']); ?>
                     </option>
@@ -66,56 +78,71 @@ $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM cha
 
 <?php if (count($teams) > 0): ?>
 
-    <div class="card" style="padding: 0; overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); background: white;">
+    <div class="card"
+        style="padding: 0; overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); background: white;">
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead style="background: var(--color-gray-50); color: var(--color-gray-600);">
                 <tr>
-                    <th style="padding: var(--space-4); border-bottom: 1px solid var(--color-gray-200); width: 80px;">Rank</th>
+                    <th style="padding: var(--space-4); border-bottom: 1px solid var(--color-gray-200); width: 80px;">Rank
+                    </th>
                     <th style="padding: var(--space-4); border-bottom: 1px solid var(--color-gray-200);">Team Name</th>
                     <th style="padding: var(--space-4); border-bottom: 1px solid var(--color-gray-200);">Members</th>
-                    <th style="padding: var(--space-4); border-bottom: 1px solid var(--color-gray-200); text-align: right;">Total Points</th>
+                    <th style="padding: var(--space-4); border-bottom: 1px solid var(--color-gray-200); text-align: right;">
+                        Total Points</th>
                 </tr>
             </thead>
             <tbody>
-                <?php 
+                <?php
                 // Loop through ALL teams (starting from index 0)
-                for($i = 0; $i < count($teams); $i++): 
+                for ($i = 0; $i < count($teams); $i++):
                     $team = $teams[$i];
                     $is_my_team = ($team['team_id'] == $my_team_id);
                     $rank = $i + 1;
-                ?>
-                <tr style="border-bottom: 1px solid var(--color-gray-100); <?php echo $is_my_team ? 'background: #eff6ff;' : ''; ?>">
-                    <td style="padding: var(--space-4); font-weight: 700; color: var(--color-gray-400);">
-                        <?php 
-                        // Simple Rank Display
-                        if ($rank == 1) echo '🥇';
-                        elseif ($rank == 2) echo '🥈';
-                        elseif ($rank == 3) echo '🥉';
-                        else echo "#" . $rank;
-                        ?>
-                    </td>
-                    <td style="padding: var(--space-4);">
-                        <div style="display: flex; align-items: center; gap: var(--space-3);">
-                            <div style="width: 32px; height: 32px; background: var(--color-gray-100); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--color-gray-500); font-size: 0.8rem;">
-                                <?php echo strtoupper(substr($team['team_name'], 0, 1)); ?>
+                    ?>
+                    <tr
+                        style="border-bottom: 1px solid var(--color-gray-100); <?php echo $is_my_team ? 'background: #eff6ff;' : ''; ?>">
+                        <td style="padding: var(--space-4); font-weight: 700; color: var(--color-gray-400);">
+                            <?php
+                            // Simple Rank Display
+                            if ($rank == 1)
+                                echo '🥇';
+                            elseif ($rank == 2)
+                                echo '🥈';
+                            elseif ($rank == 3)
+                                echo '🥉';
+                            else
+                                echo "#" . $rank;
+                            ?>
+                        </td>
+                        <td style="padding: var(--space-4);">
+                            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                <div
+                                    style="width: 32px; height: 32px; background: var(--color-gray-100); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--color-gray-500); font-size: 0.8rem;">
+                                    <?php echo strtoupper(substr($team['team_name'], 0, 1)); ?>
+                                </div>
+                                <span
+                                    style="font-weight: 600; color: var(--color-gray-800);"><?php echo htmlspecialchars($team['team_name']); ?></span>
+                                <?php if ($is_my_team): ?>
+                                    <span class="badge"
+                                        style="background: var(--color-primary); color: white; padding: 2px 6px; font-size: 10px; border-radius: 4px;">YOUR
+                                        TEAM</span>
+                                <?php endif; ?>
                             </div>
-                            <span style="font-weight: 600; color: var(--color-gray-800);"><?php echo htmlspecialchars($team['team_name']); ?></span>
-                            <?php if($is_my_team): ?>
-                                <span class="badge" style="background: var(--color-primary); color: white; padding: 2px 6px; font-size: 10px; border-radius: 4px;">YOUR TEAM</span>
-                            <?php endif; ?>
-                        </div>
-                    </td>
-                    <td style="padding: var(--space-4);">
-                        <span style="background: var(--color-gray-100); color: var(--color-gray-600); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
-                            <i class="fas fa-user-friends" style="margin-right: 4px;"></i> <?php echo number_format($team['member_count']); ?>
-                        </span>
-                    </td>
-                    <td style="padding: var(--space-4); text-align: right;">
-                        <span style="background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px; font-weight: 700; font-size: 14px;">
-                            <?php echo number_format($team['display_points']); ?> pts
-                        </span>
-                    </td>
-                </tr>
+                        </td>
+                        <td style="padding: var(--space-4);">
+                            <span
+                                style="background: var(--color-gray-100); color: var(--color-gray-600); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                <i class="fas fa-user-friends" style="margin-right: 4px;"></i>
+                                <?php echo number_format($team['member_count']); ?>
+                            </span>
+                        </td>
+                        <td style="padding: var(--space-4); text-align: right;">
+                            <span
+                                style="background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px; font-weight: 700; font-size: 14px;">
+                                <?php echo number_format($team['display_points']); ?> pts
+                            </span>
+                        </td>
+                    </tr>
                 <?php endfor; ?>
             </tbody>
         </table>
@@ -126,16 +153,11 @@ $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM cha
         <div style="font-size: 4rem; margin-bottom: var(--space-4); opacity: 0.5;">🛡️</div>
         <h3>No Teams Found</h3>
         <p style="color: var(--color-gray-600);">There are no teams participating in this ranking yet.</p>
-        <?php if($my_team_id == 0): ?>
-            <a href="teams.php" class="btn btn-primary" style="margin-top: var(--space-4); display: inline-block;">Join a Team</a>
+        <?php if ($my_team_id == 0): ?>
+            <a href="teams.php" class="btn btn-primary"
+                style="margin-top: var(--space-4); display: inline-block; text-decoration: none;">Join a Team</a>
         <?php endif; ?>
     </div>
 <?php endif; ?>
-
-<div style="margin-top: var(--space-8); text-align: center;">
-    <a href="leaderboard.php" class="btn btn-secondary">
-        <i class="fas fa-chevron-left" style="margin-right: 8px;"></i> Back to Hub
-    </a>
-</div>
 
 <?php include('includes/footer.php'); ?>
