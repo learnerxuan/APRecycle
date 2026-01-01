@@ -43,10 +43,10 @@ if (isset($_POST['add_moderator'])) {
             // Hash password
             $hashed_password = password_hash($mod_password, PASSWORD_DEFAULT);
             
-            // Insert new eco-moderator
+            // Insert new eco-moderator with 'eco-moderator' role (hyphen)
             $insert_stmt = mysqli_prepare($conn, 
                 "INSERT INTO user (username, password, email, role, qr_code, lifetime_points, created_at) 
-                 VALUES (?, ?, ?, 'eco_moderator', ?, 0, NOW())");
+                 VALUES (?, ?, ?, 'eco-moderator', ?, 0, NOW())");
             mysqli_stmt_bind_param($insert_stmt, "ssss", $mod_username, $hashed_password, $mod_email, $qr_code);
             
             if (mysqli_stmt_execute($insert_stmt)) {
@@ -56,7 +56,9 @@ if (isset($_POST['add_moderator'])) {
             } else {
                 $error_message = "Failed to add eco-moderator. Please try again.";
             }
+            mysqli_stmt_close($insert_stmt);
         }
+        mysqli_stmt_close($check_stmt);
     }
 }
 

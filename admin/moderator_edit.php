@@ -52,12 +52,12 @@ if (isset($_POST['update_moderator'])) {
                 // Update with new password
                 $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
                 $update_stmt = mysqli_prepare($conn, 
-                    "UPDATE user SET username = ?, email = ?, password = ? WHERE user_id = ? AND role = 'eco_moderator'");
+                    "UPDATE user SET username = ?, email = ?, password = ? WHERE user_id = ? AND role = 'eco-moderator'");
                 mysqli_stmt_bind_param($update_stmt, "sssi", $mod_username, $mod_email, $hashed_password, $moderator_id);
             } else {
                 // Update without password change
                 $update_stmt = mysqli_prepare($conn, 
-                    "UPDATE user SET username = ?, email = ? WHERE user_id = ? AND role = 'eco_moderator'");
+                    "UPDATE user SET username = ?, email = ? WHERE user_id = ? AND role = 'eco-moderator'");
                 mysqli_stmt_bind_param($update_stmt, "ssi", $mod_username, $mod_email, $moderator_id);
             }
             
@@ -71,7 +71,7 @@ if (isset($_POST['update_moderator'])) {
 }
 
 // Get moderator details
-$mod_query = "SELECT user_id, username, email, created_at FROM user WHERE user_id = ? AND role = 'eco_moderator'";
+$mod_query = "SELECT user_id, username, email, created_at FROM user WHERE user_id = ? AND role = 'eco-moderator'";
 $stmt = mysqli_prepare($conn, $mod_query);
 mysqli_stmt_bind_param($stmt, "i", $moderator_id);
 mysqli_stmt_execute($stmt);
