@@ -3,14 +3,25 @@ session_start();
 require_once '../php/config.php';
 $conn = getDBConnection();
 
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'eco-moderator') {
+    header("Location: ../login.php");
+    exit();
+}
+
 $content_id = $_GET['id'] ?? 0;
-$sql = "SELECT ec.*, u.username AS author_name FROM educational_content ec LEFT JOIN user u ON ec.author_id = u.user_id WHERE ec.content_id = ?";
+$sql = "SELECT ec.*, u.username AS author_name 
+        FROM educational_content ec 
+        LEFT JOIN user u ON ec.author_id = u.user_id 
+        WHERE ec.content_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $content_id);
 $stmt->execute();
 $article = $stmt->get_result()->fetch_assoc();
 
-if (!$article) { echo "<script>alert('Article not found.'); window.location.href='educational_content.php';</script>"; exit(); }
+if (!$article) {
+    echo "<script>alert('Article not found.'); window.location.href='educational_content.php';</script>";
+    exit();
+}
 ?>
 
 <!DOCTYPE html>

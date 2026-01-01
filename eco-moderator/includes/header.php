@@ -244,7 +244,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <body>
     <header class="moderator-header">
-        <!-- Top Bar -->
         <div class="moderator-header-top">
             <a href="dashboard.php" class="moderator-logo">
                 <div class="moderator-logo-icon">
@@ -273,7 +272,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
         <nav class="moderator-nav">
             <ul class="moderator-nav-tabs">
                 <li class="moderator-nav-tab">
@@ -291,10 +289,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="moderator-nav-tab">
-                    <a href="content-creation.php"
-                        class="moderator-nav-link <?php echo $current_page == 'content-creation.php' ? 'active' : ''; ?>">
-                        <i class="fas fa-pen-nib moderator-nav-icon"></i>
-                        <span>Content Creation</span>
+                    <a href="educational_content.php"
+                        class="moderator-nav-link <?php echo ($current_page == 'educational_content.php' || $current_page == 'content-creation.php' || $current_page == 'content-edit.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-book moderator-nav-icon"></i>
+                        <span>Educational Content</span>
                     </a>
                 </li>
             </ul>

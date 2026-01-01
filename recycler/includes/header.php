@@ -344,7 +344,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="educational_content.php"
                         class="recycler-nav-link <?php echo $current_page == 'educational_content.php' ? 'active' : ''; ?>">
                         <i class="fas fa-book recycler-nav-icon"></i>
-                        <span>Education</span>
+                        <span>Educational Content</span>
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
