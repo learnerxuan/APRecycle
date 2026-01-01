@@ -53,6 +53,16 @@ mysqli_stmt_execute($rank_stmt);
 $rank_result = mysqli_stmt_get_result($rank_stmt);
 $user_rank = mysqli_fetch_assoc($rank_result)['user_rank'];
 
+// Get user's total items recycled and calculate CO₂ reduction
+$co2_stmt = mysqli_prepare($conn, "SELECT SUM(sm.quantity) as total_items FROM submission_material sm JOIN recycling_submission rs ON sm.submission_id = rs.submission_id WHERE rs.user_id = ? AND rs.status = 'approved'");
+mysqli_stmt_bind_param($co2_stmt, "i", $user_id);
+mysqli_stmt_execute($co2_stmt);
+$co2_result = mysqli_stmt_get_result($co2_stmt);
+$user_total_items = mysqli_fetch_assoc($co2_result)['total_items'];
+$user_total_items = $user_total_items ? $user_total_items : 0;
+// CO₂ calculation: 0.15kg CO₂ saved per item recycled (same formula as admin analytics)
+$user_co2_saved = round($user_total_items * 0.15, 2);
+
 $page_title = "Dashboard";
 include 'includes/header.php';
 ?>
@@ -240,6 +250,12 @@ include 'includes/header.php';
     <div class="dashboard-card stats-card">
         <div class="stat-value"><?php echo number_format($user['lifetime_points']); ?></div>
         <div class="stat-label">Total Points</div>
+    </div>
+
+    <div class="dashboard-card stats-card">
+        <div class="stat-value"><?php echo number_format($user_co2_saved, 2); ?><span style="font-size: 0.6em">kg</span>
+        </div>
+        <div class="stat-label">CO₂ Reduced</div>
     </div>
 
     <div class="dashboard-card stats-card">
