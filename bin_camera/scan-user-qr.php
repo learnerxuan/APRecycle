@@ -211,6 +211,9 @@ if ($detected_material_id) {
         // Check if material matches (or if it's a generic challenge)
         if (is_null($ch['target_material_id']) || $ch['target_material_id'] == $detected_material_id) {
 
+            // Store original completion state BEFORE any updates
+            $was_completed_before_submission = $ch['is_completed'];
+
             // Calculate new values
             $points_to_add = floor($material_points * $ch['point_multiplier']);
             $new_quantity = $ch['challenge_quantity'] + 1;
@@ -260,8 +263,8 @@ if ($detected_material_id) {
             }
 
             // Apply highest multiplier (for immediate points calculation)
-            // Only apply multiplier if challenge is not completed
-            if ($ch['is_completed'] == 0 && $ch['point_multiplier'] > $total_multiplier) {
+            // Use the ORIGINAL completion state - if challenge was active when submission was made, apply multiplier
+            if ($was_completed_before_submission == 0 && $ch['point_multiplier'] > $total_multiplier) {
                 $total_multiplier = $ch['point_multiplier'];
             }
         }
