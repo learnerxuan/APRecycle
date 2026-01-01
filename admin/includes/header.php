@@ -352,22 +352,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <span>Analytics</span>
                     </a>
                 </li>
-
-                <li class="admin-nav-tab">
-                    <a href="users.php"
-                        class="admin-nav-link <?php echo $current_page == 'users.php' ? 'active' : ''; ?>">
-                        <i class="fas fa-users admin-nav-icon"></i>
-                        <span>Users</span>
-                    </a>
-                </li>
-
-                <li class="admin-nav-tab">
-                    <a href="settings.php"
-                        class="admin-nav-link <?php echo $current_page == 'settings.php' ? 'active' : ''; ?>">
-                        <i class="fas fa-cog admin-nav-icon"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
             </ul>
         </nav>
     </header>
