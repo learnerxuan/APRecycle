@@ -341,6 +341,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
+                    <a href="educational_content.php"
+                        class="recycler-nav-link <?php echo $current_page == 'educational_content.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-book recycler-nav-icon"></i>
+                        <span>Education</span>
+                    </a>
+                </li>
+                <li class="recycler-nav-tab">
                     <a href="inbox.php"
                         class="recycler-nav-link <?php echo $current_page == 'inbox.php' ? 'active' : ''; ?>">
                         <i class="fas fa-inbox recycler-nav-icon"></i>
@@ -348,8 +355,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="recycler-nav-tab">
-                    <a href="achievements.php" 
-                    class="recycler-nav-link <?php echo $current_page == 'achievements.php' ? 'active' : ''; ?>">
+                    <a href="achievements.php"
+                        class="recycler-nav-link <?php echo $current_page == 'achievements.php' ? 'active' : ''; ?>">
                         <i class="fas fa-medal recycler-nav-icon"></i>
                         <span>Achievements</span>
                     </a>
