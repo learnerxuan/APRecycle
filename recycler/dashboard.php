@@ -46,6 +46,13 @@ mysqli_stmt_execute($recent_stmt);
 $recent_result = mysqli_stmt_get_result($recent_stmt);
 $recent_count = mysqli_fetch_assoc($recent_result)['count'];
 
+// Get user's current rank among all recyclers
+$rank_stmt = mysqli_prepare($conn, "SELECT COUNT(*) + 1 AS user_rank FROM user WHERE role = 'recycler' AND lifetime_points > (SELECT lifetime_points FROM user WHERE user_id = ?)");
+mysqli_stmt_bind_param($rank_stmt, "i", $user_id);
+mysqli_stmt_execute($rank_stmt);
+$rank_result = mysqli_stmt_get_result($rank_stmt);
+$user_rank = mysqli_fetch_assoc($rank_result)['user_rank'];
+
 $page_title = "Dashboard";
 include 'includes/header.php';
 ?>
@@ -241,7 +248,7 @@ include 'includes/header.php';
     </div>
 
     <div class="dashboard-card stats-card">
-        <div class="stat-value">-</div>
+        <div class="stat-value">#<?php echo $user_rank; ?></div>
         <div class="stat-label">Current Rank</div>
     </div>
 </div>
