@@ -32,7 +32,8 @@ if (empty($user['qr_code'])) {
 }
 
 // Get QR code image URL
-function getQRImageURL($qr_data) {
+function getQRImageURL($qr_data)
+{
     return "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" . urlencode($qr_data);
 }
 
@@ -185,7 +186,12 @@ include 'includes/header.php';
     }
 
     @media print {
-        .recycler-header, .recycler-nav, .qr-actions, .info-box, .dashboard-card:not(.qr-section) {
+
+        .recycler-header,
+        .recycler-nav,
+        .qr-actions,
+        .info-box,
+        .dashboard-card:not(.qr-section) {
             display: none !important;
         }
 
@@ -209,24 +215,17 @@ include 'includes/header.php';
             <p class="qr-subtitle">Scan this code at the bin to track your recycling contributions</p>
 
             <div class="qr-code-container">
-                <img src="<?php echo htmlspecialchars($qr_image_url); ?>" alt="Recycler QR Code" class="qr-code-image" id="qrCodeImage">
+                <img src="<?php echo htmlspecialchars($qr_image_url); ?>" alt="Recycler QR Code" class="qr-code-image"
+                    id="qrCodeImage">
                 <p class="qr-username"><?php echo htmlspecialchars($username); ?></p>
             </div>
 
-            <div class="qr-actions">
-                <a href="<?php echo htmlspecialchars($qr_image_url); ?>" download="my-qr-code.png" class="btn-qr btn-download">
-                    <i class="fas fa-download"></i>
-                    Download QR Code
-                </a>
-                <button onclick="window.print()" class="btn-qr btn-print">
-                    <i class="fas fa-print"></i>
-                    Print QR Code
-                </button>
-            </div>
+
         </div>
 
         <div class="info-box">
-            <p><i class="fas fa-info-circle"></i> <strong>How to use:</strong> After the bin camera scans your waste, show this QR code to the camera to link the recycling to your account and earn points!</p>
+            <p><i class="fas fa-info-circle"></i> <strong>How to use:</strong> After the bin camera scans your waste,
+                show this QR code to the camera to link the recycling to your account and earn points!</p>
         </div>
     </div>
 
