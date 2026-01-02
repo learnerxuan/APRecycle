@@ -45,34 +45,53 @@ if ($rank_result) {
 $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM challenge ORDER BY end_date DESC");
 ?>
 
-<div style="margin-bottom: var(--space-6); text-align: right;">
-    <a href="leaderboard.php"
-        style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"
-        onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';"
-        onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
-        <i class="fas fa-arrow-left"></i>
-        <span>Back</span>
-    </a>
-</div>
+<style>
+    @media (max-width: 768px) {
+        .page-header-mobile {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 1rem;
+        }
 
-<div class="page-header"
+        .page-header-mobile .back-btn-mobile {
+            order: -1;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header-mobile .filter-mobile {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="page-header page-header-mobile"
     style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
     <div>
         <h1 class="page-title">Team Leaderboard</h1>
         <p class="page-description">Collaboration is key. See which teams are making the biggest impact.</p>
     </div>
-    <div style="background: var(--color-gray-100); padding: var(--space-2); border-radius: var(--radius-md);">
-        <form method="GET">
-            <select name="challenge_id" onchange="this.form.submit()"
-                style="padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); border: 1px solid var(--color-gray-300); background: white; font-weight: 500; color: var(--color-gray-700); cursor: pointer; min-width: 200px;">
-                <option value="0">🏆 Overall Lifetime Rankings</option>
-                <?php while ($c = mysqli_fetch_assoc($challenges)): ?>
-                    <option value="<?php echo $c['challenge_id']; ?>" <?php echo ($challenge_id == $c['challenge_id']) ? 'selected' : ''; ?>>
-                        Event: <?php echo htmlspecialchars($c['title']); ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-        </form>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="filter-mobile"
+            style="background: var(--color-gray-100); padding: var(--space-2); border-radius: var(--radius-md);">
+            <form method="GET">
+                <select name="challenge_id" onchange="this.form.submit()"
+                    style="padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); border: 1px solid var(--color-gray-300); background: white; font-weight: 500; color: var(--color-gray-700); cursor: pointer; min-width: 200px;">
+                    <option value="0">🏆 Overall Lifetime Rankings</option>
+                    <?php while ($c = mysqli_fetch_assoc($challenges)): ?>
+                        <option value="<?php echo $c['challenge_id']; ?>" <?php echo ($challenge_id == $c['challenge_id']) ? 'selected' : ''; ?>>
+                            Event: <?php echo htmlspecialchars($c['title']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </form>
+        </div>
+        <a href="leaderboard.php" class="back-btn-mobile"
+            style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); white-space: nowrap;"
+            onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';"
+            onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </a>
     </div>
 </div>
 

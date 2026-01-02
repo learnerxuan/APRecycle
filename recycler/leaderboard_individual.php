@@ -42,25 +42,63 @@ if ($result) {
 }
 ?>
 
-<div style="margin-bottom: var(--space-6); text-align: right;">
-    <a href="leaderboard.php" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';" onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
-        <i class="fas fa-arrow-left"></i>
-        <span>Back</span>
-    </a>
-</div>
+<style>
+    @media (max-width: 768px) {
+        .page-header-mobile { 
+            flex-direction: column !important; 
+            align-items: flex-start !important; 
+            gap: 1rem; 
+        }
+        .page-header-mobile .back-btn-mobile { 
+            order: -1; 
+            margin-bottom: 0.5rem; 
+        }
+        .page-header-mobile .toggle-mobile { 
+            width: 100%; 
+            justify-content: center; 
+        }
+        
+        /* Podium grid - single column on mobile */
+        .podium-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+        
+        /* Table responsive */
+        .leaderboard-table {
+            font-size: 0.875rem;
+        }
+        
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 0.75rem 0.5rem !important;
+        }
+        
+        /* Hide less important columns on mobile */
+        .hide-mobile {
+            display: none !important;
+        }
+    }
+</style>
 
-<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
+<div class="page-header page-header-mobile" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
     <div>
         <h1 class="page-title">Individual Rankings</h1>
         <p class="page-description">Celebrating APU's most dedicated environmental heroes.</p>
     </div>
-    <div style="background: var(--color-gray-100); padding: var(--space-1); border-radius: var(--radius-md); display: flex; gap: var(--space-1);">
-        <a href="?period=lifetime" class="btn" style="padding: var(--space-2) var(--space-4); background: <?php echo $period == 'lifetime' ? 'var(--color-white)' : 'transparent'; ?>; color: var(--color-gray-700); box-shadow: <?php echo $period == 'lifetime' ? 'var(--shadow-sm)' : 'none'; ?>; border:none; cursor:pointer; text-decoration: none;">Lifetime</a>
-        <a href="?period=monthly" class="btn" style="padding: var(--space-2) var(--space-4); background: <?php echo $period == 'monthly' ? 'var(--color-white)' : 'transparent'; ?>; color: var(--color-gray-700); box-shadow: <?php echo $period == 'monthly' ? 'var(--shadow-sm)' : 'none'; ?>; border:none; cursor:pointer; text-decoration: none;">Monthly</a>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="toggle-mobile" style="background: var(--color-gray-100); padding: var(--space-1); border-radius: var(--radius-md); display: flex; gap: var(--space-1);">
+            <a href="?period=lifetime" class="btn" style="padding: var(--space-2) var(--space-4); background: <?php echo $period == 'lifetime' ? 'var(--color-white)' : 'transparent'; ?>; color: var(--color-gray-700); box-shadow: <?php echo $period == 'lifetime' ? 'var(--shadow-sm)' : 'none'; ?>; border:none; cursor:pointer; text-decoration: none;">Lifetime</a>
+            <a href="?period=monthly" class="btn" style="padding: var(--space-2) var(--space-4); background: <?php echo $period == 'monthly' ? 'var(--color-white)' : 'transparent'; ?>; color: var(--color-gray-700); box-shadow: <?php echo $period == 'monthly' ? 'var(--shadow-sm)' : 'none'; ?>; border:none; cursor:pointer; text-decoration: none;">Monthly</a>
+        </div>
+        <a href="leaderboard.php" class="back-btn-mobile" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); white-space: nowrap;" onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';" onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </a>
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-bottom: var(--space-10); align-items: end;">
+<div class="podium-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-bottom: var(--space-10); align-items: end;">
     <?php 
     $podium_map = [1 => '🥈', 0 => '🥇', 2 => '🥉']; 
     $display_order = [1, 0, 2]; // 2nd, 1st, 3rd for visual podium
@@ -81,7 +119,7 @@ if ($result) {
 </div>
 
 <div class="card" style="padding: 0; overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
-    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+    <table class="leaderboard-table" style="width: 100%; border-collapse: collapse; text-align: left;">
         <thead style="background: var(--color-gray-50); color: var(--color-gray-600);">
             <tr>
                 <th style="padding: var(--space-4); border-bottom: 1px solid var(--color-gray-200);">Rank</th>

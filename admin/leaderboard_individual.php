@@ -153,8 +153,10 @@ $result = mysqli_query($conn, $sql);
     }
 
     .points-badge {
-        background: #dcfce7; /* Light Green */
-        color: #166534;       /* Dark Green */
+        background: #dcfce7;
+        /* Light Green */
+        color: #166534;
+        /* Dark Green */
         padding: 4px 12px;
         border-radius: 999px;
         font-weight: 700;
@@ -187,6 +189,37 @@ $result = mysqli_query($conn, $sql);
 
     .page-link:hover:not(.active) {
         background: var(--color-gray-50);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 1rem;
+        }
+
+        .toolbar {
+            flex-direction: column !important;
+            gap: 1rem;
+        }
+
+        .search-form {
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100% !important;
+        }
+
+        table {
+            font-size: 0.875rem;
+        }
+
+        .rank-cell,
+        .points-badge {
+            font-size: 0.75rem;
+        }
     }
 </style>
 

@@ -352,20 +352,34 @@ if ($challenge_id > 0) {
         }
     </style>
 
-    <div style="margin-bottom: var(--space-6); text-align: right;">
-        <a href="leaderboard.php"
-            style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"
+    <style>
+        @media (max-width: 768px) {
+            .page-header-actions {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.5rem;
+            }
+
+            .page-header-actions .back-btn-mobile {
+                order: -1;
+            }
+        }
+    </style>
+
+    <div class="page-header-actions"
+        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+        <div>
+            <h2 style="margin:0;"><i class="fas fa-trophy" style="margin-right: 10px; color: var(--color-primary);"></i>
+                Challenge Hub</h2>
+            <div style="font-size: var(--text-sm); color: var(--color-gray-600);">Compete, Recycle, Win!</div>
+        </div>
+        <a href="leaderboard.php" class="back-btn-mobile"
+            style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: white; color: var(--color-gray-700); text-decoration: none; border-radius: 8px; border: 1px solid var(--color-gray-200); font-weight: 500; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); white-space: nowrap;"
             onmouseover="this.style.background='var(--color-gray-50)'; this.style.borderColor='var(--color-gray-300)';"
             onmouseout="this.style.background='white'; this.style.borderColor='var(--color-gray-200)';">
             <i class="fas fa-arrow-left"></i>
             <span>Back</span>
         </a>
-    </div>
-
-    <div class="page-header-actions">
-        <h2 style="margin:0;"><i class="fas fa-trophy" style="margin-right: 10px; color: var(--color-primary);"></i>
-            Challenge Hub</h2>
-        <div style="font-size: var(--text-sm); color: var(--color-gray-600);">Compete, Recycle, Win!</div>
     </div>
 
     <div class="stats-row">
