@@ -35,14 +35,22 @@ if (!$article) { echo "<script>alert('Article not found.'); window.location.href
         .page-hero p { font-size: 1.125rem; opacity: 0.95; margin: 0; }
 
         .article-container { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow: hidden; }
-        .article-hero { width: 100%; height: 400px; object-fit: cover; }
+        
+        .article-hero { 
+            width: 100%; 
+            height: auto; 
+            max-height: 600px; 
+            object-fit: contain; 
+            background-color: #f7fafc;
+            display: block;
+        }
+        
         .article-content { padding: 3rem; }
         .badge { background: #edf2f7; color: #4a5568; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; display: inline-block; margin-bottom: 1rem; }
 
         @media (max-width: 768px) {
             .page-hero { padding: 2rem 1rem; }
             .page-hero h1 { font-size: 1.75rem; }
-            .article-hero { height: 250px; }
             .article-content { padding: 1.5rem; }
         }
     </style>
