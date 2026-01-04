@@ -140,9 +140,9 @@ if ($action === 'reject') {
                         $award_badge->close();
                     }
 
-                    // Award Reward
+                    // Award Reward (but not claimed yet)
                     if (!empty($ch['reward_id'])) {
-                        $award_reward = $conn->prepare("INSERT IGNORE INTO user_reward (user_id, reward_id) VALUES (?, ?)");
+                        $award_reward = $conn->prepare("INSERT IGNORE INTO user_reward (user_id, reward_id, is_claimed) VALUES (?, ?, 0)");
                         $award_reward->bind_param("ii", $user_id, $ch['reward_id']);
                         $award_reward->execute();
                         $award_reward->close();

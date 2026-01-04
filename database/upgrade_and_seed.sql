@@ -78,6 +78,13 @@ PREPARE stmt FROM @alter_sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
+-- Add is_claimed to user_reward table (for reward claim system)
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'user_reward' AND COLUMN_NAME = 'is_claimed');
+SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE `user_reward` ADD COLUMN `is_claimed` TINYINT(1) NOT NULL DEFAULT 0 COMMENT "0=earned but not claimed, 1=claimed" AFTER `date_earned`', 'SELECT "Column is_claimed already exists"');
+PREPARE stmt FROM @alter_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
 -- ============================================
 -- STEP 2: SAMPLE DATA - MATERIALS
 -- ============================================
@@ -355,23 +362,8 @@ INSERT INTO `submission_material` (`submission_id`, `material_id`, `quantity`) V
 -- ============================================
 -- STEP 15: SAMPLE DATA - EDUCATIONAL CONTENT
 -- ============================================
-
-INSERT INTO `educational_content` (`content_id`, `title`, `content_body`, `image`, `tags`, `created_at`, `author_id`) VALUES
-(1, 'How to Identify Recyclable Plastics', 'Learn about the different types of plastic and which ones can be recycled. Look for the recycling symbol with numbers 1-7. PET (#1) and HDPE (#2) are the most commonly recycled plastics.\n\nSteps to recycle plastic properly:\n1. Check the recycling number\n2. Clean the plastic item\n3. Remove caps and labels if possible\n4. Place in the correct bin\n\nRemember: Clean and dry plastics recycle better!', '/images/content/plastic_guide.jpg', 'plastic,recycling,guide,beginner', '2024-09-10 10:00:00', 3),
-
-(2, 'E-Waste Recycling Guide', 'Electronic waste contains valuable materials that can be recovered and reused. Never throw electronics in regular trash!\n\nWhat counts as e-waste:\n- Old phones and tablets\n- Broken laptops\n- Cables and chargers\n- Small appliances\n- Batteries\n\nImportant: Remove all personal data before recycling electronics. Our campus e-waste bins are located at the IT Department and Student Center.', '/images/content/ewaste_guide.jpg', 'e-waste,electronics,safety,guide', '2024-09-15 11:00:00', 4),
-
-(3, 'Paper Recycling Best Practices', 'Paper is one of the easiest materials to recycle, but it needs to be clean and dry.\n\nDO recycle:\n✓ Newspapers and magazines\n✓ Office paper\n✓ Cardboard boxes\n✓ Paper bags\n\nDON\'T recycle:\n✗ Greasy pizza boxes\n✗ Wax-coated paper\n✗ Tissues or paper towels\n✗ Shredded paper (too small)\n\nTip: Flatten cardboard boxes to save space!', '/images/content/paper_guide.jpg', 'paper,cardboard,office,tips', '2024-09-20 12:00:00', 3),
-
-(4, 'Aluminum Can Recycling Facts', 'Did you know? Recycling one aluminum can saves enough energy to power a laptop for 3 hours!\n\nQuick facts:\n- Aluminum can be recycled infinitely\n- Takes 60 days for a can to go from bin to store shelf\n- 95% less energy than making new cans\n\nHow to recycle cans:\n1. Rinse the can\n2. Crush it (optional but saves space)\n3. Place in aluminum recycling bin\n\nEvery can counts!', '/images/content/aluminum_facts.jpg', 'aluminum,metal,facts,energy', '2024-10-01 13:00:00', 4),
-
-(5, 'Glass Recycling 101', 'Glass is 100% recyclable and can be recycled endlessly without loss of quality.\n\nTypes of glass we accept:\n- Clear bottles\n- Colored bottles (green, brown)\n- Glass jars\n\nNOT accepted:\n- Window glass\n- Light bulbs\n- Mirrors\n- Ceramics\n\nSafety first: Handle broken glass carefully and place in designated containers.', '/images/content/glass_guide.jpg', 'glass,bottles,safety,guide', '2024-10-10 14:00:00', 5),
-
-(6, 'Why Recycling Matters', 'Every item you recycle makes a real difference!\n\nEnvironmental benefits:\n🌍 Reduces landfill waste\n🌳 Saves natural resources\n💨 Lowers carbon emissions\n💧 Conserves water and energy\n\nOn our campus alone, we\'ve saved:\n- 500kg of CO₂ this semester\n- Equivalent to planting 25 trees\n- 1000+ items diverted from landfills\n\nYour contribution matters - keep recycling!', '/images/content/why_recycle.jpg', 'motivation,impact,environment,general', '2024-10-15 15:00:00', 3),
-
-(7, 'Common Recycling Mistakes to Avoid', 'Avoid these common mistakes for better recycling:\n\n❌ Wishcycling - Don\'t recycle items you\'re unsure about\n❌ Dirty containers - Always rinse before recycling\n❌ Plastic bags in bins - Use designated bag collection\n❌ Mixing materials - Sort properly\n\n✅ When in doubt, check with eco-moderators\n✅ Use our campus recycling guide app\n✅ Attend monthly recycling workshops\n\nBetter recycling = Better environment!', '/images/content/mistakes.jpg', 'tips,mistakes,education,general', '2024-10-20 16:00:00', 4),
-
-(8, 'Tetra Pak Recycling Instructions', 'Tetra Pak cartons (juice boxes, milk cartons) are recyclable!\n\nHow to recycle:\n1. Rinse the carton\n2. Flatten it\n3. Place in designated bin\n\nTetra Paks are made of:\n- 75% paper\n- 20% plastic\n- 5% aluminum\n\nAll three materials can be separated and recycled. Find Tetra Pak bins at all cafeterias!', '/images/content/tetrapak.jpg', 'tetrapak,cartons,guide,tips', '2024-11-01 17:00:00', 5);
+-- Sample data removed - images not included
+-- Moderators can create educational content through the admin panel
 
 -- ============================================
 -- COMPLETION MESSAGE
