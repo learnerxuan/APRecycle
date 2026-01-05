@@ -8,8 +8,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'eco-moderator') {
     exit();
 }
 
-$sql = "SELECT * FROM educational_content ORDER BY created_at DESC";
-$result = $conn->query($sql);
+$sql_pub = "SELECT * FROM educational_content WHERE status = 'published' ORDER BY created_at DESC";
+$res_pub = $conn->query($sql_pub);
+
+$sql_draft = "SELECT * FROM educational_content WHERE status = 'draft' ORDER BY created_at DESC";
+$res_draft = $conn->query($sql_draft);
 ?>
 
 <!DOCTYPE html>
@@ -105,8 +108,8 @@ $result = $conn->query($sql);
 
         <div class="section-title">Published Content</div>
         <div class="card" style="padding: 0; border-top-left-radius: 0; border-top-right-radius: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <?php if ($result && $result->num_rows > 0): ?>
-                <?php while($row = $result->fetch_assoc()): ?>
+            <?php if ($res_pub && $res_pub->num_rows > 0): ?>
+                <?php while($row = $res_pub->fetch_assoc()): ?>
                     <div class="content-card">
                         <div style="flex: 1;">
                             <h3 style="margin: 0; color: var(--color-gray-800); font-size: 1.125rem;"><?php echo htmlspecialchars($row['title']); ?></h3>
@@ -121,7 +124,7 @@ $result = $conn->query($sql);
                             </div>
                         </div>
                         <div class="action-buttons">
-                            <a href="educational_content_view.php?id=<?php echo $row['content_id']; ?>" class="btn btn-secondary btn-sm" style="background: #edf2f7; color: #4a5568;">View</a>
+                            <a href="content-view.php?id=<?php echo $row['content_id']; ?>" class="btn btn-secondary btn-sm" style="background: #edf2f7; color: #4a5568;">View</a>
                             <a href="content-edit.php?id=<?php echo $row['content_id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
                             <a href="content-delete.php?id=<?php echo $row['content_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this article?');">Delete</a>
                         </div>
@@ -129,10 +132,38 @@ $result = $conn->query($sql);
                 <?php endwhile; ?>
             <?php else: ?>
                 <div class="content-card">
-                    <p style="color: var(--color-gray-500); margin: 0;">No content published yet.</p>
+                    <p style="color: var(--color-gray-500); margin: 0;">No published content.</p>
                 </div>
             <?php endif; ?>
         </div>
+
+        <div class="section-title" style="margin-top: 2.5rem; background: #fff7ed; color: #9a3412;">Drafts</div>
+        <div class="card" style="padding: 0; border-top-left-radius: 0; border-top-right-radius: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <?php if ($res_draft && $res_draft->num_rows > 0): ?>
+                <?php while($row = $res_draft->fetch_assoc()): ?>
+                    <div class="content-card">
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0; color: var(--color-gray-800); font-size: 1.125rem;">
+                                <?php echo htmlspecialchars($row['title']); ?> 
+                                <span style="font-size: 0.75rem; background: #fed7aa; color: #9a3412; padding: 2px 8px; border-radius: 4px; margin-left: 8px;">DRAFT</span>
+                            </h3>
+                            <div class="meta-info">
+                                Created <?php echo date('M d, Y', strtotime($row['created_at'])); ?> 
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="content-edit.php?id=<?php echo $row['content_id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
+                            <a href="content-delete.php?id=<?php echo $row['content_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this draft?');">Delete</a>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <div class="content-card">
+                    <p style="color: var(--color-gray-500); margin: 0;">No drafts saved.</p>
+                </div>
+            <?php endif; ?>
+        </div>
+
     </div>
 
     <?php include 'includes/footer.php'; ?>

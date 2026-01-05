@@ -15,6 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $body = $_POST['content_body'];
     $tags = isset($_POST['tags']) ? trim($_POST['tags']) : '';
     
+    $status = ($_POST['action'] === 'draft') ? 'draft' : 'published';
+    
     $author_id = $_SESSION['user_id'];
     $image_path = '';
 
@@ -34,12 +36,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($message)) {
-        $sql = "INSERT INTO educational_content (title, content_body, image, tags, author_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())";
+        $sql = "INSERT INTO educational_content (title, content_body, image, tags, author_id, created_at, status) VALUES (?, ?, ?, ?, ?, NOW(), ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssi", $title, $body, $image_path, $tags, $author_id);
+        $stmt->bind_param("ssssis", $title, $body, $image_path, $tags, $author_id, $status);
 
         if ($stmt->execute()) {
-            echo "<script>alert('Content published successfully!'); window.location.href='educational_content.php';</script>";
+            $msg = ($status === 'draft') ? 'Draft saved successfully!' : 'Content published successfully!';
+            echo "<script>alert('$msg'); window.location.href='educational_content.php';</script>";
             exit();
         } else {
             $message = "Database Error: " . $conn->error;
@@ -120,7 +123,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" name="tags" placeholder="green, bottles, tips">
                 </div>
                 
-                <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px; padding: 12px; font-weight: 600;">Publish Content</button>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" name="action" value="draft" class="btn" style="flex: 1; border-radius: 8px; padding: 12px; font-weight: 600; background: #e2e8f0; color: #2d3748; border: none; cursor: pointer;">Save as Draft</button>
+                    
+                    <button type="submit" name="action" value="publish" class="btn btn-primary" style="flex: 2; border-radius: 8px; padding: 12px; font-weight: 600;">Publish Now</button>
+                </div>
             </form>
         </div>
     </div>

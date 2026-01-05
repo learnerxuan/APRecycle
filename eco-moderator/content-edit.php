@@ -22,7 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $body = $_POST['content_body'];
     $tags = isset($_POST['tags']) ? trim($_POST['tags']) : '';
     
-    // Image Handling Logic
+    $status = ($_POST['action'] === 'draft') ? 'draft' : 'published';
+    
     $final_image_path = $content['image']; 
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -50,8 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($message)) {
-        $stmt = $conn->prepare("UPDATE educational_content SET title=?, content_body=?, tags=?, image=? WHERE content_id=?");
-        $stmt->bind_param("ssssi", $title, $body, $tags, $final_image_path, $id);
+        $stmt = $conn->prepare("UPDATE educational_content SET title=?, content_body=?, tags=?, image=?, status=? WHERE content_id=?");
+        $stmt->bind_param("sssssi", $title, $body, $tags, $final_image_path, $status, $id);
         
         if ($stmt->execute()) {
             header("Location: educational_content.php");
@@ -156,7 +157,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" name="tags" value="<?php echo htmlspecialchars($content['tags']); ?>">
                 </div>
                 
-                <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px; padding: 12px; font-weight: 600;">Save Changes</button>
+                <div style="display: flex; gap: 1rem;">
+                    <?php if($content['status'] === 'published'): ?>
+                        <button type="submit" name="action" value="draft" class="btn" style="flex: 1; border-radius: 8px; padding: 12px; font-weight: 600; background: #fed7aa; color: #9a3412; border: none; cursor: pointer;">Revert to Draft</button>
+                        <button type="submit" name="action" value="publish" class="btn btn-primary" style="flex: 2; border-radius: 8px; padding: 12px; font-weight: 600;">Update Content</button>
+                    <?php else: ?>
+                        <button type="submit" name="action" value="draft" class="btn" style="flex: 1; border-radius: 8px; padding: 12px; font-weight: 600; background: #e2e8f0; color: #2d3748; border: none; cursor: pointer;">Save Draft</button>
+                        <button type="submit" name="action" value="publish" class="btn btn-primary" style="flex: 2; border-radius: 8px; padding: 12px; font-weight: 600;">Publish Now</button>
+                    <?php endif; ?>
+                </div>
             </form>
         </div>
     </div>
