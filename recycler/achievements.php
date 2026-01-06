@@ -57,22 +57,40 @@ while ($row = mysqli_fetch_assoc($available_badges_result)) {
     $available_badges[] = $row;
 }
 
-// Get earned rewards (all rewards in user_reward table)
-$earned_rewards_query = "SELECT r.reward_id, r.reward_name, r.description,
-                         ur.date_earned
-                         FROM user_reward ur
-                         JOIN reward r ON ur.reward_id = r.reward_id
-                         WHERE ur.user_id = ?
-                         ORDER BY ur.date_earned DESC";
+// Get unclaimed rewards (earned but not claimed yet)
+$unclaimed_rewards_query = "SELECT r.reward_id, r.reward_name, r.description,
+                            ur.date_earned
+                            FROM user_reward ur
+                            JOIN reward r ON ur.reward_id = r.reward_id
+                            WHERE ur.user_id = ? AND ur.is_claimed = 0
+                            ORDER BY ur.date_earned DESC";
 
-$stmt = mysqli_prepare($conn, $earned_rewards_query);
+$stmt = mysqli_prepare($conn, $unclaimed_rewards_query);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
-$earned_rewards_result = mysqli_stmt_get_result($stmt);
+$unclaimed_rewards_result = mysqli_stmt_get_result($stmt);
 
-$earned_rewards = [];
-while ($row = mysqli_fetch_assoc($earned_rewards_result)) {
-    $earned_rewards[] = $row;
+$unclaimed_rewards = [];
+while ($row = mysqli_fetch_assoc($unclaimed_rewards_result)) {
+    $unclaimed_rewards[] = $row;
+}
+
+// Get claimed rewards
+$claimed_rewards_query = "SELECT r.reward_id, r.reward_name, r.description,
+                          ur.date_earned
+                          FROM user_reward ur
+                          JOIN reward r ON ur.reward_id = r.reward_id
+                          WHERE ur.user_id = ? AND ur.is_claimed = 1
+                          ORDER BY ur.date_earned DESC";
+
+$stmt = mysqli_prepare($conn, $claimed_rewards_query);
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$claimed_rewards_result = mysqli_stmt_get_result($stmt);
+
+$claimed_rewards = [];
+while ($row = mysqli_fetch_assoc($claimed_rewards_result)) {
+    $claimed_rewards[] = $row;
 }
 
 // Available rewards are those not in user_reward table at all
@@ -344,6 +362,40 @@ include 'includes/header.php';
         color: var(--color-gray-500);
     }
 
+    .claim-button {
+        width: 100%;
+        padding: var(--space-3) var(--space-4);
+        background: linear-gradient(135deg, #FFD93D, #FFA500);
+        color: #1A202C;
+        border: none;
+        border-radius: var(--radius-md);
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        font-size: var(--text-base);
+        line-height: 1;
+        box-shadow: 0 2px 8px rgba(255, 217, 61, 0.3);
+    }
+
+    .claim-button i {
+        font-size: var(--text-base);
+        line-height: 1;
+    }
+
+    .claim-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 217, 61, 0.5);
+        background: linear-gradient(135deg, #FFA500, #FFD93D);
+    }
+
+    .claim-button:active {
+        transform: translateY(0);
+    }
+
     @media (max-width: 768px) {
         .items-grid {
             grid-template-columns: 1fr;
@@ -397,16 +449,16 @@ include 'includes/header.php';
                 <div>Badges Earned</div>
             </div>
             <div class="stat-item">
-                <div class="stat-item-value"><?php echo count($earned_rewards); ?></div>
-                <div>Rewards Earned</div>
+                <div class="stat-item-value"><?php echo count($unclaimed_rewards); ?></div>
+                <div>Rewards to Claim</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-item-value"><?php echo count($claimed_rewards); ?></div>
+                <div>Rewards Claimed</div>
             </div>
             <div class="stat-item">
                 <div class="stat-item-value"><?php echo count($available_badges); ?></div>
                 <div>Badges to Unlock</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-item-value"><?php echo count($available_rewards); ?></div>
-                <div>Rewards to Unlock</div>
             </div>
         </div>
     </div>
@@ -481,17 +533,45 @@ include 'includes/header.php';
 
     <!-- Rewards Tab -->
     <div id="rewards-tab" class="tab-content">
-        <!-- Earned Rewards -->
-        <?php if (!empty($earned_rewards)): ?>
+        <!-- Unclaimed Rewards (Earned from Challenges) -->
+        <?php if (!empty($unclaimed_rewards)): ?>
             <div class="section-title">
-                <i class="fas fa-gift"></i> My Rewards (<?php echo count($earned_rewards); ?>)
+                <i class="fas fa-gift"></i> Rewards to Claim (<?php echo count($unclaimed_rewards); ?>)
             </div>
-            <p class="section-subtitle">Rewards you've earned from completing challenges</p>
+            <p class="section-subtitle">You've earned these rewards from completing challenges - claim them now!</p>
 
             <div class="items-grid">
-                <?php foreach ($earned_rewards as $reward): ?>
+                <?php foreach ($unclaimed_rewards as $reward): ?>
+                    <div class="reward-card" style="border: 2px solid #FFD93D;">
+                        <span class="earned-badge" style="background: #FFD93D; color: #1A202C;">🎁 Ready to Claim</span>
+                        <div class="item-icon">🎁</div>
+                        <div class="item-name"><?php echo htmlspecialchars($reward['reward_name']); ?></div>
+                        <div class="item-description"><?php echo htmlspecialchars($reward['description']); ?></div>
+                        <div class="item-footer"
+                            style="border-top: 1px solid var(--color-gray-200); padding-top: var(--space-4); margin-top: var(--space-4);">
+                            <form method="POST" action="claim_reward.php" style="width: 100%;">
+                                <input type="hidden" name="reward_id" value="<?php echo $reward['reward_id']; ?>">
+                                <button type="submit" class="claim-button">
+                                    <i class="fas fa-hand-holding-heart"></i> Claim Reward
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Claimed Rewards -->
+        <?php if (!empty($claimed_rewards)): ?>
+            <div class="section-title" style="margin-top: var(--space-8);">
+                <i class="fas fa-check-circle"></i> Claimed Rewards (<?php echo count($claimed_rewards); ?>)
+            </div>
+            <p class="section-subtitle">Rewards you've already claimed</p>
+
+            <div class="items-grid">
+                <?php foreach ($claimed_rewards as $reward): ?>
                     <div class="reward-card earned">
-                        <span class="earned-badge">✓ Earned</span>
+                        <span class="earned-badge">✓ Claimed</span>
                         <div class="item-icon">🎁</div>
                         <div class="item-name"><?php echo htmlspecialchars($reward['reward_name']); ?></div>
                         <div class="item-description"><?php echo htmlspecialchars($reward['description']); ?></div>
@@ -505,10 +585,10 @@ include 'includes/header.php';
             </div>
         <?php endif; ?>
 
-        <!-- Available Rewards -->
+        <!-- Available Rewards (Not Earned Yet) -->
         <?php if (!empty($available_rewards)): ?>
             <div class="section-title" style="margin-top: var(--space-8);">
-                <i class="fas fa-lock"></i> Available Rewards (<?php echo count($available_rewards); ?>)
+                <i class="fas fa-lock"></i> Other Rewards (<?php echo count($available_rewards); ?>)
             </div>
             <p class="section-subtitle">Complete challenges to earn these rewards</p>
 
@@ -524,7 +604,7 @@ include 'includes/header.php';
             </div>
         <?php endif; ?>
 
-        <?php if (empty($earned_rewards) && empty($available_rewards)): ?>
+        <?php if (empty($unclaimed_rewards) && empty($claimed_rewards) && empty($available_rewards)): ?>
             <div class="empty-state">
                 <div class="empty-icon">🎁</div>
                 <h3 class="empty-title">No Rewards Available</h3>
