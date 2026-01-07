@@ -324,22 +324,22 @@ INSERT INTO `user_reward` (`user_id`, `reward_id`, `date_earned`) VALUES
 
 INSERT INTO `recycling_submission` (`submission_id`, `user_id`, `bin_id`, `image_url`, `ai_confidence`, `status`, `moderator_feedback`) VALUES
 -- Approved submissions
-(1, 6, 1, '/uploads/submissions/sub_001.jpg', 95.50, 'approved', 'Great job! Clear plastic bottle, properly cleaned.'),
-(2, 6, 2, '/uploads/submissions/sub_002.jpg', 92.30, 'approved', 'Perfect aluminum can recycling!'),
-(3, 7, 1, '/uploads/submissions/sub_003.jpg', 88.70, 'approved', 'Good work on the cardboard box.'),
-(4, 8, 3, '/uploads/submissions/sub_004.jpg', 96.20, 'approved', 'Excellent glass bottle condition.'),
-(5, 9, 2, '/uploads/submissions/sub_005.jpg', 91.50, 'approved', 'Nice plastic container!'),
-(6, 10, 4, '/uploads/submissions/sub_006.jpg', 94.80, 'approved', 'Great paper recycling.'),
+(1, 6, 1, '/uploads/waste_001.jpg', 0.96, 'approved', 'Great job! Clear plastic bottle, properly cleaned.'),
+(2, 6, 2, '/uploads/waste_002.jpg', 0.92, 'approved', 'Perfect aluminum can recycling!'),
+(3, 7, 1, '/uploads/waste_003.jpg', 0.89, 'approved', 'Good work on the cardboard box.'),
+(4, 8, 3, '/uploads/waste_004.jpg', 0.96, 'approved', 'Excellent glass bottle condition.'),
+(5, 9, 2, '/uploads/waste_005.jpg', 0.92, 'approved', 'Nice plastic container!'),
+(6, 10, 4, '/uploads/waste_006.jpg', 0.95, 'approved', 'Great paper recycling.'),
 
--- Rejected submission
-(10, 14, 1, '/uploads/submissions/sub_010.jpg', 45.20, 'rejected', 'Sorry, this item is not recyclable. Please check our educational content for proper waste identification.'),
+-- Rejected submissions
+(10, 14, 1, '/uploads/waste_010.jpg', 0.45, 'rejected', 'Sorry, this item is not recyclable. Please check our educational content for proper waste identification.'),
 
 -- More approved submissions for variety
-(11, 6, 5, '/uploads/submissions/sub_011.jpg', 97.10, 'approved', 'Perfect e-waste submission!'),
-(12, 7, 6, '/uploads/submissions/sub_012.jpg', 93.40, 'approved', 'Good aluminum recycling.'),
-(13, 9, 7, '/uploads/submissions/sub_013.jpg', 89.80, 'approved', 'Great metal scrap!'),
-(14, 12, 8, '/uploads/submissions/sub_014.jpg', 95.60, 'approved', 'Excellent cardboard condition.'),
-(15, 15, 1, '/uploads/submissions/sub_015.jpg', 90.20, 'approved', 'Well done!');
+(11, 6, 5, '/uploads/waste_011.jpg', 0.97, 'approved', 'Perfect e-waste submission!'),
+(12, 7, 6, '/uploads/waste_012.jpg', 0.93, 'approved', 'Good aluminum recycling.'),
+(13, 9, 7, '/uploads/waste_013.jpg', 0.90, 'approved', 'Great metal scrap!'),
+(14, 12, 8, '/uploads/waste_014.jpg', 0.96, 'approved', 'Excellent cardboard condition.'),
+(15, 15, 1, '/uploads/waste_015.jpg', 0.90, 'approved', 'Well done!');
 
 -- ============================================
 -- STEP 14: SAMPLE DATA - SUBMISSION MATERIALS
@@ -408,6 +408,8 @@ SELECT CONCAT('Educational Content: ', COUNT(*), ' records') FROM educational_co
 UNION ALL
 SELECT CONCAT('Recycling Submissions: ', COUNT(*), ' records') FROM recycling_submission;
 
+
+ALTER TABLE educational_content ADD COLUMN status ENUM('published', 'draft') NOT NULL DEFAULT 'published';
 -- ============================================
 -- END OF SCRIPT
 -- ============================================

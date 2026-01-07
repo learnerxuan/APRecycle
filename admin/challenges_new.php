@@ -6,7 +6,7 @@ $conn = getDBConnection();
 
 // Handle delete challenge
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $challenge_id = (int)$_GET['delete'];
+    $challenge_id = (int) $_GET['delete'];
 
     // Delete related records first (user_challenge)
     $delete_user_challenges = mysqli_prepare($conn, "DELETE FROM user_challenge WHERE challenge_id = ?");
@@ -72,5 +72,3 @@ $past_result = mysqli_query($conn, $past_query);
 // Include admin header
 include 'includes/header.php';
 ?>
-
-    <style>
