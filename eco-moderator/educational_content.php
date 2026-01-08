@@ -124,7 +124,7 @@ $res_draft = $conn->query($sql_draft);
                             </div>
                         </div>
                         <div class="action-buttons">
-                            <a href="content-view.php?id=<?php echo $row['content_id']; ?>" class="btn btn-secondary btn-sm" style="background: #edf2f7; color: #4a5568;">View</a>
+                            <a href="educational_content_view.php?id=<?php echo $row['content_id']; ?>" class="btn btn-secondary btn-sm" style="background: #edf2f7; color: #4a5568;">View</a>
                             <a href="content-edit.php?id=<?php echo $row['content_id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
                             <a href="content-delete.php?id=<?php echo $row['content_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this article?');">Delete</a>
                         </div>
