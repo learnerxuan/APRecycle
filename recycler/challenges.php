@@ -323,6 +323,11 @@ require_once 'includes/header.php';
                             <i class="fas fa-star"></i>
                             <?php echo $row['challenge_point']; ?> / <?php echo $row['target_points']; ?> pts
                         </div>
+                    <?php elseif ($row['completion_type'] == 'participation'): ?>
+                        <div class="meta-item">
+                            <i class="fas fa-user-check"></i>
+                            Participated (<?php echo $row['challenge_quantity']; ?> items submitted)
+                        </div>
                     <?php else: ?>
                         <div class="meta-item">
                             <i class="fas fa-hashtag"></i>
