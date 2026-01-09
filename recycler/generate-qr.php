@@ -1,8 +1,4 @@
 <?php
-/**
- * QR Code Generator for Recyclers
- * Generates and stores unique QR codes for each recycler
- */
 
 session_start();
 require_once '../php/config.php';
@@ -18,7 +14,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'recycler') {
  * Format: RECYCLER:user_id:verification_hash
  */
 function generateRecyclerQRData($user_id, $username) {
-    // Secret key for hash generation (should match in verification)
+    // Secret key for hash generation 
     $secret_key = "APRecycle2024SecretKey";
 
     // Create verification hash using user_id and username
@@ -34,7 +30,7 @@ function generateRecyclerQRData($user_id, $username) {
  * Get QR code image URL using external API
  */
 function getQRCodeImageURL($qr_data, $size = 300) {
-    // Using QR Server API (free, no library needed)
+    // Using QR Server API 
     $encoded_data = urlencode($qr_data);
     return "https://api.qrserver.com/v1/create-qr-code/?size={$size}x{$size}&data={$encoded_data}";
 }
