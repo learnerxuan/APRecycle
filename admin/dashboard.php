@@ -22,7 +22,6 @@ $challenge_result = mysqli_query($conn, $challenge_query);
 $active_challenges = mysqli_fetch_assoc($challenge_result)['count'];
 
 // C. Items Recycled (Sum of all quantities in approved submissions)
-// Note: We join with recycling_submission to ensure we only count 'Approved' items
 $items_query = "SELECT SUM(sm.quantity) as count 
                 FROM submission_material sm
                 JOIN recycling_submission rs ON sm.submission_id = rs.submission_id
@@ -41,9 +40,6 @@ include 'includes/header.php';
 ?>
 
 <style>
-    /* Dashboard Specific Styles */
-    
-    /* Stats Grid - 4 Columns */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -83,7 +79,6 @@ include 'includes/header.php';
         letter-spacing: 0.05em;
     }
 
-    /* Action Grid - 3 Columns */
     .actions-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
