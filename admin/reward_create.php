@@ -317,9 +317,6 @@ include 'includes/header.php';
     </form>
 </div>
 
-<script>
-    // No additional validation needed - rewards are challenge-only now
-</script>
 
 <?php
 include 'includes/footer.php';
