@@ -22,7 +22,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             padding: 0;
         }
 
-        /* Moderator Header */
         .moderator-header {
             background: var(--color-white);
             box-shadow: var(--shadow-md);
@@ -137,11 +136,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
             box-shadow: var(--shadow-sm);
         }
 
-        /* Navigation Tabs */
         .moderator-nav {
             background: var(--color-white);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+
+        .mobile-nav-header {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3) var(--space-4);
+            cursor: pointer;
+            background: var(--color-white);
+        }
+        
+        .mobile-nav-label {
+            font-weight: 600;
+            color: var(--color-gray-800);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
         .moderator-nav-tabs {
@@ -150,6 +166,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             padding: 0 var(--space-8);
             list-style: none;
             margin: 0;
+            transition: all 0.3s ease;
         }
 
         .moderator-nav-tab {
@@ -185,14 +202,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
             font-size: var(--text-base);
         }
 
-        /* Main Content */
         .moderator-content {
             max-width: 1400px;
             margin: 0 auto;
             padding: var(--space-8);
         }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             .moderator-header-top {
                 padding: var(--space-3) var(--space-4);
@@ -210,13 +225,41 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 display: none;
             }
 
+            .mobile-nav-header {
+                display: flex;
+                border-bottom: 1px solid var(--color-gray-200);
+            }
+
             .moderator-nav-tabs {
-                padding: 0 var(--space-4);
+                display: none;
+                flex-direction: column;
+                padding: 0;
+                gap: 0;
+                background: var(--color-white);
+                border-bottom: 1px solid var(--color-gray-200);
+            }
+
+            .moderator-nav-tabs.show {
+                display: flex;
+                animation: slideDown 0.3s ease-out;
+            }
+
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
             }
 
             .moderator-nav-link {
-                padding: var(--space-3) var(--space-4);
-                font-size: var(--text-xs);
+                padding: var(--space-4);
+                width: 100%;
+                border-bottom: 1px solid var(--color-gray-50);
+                border-left: 4px solid transparent;
+            }
+
+            .moderator-nav-link.active {
+                border-bottom-color: var(--color-gray-50);
+                border-left-color: var(--color-primary);
+                background: var(--color-gray-50);
             }
 
             .moderator-content {
@@ -224,7 +267,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             }
         }
 
-        /* Utility Classes */
         .page-header {
             margin-bottom: var(--space-6);
         }
@@ -273,7 +315,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
 
         <nav class="moderator-nav">
-            <ul class="moderator-nav-tabs">
+            <div class="mobile-nav-header" id="mobileMenuBtn">
+                <div class="mobile-nav-label">
+                    <i class="fas fa-bars"></i>
+                    <span>Menu</span>
+                </div>
+                <i class="fas fa-chevron-down" id="menuArrow"></i>
+            </div>
+
+            <ul class="moderator-nav-tabs" id="navLinks">
                 <li class="moderator-nav-tab">
                     <a href="dashboard.php"
                         class="moderator-nav-link <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
@@ -298,5 +348,23 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </ul>
         </nav>
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+            const arrow = document.getElementById('menuArrow');
+
+            menuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('show');
+                
+                if (navLinks.classList.contains('show')) {
+                    arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+    </script>
 
     <main class="moderator-content">

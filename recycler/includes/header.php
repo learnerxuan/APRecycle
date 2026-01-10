@@ -22,7 +22,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             padding: 0;
         }
 
-        /* Recycler Header */
         .recycler-header {
             background: var(--color-white);
             box-shadow: var(--shadow-md);
@@ -48,7 +47,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         .recycler-logo-icon {
             width: 40px;
-            /* Adjusted to fit logo better */
             height: 40px;
             background: transparent;
             border-radius: var(--radius-md);
@@ -81,10 +79,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             gap: var(--space-4);
         }
 
-        /* --- NEW: Profile Link Styling --- */
         .profile-link {
             text-decoration: none;
-            /* Removes the underline */
             color: inherit;
             display: block;
             border-radius: var(--radius-md);
@@ -99,17 +95,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
             background: var(--color-gray-100);
             border-radius: var(--radius-md);
             border: 1px solid transparent;
-            /* Placeholder for border transition */
             transition: all 0.2s ease;
         }
 
-        /* Interactive States */
         .profile-link:hover .recycler-user-profile {
             background: var(--color-white);
             border-color: var(--color-gray-200);
             box-shadow: var(--shadow-sm);
             transform: translateY(-2px);
-            /* Slight lift effect */
         }
 
         .profile-link:active .recycler-user-profile {
@@ -117,8 +110,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             background: var(--color-gray-100);
             box-shadow: none;
         }
-
-        /* -------------------------------- */
 
         .recycler-user-avatar {
             width: 32px;
@@ -172,11 +163,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
             box-shadow: var(--shadow-sm);
         }
 
-        /* Navigation Tabs */
         .recycler-nav {
             background: var(--color-white);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+
+        .mobile-nav-header {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3) var(--space-4);
+            cursor: pointer;
+            background: var(--color-white);
+        }
+
+        .mobile-nav-label {
+            font-weight: 600;
+            color: var(--color-gray-800);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
         .recycler-nav-tabs {
@@ -185,6 +193,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             padding: 0 var(--space-8);
             list-style: none;
             margin: 0;
+            transition: all 0.3s ease;
         }
 
         .recycler-nav-tab {
@@ -220,14 +229,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
             font-size: var(--text-base);
         }
 
-        /* Main Content */
         .recycler-content {
             max-width: 1400px;
             margin: 0 auto;
             padding: var(--space-8);
         }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             .recycler-header-top {
                 padding: var(--space-3) var(--space-4);
@@ -245,13 +252,41 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 display: none;
             }
 
+            .mobile-nav-header {
+                display: flex;
+                border-bottom: 1px solid var(--color-gray-200);
+            }
+
             .recycler-nav-tabs {
-                padding: 0 var(--space-4);
+                display: none;
+                flex-direction: column;
+                padding: 0;
+                gap: 0;
+                background: var(--color-white);
+                border-bottom: 1px solid var(--color-gray-200);
+            }
+
+            .recycler-nav-tabs.show {
+                display: flex;
+                animation: slideDown 0.3s ease-out;
+            }
+
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
             }
 
             .recycler-nav-link {
-                padding: var(--space-3) var(--space-4);
-                font-size: var(--text-xs);
+                padding: var(--space-4);
+                width: 100%;
+                border-bottom: 1px solid var(--color-gray-50);
+                border-left: 4px solid transparent;
+            }
+
+            .recycler-nav-link.active {
+                border-bottom-color: var(--color-gray-50);
+                border-left-color: var(--color-primary);
+                background: var(--color-gray-50);
             }
 
             .recycler-content {
@@ -259,7 +294,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             }
         }
 
-        /* Utility Classes */
         .page-header {
             margin-bottom: var(--space-6);
         }
@@ -311,7 +345,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
 
         <nav class="recycler-nav">
-            <ul class="recycler-nav-tabs">
+            <div class="mobile-nav-header" id="mobileMenuBtn">
+                <div class="mobile-nav-label">
+                    <i class="fas fa-bars"></i>
+                    <span>Menu</span>
+                </div>
+                <i class="fas fa-chevron-down" id="menuArrow"></i>
+            </div>
+
+            <ul class="recycler-nav-tabs" id="navLinks">
                 <li class="recycler-nav-tab">
                     <a href="dashboard.php"
                         class="recycler-nav-link <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
@@ -371,5 +413,23 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </ul>
         </nav>
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+            const arrow = document.getElementById('menuArrow');
+
+            menuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('show');
+                
+                if (navLinks.classList.contains('show')) {
+                    arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+    </script>
 
     <main class="recycler-content">
