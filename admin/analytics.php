@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrator') {
 
 $conn = getDBConnection();
 
-// --- 1. KEY METRICS ---
+// 1. KEY METRICS
 
 // A. Total Items Recycled (Approved only)
 $total_items_query = "SELECT SUM(sm.quantity) as count 
@@ -36,11 +36,11 @@ $total_recyclers = mysqli_fetch_assoc($total_users_result)['count'];
 $participation_rate = $total_recyclers > 0 ? round(($active_users / $total_recyclers) * 100, 1) : 0;
 
 // D. Environmental Impact (CO2)
-// Estimation: Average 0.15kg CO2 saved per item recycled (simplified formula)
+// Estimation: Average 0.15kg CO2 saved per item recycled
 $co2_saved = round($total_items * 0.15, 2);
 
 
-// --- 2. CHART DATA: Material Breakdown ---
+// 2. CHART DATA: Material Breakdown 
 $material_query = "SELECT m.material_name, SUM(sm.quantity) as count
                    FROM submission_material sm
                    JOIN material m ON sm.material_id = m.material_id
@@ -58,7 +58,7 @@ while ($row = mysqli_fetch_assoc($material_result)) {
 }
 
 
-// --- 3. CHART DATA: Participation Trends (Last 7 Days) ---
+// 3. CHART DATA: Participation Trends (Last 7 Days)
 $trend_query = "SELECT DATE(created_at) as submit_date, COUNT(*) as count
                 FROM recycling_submission
                 WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
@@ -81,7 +81,7 @@ for ($i = 6; $i >= 0; $i--) {
 }
 
 
-// --- 4. TOP CONTRIBUTORS (This Month) ---
+// 4. TOP CONTRIBUTORS (This Month)
 $top_users_query = "SELECT u.username, u.lifetime_points, SUM(sm.quantity) as items_month
                     FROM user u
                     JOIN recycling_submission rs ON u.user_id = rs.user_id
@@ -101,7 +101,7 @@ include 'includes/header.php';
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-    /* --- Responsive Grid for Stats --- */
+    /* Responsive Grid for Stats*/
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -135,7 +135,7 @@ include 'includes/header.php';
         letter-spacing: 0.5px;
     }
 
-    /* --- Responsive Grid for Charts --- */
+    /* Responsive Grid for Charts */
     .charts-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -149,7 +149,6 @@ include 'includes/header.php';
         border-radius: var(--radius-lg);
         box-shadow: var(--shadow-md);
         border: 1px solid var(--color-gray-200);
-        /* Note: Removed min-height to let wrapper control size */
     }
 
     .chart-title {
@@ -161,14 +160,13 @@ include 'includes/header.php';
         border-bottom: 1px solid var(--color-gray-100);
     }
 
-    /* --- [FIX] Chart Wrapper to Prevent Infinite Resize --- */
     .chart-canvas-wrapper {
         position: relative;
-        height: 300px; /* Fixed height creates a stable container for Chart.js */
+        height: 300px;
         width: 100%;
     }
 
-    /* --- Responsive Table --- */
+    /* Responsive Table*/
     .table-container {
         background: var(--color-white);
         padding: var(--space-6);
@@ -246,7 +244,6 @@ include 'includes/header.php';
             padding: var(--space-4);
         }
         
-        /* Adjust chart height for smaller screens */
         .chart-canvas-wrapper {
             height: 250px;
         }
@@ -337,7 +334,7 @@ include 'includes/header.php';
 </div>
 
 <script>
-    // --- Material Chart Configuration ---
+    // Material Chart Configuration
     const materialCtx = document.getElementById('materialChart').getContext('2d');
     const materialChart = new Chart(materialCtx, {
         type: 'doughnut', 
@@ -353,7 +350,7 @@ include 'includes/header.php';
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Critical for filling the fixed wrapper
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     position: 'bottom',
@@ -365,7 +362,7 @@ include 'includes/header.php';
         }
     });
 
-    // --- Trend Chart Configuration ---
+    // Trend Chart Configuration
     const trendCtx = document.getElementById('trendChart').getContext('2d');
     const trendChart = new Chart(trendCtx, {
         type: 'line',
@@ -383,7 +380,7 @@ include 'includes/header.php';
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Critical for filling the fixed wrapper
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
