@@ -2,13 +2,12 @@
 include('../php/config.php');
 include('includes/header.php');
 
-$conn = getDBConnection(); //
+$conn = getDBConnection(); 
 $period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
 $current_user_id = $_SESSION['user_id'];
 
-// SQL Query Logic Fixes
+
 if ($period === 'monthly') {
-    // Monthly points based on approved submissions in the current month
     $query = "SELECT u.user_id, u.username, 
               SUM(m.points_per_item * sm.quantity) as points,
               SUM(sm.quantity) as items_count
@@ -22,7 +21,6 @@ if ($period === 'monthly') {
               GROUP BY u.user_id
               ORDER BY points DESC LIMIT 10";
 } else {
-    // Lifetime points - Fixed the table alias conflict
     $query = "SELECT user_id, username, lifetime_points as points,
               (SELECT IFNULL(SUM(sm.quantity), 0) 
                FROM submission_material sm 
@@ -58,13 +56,11 @@ if ($result) {
             justify-content: center; 
         }
         
-        /* Podium grid - single column on mobile */
         .podium-grid {
             grid-template-columns: 1fr !important;
             gap: 1rem !important;
         }
         
-        /* Table responsive */
         .leaderboard-table {
             font-size: 0.875rem;
         }
@@ -74,7 +70,6 @@ if ($result) {
             padding: 0.75rem 0.5rem !important;
         }
         
-        /* Hide less important columns on mobile */
         .hide-mobile {
             display: none !important;
         }
@@ -101,7 +96,7 @@ if ($result) {
 <div class="podium-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-bottom: var(--space-10); align-items: end;">
     <?php 
     $podium_map = [1 => '🥈', 0 => '🥇', 2 => '🥉']; 
-    $display_order = [1, 0, 2]; // 2nd, 1st, 3rd for visual podium
+    $display_order = [1, 0, 2]; 
     foreach($display_order as $idx): 
         if(isset($rankings[$idx])): 
             $user = $rankings[$idx];

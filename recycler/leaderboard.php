@@ -1,7 +1,7 @@
 <?php
 session_start();
 $page_title = "Leaderboard Hub";
-include('includes/header.php'); // Ensures user is 'recycler'
+include('includes/header.php');
 ?>
 
 <div class="page-header" style="text-align: center; margin-bottom: var(--space-10);">

@@ -1,20 +1,15 @@
 <?php
-// 1. Setup Page Variables
 $page_title = 'Challenge Results';
 
-// 2. Include Configuration and Header
 require_once '../php/config.php';
 include_once 'includes/header.php';
 
-// 3. Connect to Database
 $conn = getDBConnection();
 
-// 4. Pagination Setup
-$limit = 10; // Challenges per page
+$limit = 10; 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
-// 5. Query to get Past Challenges
 $sql = "SELECT * FROM challenge 
         WHERE end_date < CURDATE() 
         ORDER BY end_date DESC 
@@ -22,7 +17,6 @@ $sql = "SELECT * FROM challenge
 
 $result = mysqli_query($conn, $sql);
 
-// Get total count for pagination
 $count_sql = "SELECT COUNT(*) as total FROM challenge WHERE end_date < CURDATE()";
 $count_result = mysqli_query($conn, $count_sql);
 $total_records = mysqli_fetch_assoc($count_result)['total'];
@@ -30,7 +24,6 @@ $total_pages = ceil($total_records / $limit);
 ?>
 
 <style>
-    /* Card Style for Challenges */
     .results-container {
         background: var(--color-white);
         border-radius: var(--radius-lg);
@@ -56,7 +49,6 @@ $total_pages = ceil($total_records / $limit);
         background: var(--color-gray-50);
     }
 
-    /* Date Box */
     .date-box {
         background: var(--color-gray-100);
         border-radius: var(--radius-md);
@@ -79,7 +71,6 @@ $total_pages = ceil($total_records / $limit);
         color: var(--color-gray-500);
     }
 
-    /* Challenge Info */
     .challenge-info {
         flex: 1;
     }
@@ -96,10 +87,8 @@ $total_pages = ceil($total_records / $limit);
         color: var(--color-gray-500);
     }
 
-    /* Winner Section */
     .winner-card {
         background: #fffbeb;
-        /* Light Yellow */
         border: 1px solid #fcd34d;
         border-radius: var(--radius-lg);
         padding: var(--space-3) var(--space-5);
@@ -150,7 +139,6 @@ $total_pages = ceil($total_records / $limit);
         font-size: var(--text-sm);
     }
 
-    /* Pagination */
     .pagination {
         display: flex;
         justify-content: center;
@@ -174,7 +162,6 @@ $total_pages = ceil($total_records / $limit);
         border-color: var(--color-primary);
     }
 
-    /* Mobile Responsive */
     @media (max-width: 768px) {
         .challenge-row {
             flex-direction: column;
@@ -216,8 +203,6 @@ $total_pages = ceil($total_records / $limit);
             $start_date = $challenge['start_date'];
             $end_date = $challenge['end_date'];
 
-            // FIX: Changed SUM(points) to COUNT(*) because 'points' column does not exist
-            // This now calculates the winner based on NUMBER OF APPROVED SUBMISSIONS
             $winner_sql = "SELECT u.username, COUNT(*) as score
                            FROM recycling_submission rs
                            JOIN user u ON rs.user_id = u.user_id

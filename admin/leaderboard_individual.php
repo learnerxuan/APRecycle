@@ -1,36 +1,28 @@
 <?php
-// 1. Setup Page Variables
 $page_title = 'Individual Rankings';
 
-// 2. Include Configuration and Header
 require_once '../php/config.php';
 include_once 'includes/header.php';
 
-// 3. Connect to Database
 $conn = getDBConnection();
 
-// 4. Handle Pagination & Search Logic
-$limit = 20; // Users per page
+$limit = 20; 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
 $search_term = '';
 $where_clause = "WHERE u.role = 'recycler'";
 
-// Add search filter if exists
 if (isset($_GET['search']) && !empty($_GET['search'])) {
     $search_term = mysqli_real_escape_string($conn, $_GET['search']);
     $where_clause .= " AND (u.username LIKE '%$search_term%' OR u.email LIKE '%$search_term%')";
 }
 
-// 5. Query to get Total Records (for pagination buttons)
 $count_sql = "SELECT COUNT(*) as total FROM user u $where_clause";
 $count_result = mysqli_query($conn, $count_sql);
 $total_records = mysqli_fetch_assoc($count_result)['total'];
 $total_pages = ceil($total_records / $limit);
 
-// 6. Main Query to get Users
-// We join with submissions to get an item count, or use a subquery for performance
 $sql = "SELECT u.user_id, u.username, u.email, u.lifetime_points, u.created_at,
         (SELECT COUNT(*) FROM recycling_submission rs WHERE rs.user_id = u.user_id AND rs.status = 'Approved') as items_count
         FROM user u 
@@ -42,7 +34,6 @@ $result = mysqli_query($conn, $sql);
 ?>
 
 <style>
-    /* Search Bar Styling */
     .toolbar {
         display: flex;
         justify-content: space-between;
@@ -85,7 +76,6 @@ $result = mysqli_query($conn, $sql);
         opacity: 0.9;
     }
 
-    /* Leaderboard Table Styling */
     .leaderboard-container {
         background: var(--color-white);
         border-radius: var(--radius-lg);
@@ -129,7 +119,6 @@ $result = mysqli_query($conn, $sql);
         background: var(--color-gray-50);
     }
 
-    /* Rank Badges */
     .rank-cell {
         font-weight: bold;
         width: 60px;
@@ -154,16 +143,13 @@ $result = mysqli_query($conn, $sql);
 
     .points-badge {
         background: #dcfce7;
-        /* Light Green */
         color: #166534;
-        /* Dark Green */
         padding: 4px 12px;
         border-radius: 999px;
         font-weight: 700;
         font-size: var(--text-sm);
     }
 
-    /* Pagination */
     .pagination {
         display: flex;
         justify-content: center;
@@ -191,7 +177,6 @@ $result = mysqli_query($conn, $sql);
         background: var(--color-gray-50);
     }
 
-    /* Mobile Responsive */
     @media (max-width: 768px) {
         .page-header {
             flex-direction: column !important;
@@ -272,7 +257,6 @@ $result = mysqli_query($conn, $sql);
                     <?php
                     $counter = 0;
                     while ($row = mysqli_fetch_assoc($result)):
-                        // Calculate Rank based on page number
                         $rank = $start + $counter + 1;
                         $counter++;
                         ?>

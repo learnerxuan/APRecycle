@@ -1,11 +1,9 @@
 <?php
-// Set page title before including header
 $page_title = 'Leaderboard Overview';
 
 require_once '../php/config.php';
 include_once 'includes/header.php';
 
-// Ensure the user is an administrator
 if ($_SESSION['role'] !== 'administrator') {
     header('Location: ../login.php');
     exit();
@@ -20,32 +18,27 @@ $stats = [
     'top_recyclers' => []
 ];
 
-// 1. Total Recyclers Count
 $sql = "SELECT COUNT(*) as count FROM user WHERE role = 'recycler'";
 if ($result = mysqli_query($conn, $sql)) {
     $stats['total_recyclers'] = mysqli_fetch_assoc($result)['count'];
 }
 
-// 2. Active This Month (Users with submissions in last 30 days)
 $sql = "SELECT COUNT(DISTINCT user_id) as count FROM recycling_submission 
         WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
 if ($result = mysqli_query($conn, $sql)) {
     $stats['active_this_month'] = mysqli_fetch_assoc($result)['count'];
 }
 
-// 3. Total Teams Count
 $sql = "SELECT COUNT(*) as count FROM team";
 if ($result = mysqli_query($conn, $sql)) {
     $stats['total_teams'] = mysqli_fetch_assoc($result)['count'];
 }
 
-// 4. Active Challenges Count
 $sql = "SELECT COUNT(*) as count FROM challenge WHERE end_date >= CURDATE()";
 if ($result = mysqli_query($conn, $sql)) {
     $stats['active_challenges'] = mysqli_fetch_assoc($result)['count'];
 }
 
-// 6. Top 3 Individual Recyclers (Points & Items)
 $sql = "SELECT u.username, u.lifetime_points, 
         (SELECT COUNT(*) FROM recycling_submission rs WHERE rs.user_id = u.user_id AND rs.status = 'Approved') as items_count
         FROM user u 
@@ -60,7 +53,6 @@ if ($result = mysqli_query($conn, $sql)) {
 ?>
 
 <style>
-    /* Page Specific Styles */
     .stat-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

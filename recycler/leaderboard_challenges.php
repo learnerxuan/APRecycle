@@ -130,7 +130,7 @@ if ($challenge_id > 0) {
                      (SELECT challenge_point FROM user_challenge WHERE challenge_id = c.challenge_id AND user_id = $current_user_id) as my_points
                      FROM challenge c
                      WHERE c.start_date <= CURDATE() AND c.end_date >= CURDATE()
-                     ORDER BY c.end_date ASC"; // Most urgent first
+                     ORDER BY c.end_date ASC";
     $active_result = mysqli_query($conn, $active_query);
     $active_challenges = mysqli_fetch_all($active_result, MYSQLI_ASSOC);
 

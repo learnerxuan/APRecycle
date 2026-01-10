@@ -1,15 +1,15 @@
 <?php
-// 1. Setup Page Variables
+// Setup Page Variables
 $page_title = 'Team Rankings';
 
-// 2. Include Configuration and Header
+// Include Configuration and Header
 require_once '../php/config.php';
 include_once 'includes/header.php';
 
-// 3. Connect to Database
+// Connect to Database
 $conn = getDBConnection();
 
-// 4. Handle Pagination & Search Logic
+// Handle Pagination & Search Logic
 $limit = 20; // Teams per page
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
@@ -23,14 +23,13 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $where_clause .= " AND t.team_name LIKE '%$search_term%'";
 }
 
-// 5. Query to get Total Records (for pagination buttons)
+// Query to get Total Records (for pagination buttons)
 $count_sql = "SELECT COUNT(*) as total FROM team t $where_clause";
 $count_result = mysqli_query($conn, $count_sql);
 $total_records = mysqli_fetch_assoc($count_result)['total'];
 $total_pages = ceil($total_records / $limit);
 
-// 6. Main Query to get Teams
-// FIX: Removed 't.created_at' because your database does not have that column
+// Main Query to get Teams
 $sql = "SELECT t.team_id, t.team_name,
         (SELECT COUNT(*) FROM user u WHERE u.team_id = t.team_id) as member_count,
         (SELECT COALESCE(SUM(u.lifetime_points), 0) FROM user u WHERE u.team_id = t.team_id) as team_total_points
@@ -155,9 +154,7 @@ $result = mysqli_query($conn, $sql);
     /* Green Badge for Team Points */
     .points-badge {
         background: #dcfce7;
-        /* Light Green */
         color: #166534;
-        /* Dark Green */
         padding: 4px 12px;
         border-radius: 999px;
         font-weight: 700;
