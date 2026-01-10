@@ -5,19 +5,15 @@ include('includes/header.php');
 $conn = getDBConnection();
 $current_user_id = $_SESSION['user_id'];
 
-// Check if a specific challenge is selected for details
 $challenge_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($challenge_id > 0) {
-    // --- DETAIL VIEW: Specific Challenge Standings (Same as before) ---
-    // Fetch Challenge Details
     $stmt = mysqli_prepare($conn, "SELECT *, CASE WHEN end_date >= CURRENT_DATE() THEN 'Active' ELSE 'Completed' END AS challenge_status FROM challenge WHERE challenge_id = ?");
     mysqli_stmt_bind_param($stmt, "i", $challenge_id);
     mysqli_stmt_execute($stmt);
     $challenge_info = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
     mysqli_stmt_close($stmt);
 
-    // Fetch Rankings
     $rank_query = "SELECT u.user_id, u.username, uc.challenge_point 
                    FROM user_challenge uc
                    JOIN user u ON uc.user_id = u.user_id
@@ -122,9 +118,6 @@ if ($challenge_id > 0) {
 
     <?php
 } else {
-    // --- LIST VIEW: Recycler Hub (Modified Admin Design) ---
-
-    // Fetch Active Challenges with User Data
     $active_query = "SELECT c.*, 
                      (SELECT COUNT(*) FROM user_challenge WHERE challenge_id = c.challenge_id) as participant_count,
                      (SELECT challenge_point FROM user_challenge WHERE challenge_id = c.challenge_id AND user_id = $current_user_id) as my_points
@@ -134,23 +127,19 @@ if ($challenge_id > 0) {
     $active_result = mysqli_query($conn, $active_query);
     $active_challenges = mysqli_fetch_all($active_result, MYSQLI_ASSOC);
 
-    // Fetch Upcoming
     $upcoming_query = "SELECT c.* FROM challenge c WHERE c.start_date > CURDATE() ORDER BY c.start_date ASC";
     $upcoming_result = mysqli_query($conn, $upcoming_query);
 
-    // Fetch Past
     $past_query = "SELECT c.*, 
                    (SELECT challenge_point FROM user_challenge WHERE challenge_id = c.challenge_id AND user_id = $current_user_id) as my_points
                    FROM challenge c WHERE c.end_date < CURDATE() ORDER BY c.end_date DESC LIMIT 5";
     $past_result = mysqli_query($conn, $past_query);
 
-    // User Stats Calculation
     $my_stats_query = "SELECT COUNT(*) as joined_count, SUM(challenge_point) as total_points FROM user_challenge WHERE user_id = $current_user_id";
     $my_stats = mysqli_fetch_assoc(mysqli_query($conn, $my_stats_query));
     ?>
 
     <style>
-        /* Admin-inspired styles with Recycler modifications */
         .page-header-actions {
             display: flex;
             justify-content: space-between;
@@ -162,7 +151,6 @@ if ($challenge_id > 0) {
             box-shadow: var(--shadow-sm);
         }
 
-        /* Stats Row - Recycler Themed */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -195,7 +183,6 @@ if ($challenge_id > 0) {
             letter-spacing: 0.5px;
         }
 
-        /* Hero Card for Featured Challenge */
         .hero-challenge {
             background: linear-gradient(135deg, var(--color-primary) 0%, #059669 100%);
             color: white;
@@ -242,7 +229,6 @@ if ($challenge_id > 0) {
             letter-spacing: 1px;
         }
 
-        /* Grid Layout */
         .challenges-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -325,7 +311,6 @@ if ($challenge_id > 0) {
             background: var(--color-gray-50);
         }
 
-        /* Personal Stats Badge inside Card */
         .my-points-badge {
             background: #ECFDF5;
             border: 1px solid #10B981;
@@ -398,7 +383,7 @@ if ($challenge_id > 0) {
     </div>
 
     <?php if (count($active_challenges) > 0):
-        $hero = $active_challenges[0]; // First one is featured
+        $hero = $active_challenges[0]; 
         ?>
         <h2 style="margin-bottom: var(--space-4); color: var(--color-gray-800); display: flex; align-items: center; gap: 10px;">
             <i class="fas fa-fire" style="color: #EF4444;"></i> Spotlight Challenge
@@ -535,6 +520,6 @@ if ($challenge_id > 0) {
     <?php endif; ?>
 
     <?php
-} // End Else (List View)
+}
 include('includes/footer.php');
 ?>

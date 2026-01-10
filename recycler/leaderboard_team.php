@@ -73,7 +73,8 @@ $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM cha
                     style="padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); border: 1px solid var(--color-gray-300); background: white; font-weight: 500; color: var(--color-gray-700); cursor: pointer; min-width: 200px;">
                     <option value="0">🏆 Overall Lifetime Rankings</option>
                     <?php while ($c = mysqli_fetch_assoc($challenges)): ?>
-                        <option value="<?php echo $c['challenge_id']; ?>" <?php echo ($challenge_id == $c['challenge_id']) ? 'selected' : ''; ?>>
+                        <option value="<?php echo $c['challenge_id']; ?>" 
+                            <?php echo ($challenge_id == $c['challenge_id']) ? 'selected' : ''; ?>>
                             Event: <?php echo htmlspecialchars($c['title']); ?>
                         </option>
                     <?php endwhile; ?>
