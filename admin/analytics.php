@@ -149,6 +149,7 @@ include 'includes/header.php';
         border-radius: var(--radius-lg);
         box-shadow: var(--shadow-md);
         border: 1px solid var(--color-gray-200);
+        min-width: 0;
     }
 
     .chart-title {
