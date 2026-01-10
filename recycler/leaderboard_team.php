@@ -5,16 +5,13 @@ include('includes/header.php');
 $conn = getDBConnection();
 $current_user_id = $_SESSION['user_id'];
 
-// Get current user's team to highlight it
 $user_team_query = "SELECT team_id FROM user WHERE user_id = $current_user_id";
 $user_team_result = mysqli_query($conn, $user_team_query);
 $my_team_id = ($row = mysqli_fetch_assoc($user_team_result)) ? $row['team_id'] : 0;
 
 $challenge_id = isset($_GET['challenge_id']) ? intval($_GET['challenge_id']) : 0;
 
-// Fetch Rankings
 if ($challenge_id > 0) {
-    // Challenge Specific Rankings
     $query = "SELECT t.team_id, t.team_name, 
               COALESCE(SUM(uc.challenge_point), 0) as display_points, 
               COUNT(DISTINCT u.user_id) as member_count
@@ -25,7 +22,6 @@ if ($challenge_id > 0) {
               HAVING display_points > 0
               ORDER BY display_points DESC";
 } else {
-    // Overall Rankings (Consistent with Admin Logic)
     $query = "SELECT t.team_id, t.team_name, 
               (SELECT COUNT(*) FROM user WHERE team_id = t.team_id) as member_count,
               (SELECT COALESCE(SUM(lifetime_points), 0) FROM user WHERE team_id = t.team_id) as display_points
@@ -41,7 +37,6 @@ if ($rank_result) {
     }
 }
 
-// Challenges for filter
 $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM challenge ORDER BY end_date DESC");
 ?>
 
@@ -112,7 +107,6 @@ $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM cha
             </thead>
             <tbody>
                 <?php
-                // Loop through ALL teams (starting from index 0)
                 for ($i = 0; $i < count($teams); $i++):
                     $team = $teams[$i];
                     $is_my_team = ($team['team_id'] == $my_team_id);
@@ -122,7 +116,6 @@ $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM cha
                         style="border-bottom: 1px solid var(--color-gray-100); <?php echo $is_my_team ? 'background: #eff6ff;' : ''; ?>">
                         <td style="padding: var(--space-4); font-weight: 700; color: var(--color-gray-400);">
                             <?php
-                            // Simple Rank Display
                             if ($rank == 1)
                                 echo '🥇';
                             elseif ($rank == 2)
