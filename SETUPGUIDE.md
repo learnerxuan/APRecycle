@@ -24,7 +24,7 @@ The bin camera requires a Gemini API key to classify waste items using AI.
    ```
    GEMINI_API_KEY=your_api_key_here
    ```
-5. Replace `your_api_key_here` with your actual API key
+5. Replace `your_api_key_here` with your actual API key (or use the api key provided below)
 6. Save the file
 
 ---
