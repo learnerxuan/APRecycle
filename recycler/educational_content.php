@@ -3,7 +3,6 @@ session_start();
 require_once '../php/config.php';
 $conn = getDBConnection();
 
-// Check if user is logged in as recycler
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'recycler') {
     header('Location: ../login.php');
     exit();
@@ -12,14 +11,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'recycler') {
 $search = $_GET['search'] ?? '';
 $filter = $_GET['filter'] ?? 'All';
 
-// [FIX 1] Added "AND status = 'published'" to prevent drafts from showing
 $sql = "SELECT * FROM educational_content WHERE title LIKE ? AND status = 'published'";
 $params = ["%$search%"];
 $types = "s";
 
 if ($filter !== 'All') {
     if ($filter === 'General Tips') {
-        // [FIX] Ensure status check is respected when filtering tags
         $sql .= " AND (tags LIKE ? OR tags LIKE ?)";
         $params[] = "%General%";
         $params[] = "%Tips%";
