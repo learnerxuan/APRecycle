@@ -3,15 +3,23 @@ session_start();
 require_once '../php/config.php';
 $conn = getDBConnection();
 
+// Check if user is logged in as recycler
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'recycler') {
+    header('Location: ../login.php');
+    exit();
+}
+
 $search = $_GET['search'] ?? '';
 $filter = $_GET['filter'] ?? 'All';
 
-$sql = "SELECT * FROM educational_content WHERE title LIKE ?";
+// [FIX 1] Added "AND status = 'published'" to prevent drafts from showing
+$sql = "SELECT * FROM educational_content WHERE title LIKE ? AND status = 'published'";
 $params = ["%$search%"];
 $types = "s";
 
 if ($filter !== 'All') {
     if ($filter === 'General Tips') {
+        // [FIX] Ensure status check is respected when filtering tags
         $sql .= " AND (tags LIKE ? OR tags LIKE ?)";
         $params[] = "%General%";
         $params[] = "%Tips%";
@@ -105,17 +113,23 @@ $result = $stmt->get_result();
             <?php if ($result && $result->num_rows > 0): ?>
                 <?php while($row = $result->fetch_assoc()): ?>
                     <a href="educational_content_view.php?id=<?php echo $row['content_id']; ?>" class="article-card">
-                        <?php 
-                            $imgSrc = !empty($row['image']) ? '../' . $row['image'] : '../assets/aprecycle-logo.png';
-                            $raw_tags = $row['tags'];
-                            $normalized_tags = str_replace(['General, Tips', 'General,Tips'], 'General Tips', $raw_tags);
-                            $tags_display = htmlspecialchars(implode(', ', array_map('trim', explode(',', $normalized_tags))));
-                        ?>
-                        <img src="<?php echo htmlspecialchars($imgSrc); ?>" alt="Thumbnail" class="article-thumb">
+                        
+                        <?php if (!empty($row['image'])): ?>
+                            <img src="../<?php echo htmlspecialchars($row['image']); ?>" alt="Thumbnail" class="article-thumb">
+                        <?php else: ?>
+                            <div class="article-thumb" style="display: flex; align-items: center; justify-content: center; background-color: #e2e8f0; color: #a0aec0;">
+                                <i class="fas fa-book-open fa-2x"></i>
+                            </div>
+                        <?php endif; ?>
                         
                         <div style="flex: 1; width: 100%;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                                 <h4 style="margin: 0; color: #2d3748; font-size: 1.25rem;"><?php echo htmlspecialchars($row['title']); ?></h4>
+                                <?php 
+                                    $raw_tags = $row['tags'];
+                                    $normalized_tags = str_replace(['General, Tips', 'General,Tips'], 'General Tips', $raw_tags);
+                                    $tags_display = htmlspecialchars(implode(', ', array_map('trim', explode(',', $normalized_tags))));
+                                ?>
                                 <span style="background: #edf2f7; color: #4a5568; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; margin-left: 1rem;"><?php echo $tags_display; ?></span>
                             </div>
                             <div style="font-size: 0.85rem; color: #a0aec0; margin-bottom: 0.75rem;">
