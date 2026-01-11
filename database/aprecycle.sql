@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `material` (
 --
 
 INSERT INTO `material` (`material_id`, `material_name`, `points_per_item`) VALUES
-(1, 'Plastic Bottle (PET)', 10),
+(1, 'Plastic Bottle', 10),
 (2, 'Aluminum Can', 15),
 (3, 'Glass Bottle', 12),
 (4, 'Cardboard Box', 8),
