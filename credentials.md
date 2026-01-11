@@ -36,17 +36,11 @@ All users share the same password: **`password123`**
 
 ## Recycler Accounts (Sample Users)
 
-### Active Recyclers with Teams
-
-**john_warrior** 
-- **Username:** `john_warrior`
-- **Password:** `password123`
-
-**sarah_green** 
+### sarah_green (Recommended)
 - **Username:** `sarah_green`
 - **Password:** `password123`
 
-**emma_legend** 
+### emma_legend
 - **Username:** `emma_legend`
 - **Password:** `password123`
 
@@ -58,7 +52,7 @@ All users share the same password: **`password123`**
 |------|----------------|----------|--------------|
 | **Administrator** | admin1 | password123 | Full system control |
 | **Eco-Moderator** | moderator1 | password123 | Review & content management |
-| **Recycler** | john_warrior | password123 | Recycling, challenges, teams |
+| **Recycler** | sarah_green | password123 | Recycling, challenges, teams |
 
 ---
 
