@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 09, 2026 at 04:59 AM
--- Server version: 9.1.0
--- PHP Version: 8.3.14
+-- Generation Time: Jan 11, 2026 at 03:33 PM
+-- Server version: 8.4.7
+-- PHP Version: 8.3.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `badge` (
   `badge_type` enum('milestone','challenge') NOT NULL DEFAULT 'challenge' COMMENT 'milestone = auto-unlock at points, challenge = only from completing challenges',
   `description` text NOT NULL,
   PRIMARY KEY (`badge_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `badge`
@@ -51,7 +51,9 @@ INSERT INTO `badge` (`badge_id`, `badge_name`, `point_required`, `badge_type`, `
 (7, 'Earth Week Champion', 0, 'challenge', 'Participated and completed Earth Week Challenge'),
 (8, 'Paper Saving Pioneer', 0, 'challenge', 'Completed the Paper Recycling Month challenge'),
 (9, 'Aluminum Can Crusher', 0, 'challenge', 'Completed the Aluminum Can Drive challenge'),
-(10, 'Welcome Badge', 0, 'challenge', 'Completed your first challenge - welcome to APRecycle!');
+(10, 'Welcome Badge', 0, 'challenge', 'Completed your first challenge - welcome to APRecycle!'),
+(11, 'Milk Drinker', 0, 'challenge', 'Complete The Milk Carton Recycling Campaign to earn it!'),
+(12, 'Eco Starter (Plastic Bottle)', 0, 'challenge', 'Join Bottle Recycling Challenge to earn it!');
 
 -- --------------------------------------------------------
 
@@ -78,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `challenge` (
   KEY `badge_id` (`badge_id`),
   KEY `reward_id` (`reward_id`),
   KEY `target_material_id` (`target_material_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `challenge`
@@ -91,7 +93,10 @@ INSERT INTO `challenge` (`challenge_id`, `title`, `description`, `start_date`, `
 (4, 'Paper Recycling Month', 'February is Paper Month! Recycle 40 paper items to save trees and earn the Paper Saving Pioneer badge plus APU Hoodie. Triple points for all paper!', '2025-02-01', '2025-02-28', 8, 4, 3.0, 5, 40, 0, 'quantity', '2026-01-09 12:58:53'),
 (5, 'Aluminum Can Drive', 'Crush it! Recycle 25 aluminum cans to complete the challenge and earn the Aluminum Can Crusher badge plus APU Eco Tote Bag. 1.8x points boost!', '2025-03-01', '2025-03-15', 9, 1, 1.8, 2, 25, 0, 'quantity', '2026-01-09 12:58:53'),
 (6, 'October Kickoff Challenge', 'Start your recycling journey this October! Just participate by submitting any 1 item to earn the Welcome Badge and Eco Tote Bag. 1.5x points for everyone!', '2024-10-01', '2024-10-31', 10, 1, 1.5, NULL, 1, 0, 'participation', '2026-01-09 12:58:53'),
-(7, 'Back to School Recycle', 'Welcome back! Simple participation challenge - recycle 1 item to get started with the Welcome Badge. Perfect for beginners!', '2024-09-01', '2024-09-30', 10, NULL, 1.2, NULL, 1, 0, 'participation', '2026-01-09 12:58:53');
+(7, 'Back to School Recycle', 'Welcome back! Simple participation challenge - recycle 1 item to get started with the Welcome Badge. Perfect for beginners!', '2024-09-01', '2024-09-30', 10, NULL, 1.2, NULL, 1, 0, 'participation', '2026-01-09 12:58:53'),
+(8, 'Milk Carton Recycling Campaign', 'The goal of this challenge is to promote sustainability by recycling used milk cartons. Participants are encouraged to collect, clean, and recycle milk cartons to reduce waste and support a greener environment.\r\nRules:\r\n\r\nOnly clean and empty milk cartons will be accepted.\r\nFlatten cartons before submission to save space.\r\nDrop cartons at designated recycling points within the campaign period.\r\n\r\nWhat Participants Need to Do:\r\n\r\nGather your used milk cartons.\r\nRinse and flatten them.\r\nSubmit them at the nearest collection point.\r\n\r\nEvery carton you recycle helps reduce landfill waste and contributes to a circular economy. Let’s work together to make a positive impact on the planet!', '2026-01-11', '2026-02-12', 11, NULL, 3.5, 10, 0, 0, 'participation', '2026-01-11 15:09:46'),
+(9, 'Bottle Recycling Challenge', 'The goal of this challenge is to reduce plastic waste by recycling used plastic bottles. Participants will collect, clean, and recycle plastic bottles to help protect the environment and promote a sustainable future.\r\nRules:\r\n\r\nOnly clean and empty plastic bottles will be accepted.\r\nRemove caps and labels before recycling.\r\nDrop bottles at designated recycling points during the campaign period.\r\n\r\nWhat Participants Need to Do:\r\n\r\nGather your used plastic bottles.\r\nRinse and remove caps/labels.\r\nSubmit them at the nearest collection point.\r\n\r\nEvery bottle recycled helps reduce pollution and supports a cleaner planet. Let’s make a difference together!', '2026-01-11', '2026-02-28', 12, 3, 5.0, 1, 10, 0, 'quantity', '2026-01-11 15:14:10'),
+(10, 'Future Recycling Challenge', 'Join the movement to tackle tomorrow’s recycling problems today! Recycle hard-to-recycle materials like electronics, multi-layer packaging, and textiles. Earn points and badges while making a real impact on sustainability.', '2026-01-18', '2026-01-25', NULL, 1, 2.0, NULL, 20, 0, 'quantity', '2026-01-11 22:42:15');
 
 -- --------------------------------------------------------
 
@@ -111,7 +116,17 @@ CREATE TABLE IF NOT EXISTS `educational_content` (
   `status` enum('published','draft') NOT NULL DEFAULT 'published',
   PRIMARY KEY (`content_id`),
   KEY `author_id` (`author_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `educational_content`
+--
+
+INSERT INTO `educational_content` (`content_id`, `title`, `content_body`, `image`, `tags`, `created_at`, `author_id`, `status`) VALUES
+(2, 'How to Recycle Milk Cartons the Right Way', 'Milk cartons are often overlooked, but they can be recycled into new paper products and building materials. Here’s how you can recycle them properly:\r\n1. Empty the Carton\r\nPour out any remaining liquid to avoid contamination.\r\n2. Rinse Inside\r\nQuickly rinse the inside to remove residue. This keeps the recycling process clean.\r\n3. Flatten the Carton\r\nFlattening saves space and makes transportation easier.\r\n4. Remove Plastic Caps\r\nCaps are usually made of different materials. Separate them before recycling.\r\n5. Drop at Designated Collection Points\r\nFind your nearest recycling station or community bin that accepts cartons.\r\nWhy It Matters:\r\nCartons are made of valuable paperboard and plastic layers. Recycling them reduces landfill waste and supports a circular economy.\r\nTip: Encourage your household to recycle every carton—small steps lead to big changes!', 'uploads/content/edu_696383cfddade.jpg', 'green, recycling, milk cartons, sustainability, eco-friendly', '2026-01-11 19:03:18', 3, 'published'),
+(4, '5 Easy Steps to Recycle Plastic Bottles', 'Recycling plastic bottles is one of the simplest ways to reduce waste and protect our environment. Here’s how you can do it effectively:\r\n1. Empty the Bottle\r\nMake sure the bottle is completely empty. Leftover liquids can contaminate the recycling process.\r\n2. Rinse Thoroughly\r\nQuickly rinse the bottle to remove any residue. Clean bottles are easier to recycle.\r\n3. Remove Caps and Labels\r\nCaps and labels are often made from different materials. Separate them before recycling.\r\n4. Flatten the Bottle\r\nFlattening saves space in recycling bins and makes transportation more efficient.\r\n5. Drop at Designated Recycling Points\r\nFind your nearest recycling station or use community collection bins.\r\nWhy It Matters:\r\nPlastic takes hundreds of years to decompose. By recycling, you help reduce pollution, conserve resources, and support a circular economy.\r\nTip: Encourage friends and family to join in—every bottle counts!', '', 'green, recycling, plastic, bottles, sustainability, eco-friendly', '2026-01-11 19:11:37', 3, 'published'),
+(5, 'Why and How to Recycle Glass Bottles', 'Glass is 100% recyclable and can be reused endlessly without losing quality. Recycling glass bottles saves energy, reduces raw material use, and helps protect the environment. Here’s how you can do it:\r\n1. Empty the Bottle\r\nRemove any leftover liquid to prevent contamination.\r\n2. Rinse Thoroughly\r\nClean bottles are easier to process and ensure high-quality recycled glass.\r\n3. Remove Ca', '', '', '2026-01-11 19:12:20', 3, 'draft'),
+(6, 'The Right Way to Recycle Paper and Cardboard', 'Paper and cardboard are among the most recyclable materials, yet millions of tons end up in landfills every year. Recycling them helps save trees, water, and energy. Here’s how you can do it correctly:\r\n1. Separate Clean Paper from Dirty Paper\r\nOnly recycle paper that is free from food stains, grease, or heavy glue. Dirty paper can contaminate the recycling process.\r\n2. Remove Non-Paper Attachments\r\nTake off staples, plastic windows from envelopes, and tape. These materials need separate processing.\r\n3. Flatten Cardboard Boxes\r\nFlatten boxes to save space and make transportation easier.\r\n4. Keep Paper Dry\r\nWet paper is harder to recycle and often gets discarded. Store it in a dry place before recycling.\r\n5. Drop at Designated Recycling Points\r\nFind your nearest paper recycling bin or collection center.\r\nWhy It Matters:\r\nRecycling one ton of paper saves 17 trees and 7,000 gallons of water. Every sheet counts toward a greener planet.\r\nTip: Encourage offices and schools to set up paper recycling bins—it’s an easy way to make a big impact!\r\n', 'uploads/content/edu_696386391d79c.png', 'green, recycling, paper, cardboard, sustainability, eco-friendly', '2026-01-11 19:15:05', 3, 'published');
 
 -- --------------------------------------------------------
 
@@ -132,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `material` (
 --
 
 INSERT INTO `material` (`material_id`, `material_name`, `points_per_item`) VALUES
-(1, 'Plastic Bottle', 10),
+(1, 'Plastic Bottles', 10),
 (2, 'Aluminum Can', 15),
 (3, 'Glass Bottle', 12),
 (4, 'Cardboard Box', 8),
@@ -141,7 +156,7 @@ INSERT INTO `material` (`material_id`, `material_name`, `points_per_item`) VALUE
 (7, 'E-Waste (Large)', 50),
 (8, 'Metal Scrap', 20),
 (9, 'Plastic Container (HDPE)', 10),
-(10, 'Tetra Pak', 8);
+(10, 'Carton', 8);
 
 -- --------------------------------------------------------
 
@@ -190,7 +205,7 @@ CREATE TABLE IF NOT EXISTS `recycling_submission` (
   PRIMARY KEY (`submission_id`),
   KEY `user_id` (`user_id`),
   KEY `bin_id` (`bin_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `recycling_submission`
@@ -208,7 +223,14 @@ INSERT INTO `recycling_submission` (`submission_id`, `user_id`, `bin_id`, `image
 (12, 7, 6, '/uploads/waste_012.jpg', 0.93, 'approved', 'Good aluminum recycling.', '2026-01-09 12:58:53'),
 (13, 9, 7, '/uploads/waste_013.jpg', 0.90, 'approved', 'Great metal scrap!', '2026-01-09 12:58:53'),
 (14, 12, 8, '/uploads/waste_014.jpg', 0.96, 'approved', 'Excellent cardboard condition.', '2026-01-09 12:58:53'),
-(15, 15, 1, '/uploads/waste_015.jpg', 0.90, 'approved', 'Well done!', '2026-01-09 12:58:53');
+(15, 15, 1, '/uploads/waste_015.jpg', 0.90, 'approved', 'Well done!', '2026-01-09 12:58:53'),
+(16, 7, 1, 'uploads/waste_69638e51be4d6.jpg', 0.98, 'Approved', NULL, '2026-01-11 19:49:37'),
+(18, 7, 1, 'uploads/waste_696391cc47e44.jpg', 0.70, 'approved', '✅ Approved by eco-moderator. Great job recycling!', '2026-01-11 20:04:28'),
+(19, 7, 1, 'uploads/waste_6963bfe6c122f.jpg', 0.98, 'Approved', NULL, '2026-01-11 23:21:10'),
+(20, 7, 1, 'uploads/waste_6963c05e96639.jpg', 0.98, 'Approved', NULL, '2026-01-11 23:23:10'),
+(21, 7, 1, 'uploads/waste_6963c0bec6c02.jpg', 0.70, 'Pending', NULL, '2026-01-11 23:24:46'),
+(22, 7, 1, 'uploads/waste_6963c0e90bdde.jpg', 0.70, 'Pending', NULL, '2026-01-11 23:25:29'),
+(23, 7, 1, 'uploads/waste_6963c1724086c.jpg', 0.70, 'Pending', NULL, '2026-01-11 23:27:46');
 
 -- --------------------------------------------------------
 
@@ -271,7 +293,14 @@ INSERT INTO `submission_material` (`submission_id`, `material_id`, `quantity`) V
 (12, 2, 8),
 (13, 8, 2),
 (14, 4, 4),
-(15, 5, 15);
+(15, 5, 15),
+(16, 3, 1),
+(18, 5, 1),
+(19, 10, 1),
+(20, 10, 1),
+(21, 1, 1),
+(22, 1, 1),
+(23, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -288,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `team` (
   `points` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`team_id`),
   UNIQUE KEY `team_name_unique` (`team_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `team`
@@ -302,7 +331,8 @@ INSERT INTO `team` (`team_id`, `team_name`, `description`, `date_created`, `poin
 (5, 'Recycle Rebels', 'Rebelling against waste! Join the revolution!', '2024-09-20 11:20:00', 490),
 (6, 'Earth Guardians', 'Guarding Mother Earth with every recycle', '2024-10-01 13:00:00', 420),
 (7, 'Zero Waste Heroes', 'Heroes don\'t wear capes, they recycle!', '2024-10-10 10:30:00', 380),
-(8, 'The Composters', 'Turning waste into worth, one day at a time', '2024-10-20 15:00:00', 310);
+(8, 'The Composters', 'Turning waste into worth, one day at a time', '2024-10-20 15:00:00', 310),
+(9, 'Green People', 'We are green people. People that go green.', '2026-01-11 16:13:12', 0);
 
 -- --------------------------------------------------------
 
@@ -336,7 +366,7 @@ INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `role`, `qr_code
 (4, 'moderator2', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'moderator2@aprecycle.com', 'eco-moderator', 'QR_MOD002', 200, '2024-08-05 09:30:00', NULL),
 (5, 'moderator3', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'moderator3@aprecycle.com', 'eco-moderator', 'QR_MOD003', 180, '2024-08-10 10:00:00', NULL),
 (6, 'john_warrior', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'john@student.apu.edu.my', 'recycler', 'RECYCLER:6:7b8c22dd34024dcd', 450, '2024-09-01 11:00:00', 1),
-(7, 'sarah_green', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'sarah@student.apu.edu.my', 'recycler', 'RECYCLER:7:466228a69069a426', 420, '2024-09-02 12:00:00', 1),
+(7, 'sarah_green', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'sarah@student.apu.edu.my', 'recycler', 'RECYCLER:7:466228a69069a426', 528, '2024-09-02 12:00:00', NULL),
 (8, 'mike_eco', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'mike@student.apu.edu.my', 'recycler', 'RECYCLER:8:fd86ab4d6ddb0918', 380, '2024-09-03 13:00:00', 1),
 (9, 'emma_legend', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'emma@student.apu.edu.my', 'recycler', 'RECYCLER:9:982b382684cc1249', 390, '2024-09-05 15:00:00', 2),
 (10, 'david_eco', '$2y$10$ZqO6N1//qDuUZeuslem8FOPdnS1wQ6s4lJ853EvqQ9Z/oZy2hqSQi', 'david@student.apu.edu.my', 'recycler', 'RECYCLER:10:0173b2e08d1c1c2e', 360, '2024-09-06 16:00:00', 2),
@@ -378,6 +408,7 @@ INSERT INTO `user_badge` (`user_id`, `badge_id`, `date_awarded`) VALUES
 (7, 1, '2024-09-18 10:00:00'),
 (7, 2, '2024-10-25 11:00:00'),
 (7, 9, '2024-10-15 12:00:00'),
+(7, 11, '2026-01-11 23:21:10'),
 (8, 1, '2024-09-20 10:00:00'),
 (8, 9, '2024-10-10 11:00:00'),
 (9, 1, '2024-09-22 10:00:00'),
@@ -418,6 +449,7 @@ INSERT INTO `user_challenge` (`user_id`, `challenge_id`, `challenge_point`, `cha
 (6, 6, 250, 0, 0, '2024-10-01 09:00:00'),
 (7, 1, 160, 0, 0, '2024-11-01 11:00:00'),
 (7, 6, 220, 0, 0, '2024-10-01 10:00:00'),
+(7, 8, 56, 2, 1, '2026-01-11 15:14:33'),
 (8, 1, 140, 0, 0, '2024-11-02 09:00:00'),
 (8, 6, 210, 0, 0, '2024-10-02 11:00:00'),
 (9, 1, 170, 0, 0, '2024-11-01 14:00:00'),
