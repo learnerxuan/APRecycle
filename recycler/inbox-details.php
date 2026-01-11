@@ -61,6 +61,16 @@ if (mysqli_num_rows($result) === 0) {
 
 $message = mysqli_fetch_assoc($result);
 
+$image_path = $message['image_url'];
+if (strpos($image_path, '/') === 0) {
+    $image_path = substr($image_path, 1);
+}
+
+$display_image = '../' . $image_path;
+
+
+$points_earned = isset($message['points_earned']) ? (int)$message['points_earned'] : 0;
+
 $page_title = "Message Details";
 include 'includes/header.php';
 ?>
@@ -257,8 +267,9 @@ include 'includes/header.php';
         font-size: var(--text-sm);
     }
 
+    /* FIXED: Using predefined gradient variable because color-success-dark didn't exist */
     .points-highlight {
-        background: linear-gradient(135deg, var(--color-success), var(--color-success-dark));
+        background: var(--gradient-success); 
         color: white;
         padding: var(--space-6);
         border-radius: var(--radius-lg);
@@ -295,8 +306,9 @@ include 'includes/header.php';
         transition: all 0.2s ease;
     }
 
+    /* FIXED: Hardcoded color because color-danger-dark variable didn't exist */
     .btn-delete:hover {
-        background: var(--color-danger-dark);
+        background: #C53030; 
         transform: translateY(-2px);
     }
 
@@ -350,7 +362,6 @@ include 'includes/header.php';
         <i class="fas fa-arrow-left"></i> Back to Inbox
     </a>
 
-    <!-- Message Header -->
     <div class="message-header-card">
         <div class="header-top">
             <h1 class="message-title">
@@ -403,15 +414,13 @@ include 'includes/header.php';
         </div>
     </div>
 
-    <!-- Points Highlight -->
-    <?php if ($message['points_earned'] > 0): ?>
+    <?php if ($points_earned > 0): ?>
         <div class="points-highlight">
-            <div class="points-value">+<?php echo $message['points_earned']; ?> Points</div>
+            <div class="points-value">+<?php echo $points_earned; ?> Points</div>
             <div class="points-label">Added to your account</div>
         </div>
     <?php endif; ?>
 
-    <!-- Submission Details -->
     <div class="submission-details">
         <h2 class="section-title">
             <i class="fas fa-recycle"></i>
@@ -436,7 +445,7 @@ include 'includes/header.php';
                 <div class="material-name">
                     <i class="fas fa-calculator"></i> Total Items
                 </div>
-                <div class="material-points"><?php echo $message['total_items']; ?> items</div>
+                <div class="material-points"><?php echo (int)$message['total_items']; ?> items</div>
             </div>
         </div>
 
@@ -446,15 +455,14 @@ include 'includes/header.php';
                     <i class="fas fa-camera"></i>
                     Submission Image
                 </h3>
-                <img src="<?php echo htmlspecialchars($message['image_url']); ?>" 
+                <img src="<?php echo htmlspecialchars($display_image); ?>" 
                      alt="Recycling submission" 
                      class="image-preview"
-                     onerror="this.style.display='none'">
+                     onerror="this.style.display='none'; console.log('Image failed to load:', this.src);">
             </div>
         <?php endif; ?>
     </div>
 
-    <!-- Moderator Feedback -->
     <div class="feedback-section">
         <h2 class="section-title">
             <i class="fas fa-comment-alt"></i>
@@ -465,7 +473,6 @@ include 'includes/header.php';
         </div>
     </div>
 
-    <!-- Actions -->
     <div class="action-buttons">
         <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this message?');">
             <button type="submit" name="delete_message" class="btn-delete">

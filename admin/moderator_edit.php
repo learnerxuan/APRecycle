@@ -310,7 +310,7 @@ include 'includes/header.php';
         <form method="POST">
             <div class="form-group">
                 <label class="form-label" for="username">
-                    Full Name <span class="required">*</span>
+                    Username <span class="required">*</span>
                 </label>
                 <input 
                     type="text" 
@@ -349,7 +349,7 @@ include 'includes/header.php';
             </div>
 
             <div class="warning-box">
-                <p><i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong> Changes will take effect immediately. The moderator will need to use the new email/password to log in.</p>
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong> Changes will take effect immediately. The moderator will need to use the new username/password to log in.</p>
             </div>
 
             <div class="form-actions">
