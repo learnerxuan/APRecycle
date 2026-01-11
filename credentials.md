@@ -60,4 +60,3 @@ All users share the same password: **`password123`**
 
 - All passwords are hashed in the database using bcrypt (`$2y$10$...`)
 - The plaintext password `password123` is used for all test accounts
-- For production, users should set strong, unique passwords
