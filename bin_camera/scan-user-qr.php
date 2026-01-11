@@ -6,10 +6,9 @@
 
 header('Content-Type: application/json');
 
-// Include config for database connection
 require_once '../php/config.php';
 
-// Initialize response
+
 $response = [
     'status' => 'error',
     'message' => 'Initialization error.',
@@ -28,7 +27,6 @@ if (!isset($data['qr_code']) || empty($data['qr_code'])) {
     exit;
 }
 
-// Now we receive image, classification, and confidence instead of submission_id
 if (!isset($data['image']) || empty($data['image'])) {
     $response['message'] = 'Error: No image data provided.';
     echo json_encode($response);
@@ -41,16 +39,16 @@ if (!isset($data['classification']) || !isset($data['confidence'])) {
     exit;
 }
 
-$qr_code = trim($data['qr_code']); // Trim whitespace
+$qr_code = trim($data['qr_code']);
 $base64Image = $data['image'];
 $classification = $data['classification'];
 $confidence = (float) $data['confidence'];
 
-// Parse QR code data
+// parse QR code data
 // Expected format: RECYCLER:user_id:verification_hash
 $parts = explode(':', $qr_code);
 
-// Debug: Log what we received
+
 error_log("QR Code Scanned: " . $qr_code);
 error_log("Parts count: " . count($parts));
 if (count($parts) > 0) {
@@ -71,7 +69,7 @@ if (count($parts) !== 3 || $parts[0] !== 'RECYCLER') {
 $scanned_user_id = intval($parts[1]);
 $provided_hash = $parts[2];
 
-// Connect to database using config
+
 $conn = getDBConnection();
 
 if (!$conn) {
@@ -80,7 +78,7 @@ if (!$conn) {
     exit;
 }
 
-// Get user from database
+
 $stmt = $conn->prepare("SELECT user_id, username, role FROM user WHERE user_id = ? AND role = 'recycler'");
 $stmt->bind_param("i", $scanned_user_id);
 $stmt->execute();
@@ -106,7 +104,7 @@ if ($provided_hash !== $expected_hash) {
     exit;
 }
 
-// QR code is valid! Now save the image and create the submission
+// qr code valid
 $target_dir = "../uploads/";
 $file_name = "waste_" . uniqid() . ".jpg";
 $target_file_path = $target_dir . $file_name;
@@ -134,7 +132,7 @@ if (strpos($class_lower, 'not a waste') !== false || strpos($class_lower, 'non-r
 
 $simulated_bin_id = 1;
 
-// Fetch all materials from database dynamically
+// Fetch all materials from database
 $materials_query = "SELECT material_id, material_name, points_per_item FROM material ORDER BY material_name ASC";
 $materials_result = mysqli_query($conn, $materials_query);
 
@@ -155,7 +153,7 @@ while ($mat = mysqli_fetch_assoc($materials_result)) {
     ];
 }
 
-// Try to match classification to a material in database
+// match classification to a material in database
 $detected_material_id = null;
 $material_points = 0;
 
@@ -168,24 +166,23 @@ foreach ($material_map as $mat_name => $mat_data) {
     }
 }
 
-// Determine status and points based on validation
 $status = 'Rejected';
 $points_awarded = 0;
 
 if (!$is_valid_waste) {
-    // AI says it's not waste - reject
+    // not waste
     $status = 'Rejected';
     $points_awarded = 0;
 } elseif ($detected_material_id === null) {
-    // Item not in materials list - reject
+    // item not in materials list
     $status = 'Rejected';
     $points_awarded = 0;
 } elseif ($confidence >= 0.80) {
-    // High confidence AND material found - approve with material points
+    // High confidence AND material found
     $status = 'Approved';
     $points_awarded = $material_points;
 } else {
-    // Low confidence but material found - pending review
+    // Low confidence but material found
     $status = 'Pending';
     $points_awarded = 0;
 }
@@ -208,10 +205,9 @@ if ($detected_material_id) {
     $challenges = $challenge_stmt->get_result();
 
     while ($ch = $challenges->fetch_assoc()) {
-        // Check if material matches (or if it's a generic challenge)
         if (is_null($ch['target_material_id']) || $ch['target_material_id'] == $detected_material_id) {
 
-            // Store original completion state BEFORE any updates
+            // Store original completion state before any updates
             $was_completed_before_submission = $ch['is_completed'];
 
             // Calculate new values
@@ -219,7 +215,7 @@ if ($detected_material_id) {
             $new_quantity = $ch['challenge_quantity'] + 1;
             $new_points = $ch['challenge_point'] + $points_to_add;
 
-            // Update challenge progress
+            // update challenge progress
             $update_ch = $conn->prepare("UPDATE user_challenge SET challenge_quantity = ?, challenge_point = ? WHERE user_id = ? AND challenge_id = ?");
             $update_ch->bind_param("iiii", $new_quantity, $new_points, $user['user_id'], $ch['challenge_id']);
             $update_ch->execute();
@@ -263,7 +259,7 @@ if ($detected_material_id) {
             }
 
             // Apply highest multiplier (for immediate points calculation)
-            // Use the ORIGINAL completion state - if challenge was active when submission was made, apply multiplier
+            // Use the originaL completion state - if challenge was active when submission was made, apply multiplier
             if ($was_completed_before_submission == 0 && $ch['point_multiplier'] > $total_multiplier) {
                 $total_multiplier = $ch['point_multiplier'];
             }
@@ -272,7 +268,7 @@ if ($detected_material_id) {
     $challenge_stmt->close();
 }
 
-// Apply multiplier to points
+// aply multiplier to points
 $points_awarded = floor($points_awarded * $total_multiplier);
 
 // Insert submission with user_id
@@ -282,7 +278,7 @@ $stmt->bind_param("iisds", $user['user_id'], $simulated_bin_id, $db_image_path, 
 if ($stmt->execute()) {
     $submission_id = $conn->insert_id;
 
-    // Link submission material (helper table)
+    // Link submission material
     if ($detected_material_id) {
         $stmt_mat = $conn->prepare("INSERT INTO submission_material (submission_id, material_id, quantity) VALUES (?, ?, 1)");
         $stmt_mat->bind_param("ii", $submission_id, $detected_material_id);
@@ -290,7 +286,7 @@ if ($stmt->execute()) {
         $stmt_mat->close();
     }
 
-    // Award points if approved
+    // award points if approved
     if ($points_awarded > 0) {
         $stmt_points = $conn->prepare("UPDATE user SET lifetime_points = lifetime_points + ? WHERE user_id = ?");
         $stmt_points->bind_param("ii", $points_awarded, $user['user_id']);

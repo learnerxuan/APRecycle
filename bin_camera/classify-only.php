@@ -6,8 +6,24 @@
 
 header('Content-Type: application/json');
 
-// Load environment variables
+// 1. Load Database Config AND Environment Variables
+require_once '../php/config.php'; // Add this to get DB connection
 require_once '../php/env.php';
+
+// 2. Fetch Valid Materials from Database
+$conn = getDBConnection();
+$material_list = [];
+// We only need the names to tell the AI what is allowed
+$sql = "SELECT material_name FROM material"; 
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $material_list[] = $row['material_name'];
+    }
+}
+// Create a string like: "Plastic Bottle (PET), Aluminum Can, Glass Bottle..."
+$valid_materials_string = implode(', ', $material_list);
 
 // API CONFIGURATION
 $GEMINI_API_KEY = env('GEMINI_API_KEY');
@@ -33,8 +49,11 @@ if (!isset($data['image']) || empty($data['image'])) {
 
 $base64Image = $data['image'];
 
-// Prepare AI prompt
-$prompt = "Analyze the image of the waste item. Your response MUST be a JSON object with two fields: 'classification' (the type of item, e.g., Plastic Bottle, Cardboard Box, Organic) and 'confidence_score' (a score from 0.0 to 1.0 representing classification certainty).";
+// 3. Update AI prompt with the Database List
+$prompt = "Analyze the image of the waste item. 
+Classify it into EXACTLY ONE of the following valid categories: [{$valid_materials_string}]. 
+If it does not fit any of these specific categories, return 'Other'.
+Your response MUST be a JSON object with two fields: 'classification' (the exact string from the list) and 'confidence_score' (a score from 0.0 to 1.0 representing classification certainty).";
 
 $payload = json_encode([
     'contents' => [
@@ -113,7 +132,7 @@ $confidence = (float) $classification_data['confidence_score'];
 $class_lower = strtolower($classification);
 $is_valid_waste = true;
 
-if (strpos($class_lower, 'not a waste') !== false || strpos($class_lower, 'non-recyclable') !== false) {
+if (strpos($class_lower, 'not a waste') !== false || strpos($class_lower, 'non-recyclable') !== false || $class_lower === 'other') {
     $is_valid_waste = false;
 }
 
@@ -128,6 +147,9 @@ if ($confidence >= 0.80 && !$is_valid_waste) {
     $response['classification'] = $classification;
     $response['confidence'] = $confidence;
 }
+
+// Close DB connection
+$conn->close();
 
 echo json_encode($response);
 ?>
