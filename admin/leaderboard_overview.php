@@ -1,14 +1,17 @@
 <?php
 $page_title = 'Leaderboard Overview';
 
+//connect to files of database and design
 require_once '../php/config.php';
 include_once 'includes/header.php';
 
+//security check for admin role
 if ($_SESSION['role'] !== 'administrator') {
     header('Location: ../login.php');
     exit();
 }
 
+//connect to database and set empty checklist so it doesn't crash if no data
 $conn = getDBConnection();
 $stats = [
     'total_recyclers' => 0,
@@ -18,33 +21,39 @@ $stats = [
     'top_recyclers' => []
 ];
 
+//count every user who has recycler role
 $sql = "SELECT COUNT(*) as count FROM user WHERE role = 'recycler'";
 if ($result = mysqli_query($conn, $sql)) {
     $stats['total_recyclers'] = mysqli_fetch_assoc($result)['count'];
 }
 
+//count how many users submitted something in last 30 days
 $sql = "SELECT COUNT(DISTINCT user_id) as count FROM recycling_submission 
         WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
 if ($result = mysqli_query($conn, $sql)) {
     $stats['active_this_month'] = mysqli_fetch_assoc($result)['count'];
 }
 
+//count how many teams
 $sql = "SELECT COUNT(*) as count FROM team";
 if ($result = mysqli_query($conn, $sql)) {
     $stats['total_teams'] = mysqli_fetch_assoc($result)['count'];
 }
 
+//count how many challenges not yet end
 $sql = "SELECT COUNT(*) as count FROM challenge WHERE end_date >= CURDATE()";
 if ($result = mysqli_query($conn, $sql)) {
     $stats['active_challenges'] = mysqli_fetch_assoc($result)['count'];
 }
 
+//take username and their lifetime points, then arrange by decending order, then show only top 3
 $sql = "SELECT u.username, u.lifetime_points, 
         (SELECT COUNT(*) FROM recycling_submission rs WHERE rs.user_id = u.user_id AND rs.status = 'Approved') as items_count
         FROM user u 
         WHERE u.role = 'recycler' 
         ORDER BY u.lifetime_points DESC 
         LIMIT 3";
+//add the top 3 into top recyclers array
 if ($result = mysqli_query($conn, $sql)) {
     while ($row = mysqli_fetch_assoc($result)) {
         $stats['top_recyclers'][] = $row;

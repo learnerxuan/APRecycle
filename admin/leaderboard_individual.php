@@ -6,6 +6,7 @@ include_once 'includes/header.php';
 
 $conn = getDBConnection();
 
+//only show 20 ppl per page
 $limit = 20; 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
@@ -13,16 +14,19 @@ $start = ($page - 1) * $limit;
 $search_term = '';
 $where_clause = "WHERE u.role = 'recycler'";
 
+//search for requested recycler if user uses the search bar
 if (isset($_GET['search']) && !empty($_GET['search'])) {
     $search_term = mysqli_real_escape_string($conn, $_GET['search']);
     $where_clause .= " AND (u.username LIKE '%$search_term%' OR u.email LIKE '%$search_term%')";
 }
 
+//count the number of recyclers and see if need a next page button
 $count_sql = "SELECT COUNT(*) as total FROM user u $where_clause";
 $count_result = mysqli_query($conn, $count_sql);
 $total_records = mysqli_fetch_assoc($count_result)['total'];
 $total_pages = ceil($total_records / $limit);
 
+//take user info and count their submitted and approved points, then list in decending order
 $sql = "SELECT u.user_id, u.username, u.email, u.lifetime_points, u.created_at,
         (SELECT COUNT(*) FROM recycling_submission rs WHERE rs.user_id = u.user_id AND rs.status = 'Approved') as items_count
         FROM user u 
@@ -225,7 +229,7 @@ $result = mysqli_query($conn, $sql);
 <div class="toolbar">
     <div style="font-weight: 600; color: var(--color-gray-700);">
         Total Recyclers: <?php echo number_format($total_records); ?>
-    </div>
+    </div> 
     <form class="search-form" method="GET" action="">
         <input type="text" name="search" class="search-input" placeholder="Search by name or email..."
             value="<?php echo htmlspecialchars($search_term); ?>">

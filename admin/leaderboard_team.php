@@ -1,35 +1,32 @@
 <?php
-// Setup Page Variables
 $page_title = 'Team Rankings';
 
-// Include Configuration and Header
 require_once '../php/config.php';
 include_once 'includes/header.php';
 
-// Connect to Database
 $conn = getDBConnection();
 
-// Handle Pagination & Search Logic
-$limit = 20; // Teams per page
+//show only 20 teams per page
+$limit = 20;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
 $search_term = '';
-$where_clause = "WHERE 1=1"; // Default always true
+$where_clause = "WHERE 1=1"; 
 
-// Add search filter if exists
+//search for requested team from search bar
 if (isset($_GET['search']) && !empty($_GET['search'])) {
     $search_term = mysqli_real_escape_string($conn, $_GET['search']);
     $where_clause .= " AND t.team_name LIKE '%$search_term%'";
 }
 
-// Query to get Total Records (for pagination buttons)
+//count the number of teams
 $count_sql = "SELECT COUNT(*) as total FROM team t $where_clause";
 $count_result = mysqli_query($conn, $count_sql);
 $total_records = mysqli_fetch_assoc($count_result)['total'];
 $total_pages = ceil($total_records / $limit);
 
-// Main Query to get Teams
+//get teams information and arrange in decending order based on team points and member count
 $sql = "SELECT t.team_id, t.team_name,
         (SELECT COUNT(*) FROM user u WHERE u.team_id = t.team_id) as member_count,
         (SELECT COALESCE(SUM(u.lifetime_points), 0) FROM user u WHERE u.team_id = t.team_id) as team_total_points
@@ -42,7 +39,6 @@ $result = mysqli_query($conn, $sql);
 ?>
 
 <style>
-    /* Reusing Styles from Individual Leaderboard for Consistency */
     .toolbar {
         display: flex;
         justify-content: space-between;
@@ -128,7 +124,6 @@ $result = mysqli_query($conn, $sql);
         background: var(--color-gray-50);
     }
 
-    /* Rank Badges */
     .rank-cell {
         font-weight: bold;
         width: 60px;
@@ -151,7 +146,6 @@ $result = mysqli_query($conn, $sql);
         color: #CD7F32;
     }
 
-    /* Green Badge for Team Points */
     .points-badge {
         background: #dcfce7;
         color: #166534;
@@ -170,7 +164,6 @@ $result = mysqli_query($conn, $sql);
         font-weight: 600;
     }
 
-    /* Pagination */
     .pagination {
         display: flex;
         justify-content: center;
