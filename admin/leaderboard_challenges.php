@@ -6,10 +6,12 @@ include_once 'includes/header.php';
 
 $conn = getDBConnection();
 
+//only 10 challenge can be on 1 page
 $limit = 10; 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
+//select ended challenges
 $sql = "SELECT * FROM challenge 
         WHERE end_date < CURDATE() 
         ORDER BY end_date DESC 
@@ -17,6 +19,7 @@ $sql = "SELECT * FROM challenge
 
 $result = mysqli_query($conn, $sql);
 
+//count the number of ended challenges and calculate the pages needed
 $count_sql = "SELECT COUNT(*) as total FROM challenge WHERE end_date < CURDATE()";
 $count_result = mysqli_query($conn, $count_sql);
 $total_records = mysqli_fetch_assoc($count_result)['total'];
@@ -202,7 +205,7 @@ $total_pages = ceil($total_records / $limit);
         <?php while ($challenge = mysqli_fetch_assoc($result)):
             $start_date = $challenge['start_date'];
             $end_date = $challenge['end_date'];
-
+            //select the winners and only the top 1
             $winner_sql = "SELECT u.username, COUNT(*) as score
                            FROM recycling_submission rs
                            JOIN user u ON rs.user_id = u.user_id
