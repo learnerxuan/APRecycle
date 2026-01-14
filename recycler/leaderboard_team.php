@@ -5,12 +5,14 @@ include('includes/header.php');
 $conn = getDBConnection();
 $current_user_id = $_SESSION['user_id'];
 
+//see what team the user is in
 $user_team_query = "SELECT team_id FROM user WHERE user_id = $current_user_id";
 $user_team_result = mysqli_query($conn, $user_team_query);
 $my_team_id = ($row = mysqli_fetch_assoc($user_team_result)) ? $row['team_id'] : 0;
 
 $challenge_id = isset($_GET['challenge_id']) ? intval($_GET['challenge_id']) : 0;
 
+//get the total points earned by all team members for specific challenge and hide teams with no points
 if ($challenge_id > 0) {
     $query = "SELECT t.team_id, t.team_name, 
               COALESCE(SUM(uc.challenge_point), 0) as display_points, 
@@ -21,7 +23,7 @@ if ($challenge_id > 0) {
               GROUP BY t.team_id 
               HAVING display_points > 0
               ORDER BY display_points DESC";
-} else {
+} else { //calculate total points for each team
     $query = "SELECT t.team_id, t.team_name, 
               (SELECT COUNT(*) FROM user WHERE team_id = t.team_id) as member_count,
               (SELECT COALESCE(SUM(lifetime_points), 0) FROM user WHERE team_id = t.team_id) as display_points
@@ -68,7 +70,7 @@ $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM cha
     <div style="display: flex; align-items: center; gap: 1rem;">
         <div class="filter-mobile"
             style="background: var(--color-gray-100); padding: var(--space-2); border-radius: var(--radius-md);">
-            <form method="GET">
+            <form method="GET"> //get all active challenge
                 <select name="challenge_id" onchange="this.form.submit()"
                     style="padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); border: 1px solid var(--color-gray-300); background: white; font-weight: 500; color: var(--color-gray-700); cursor: pointer; min-width: 200px;">
                     <option value="0">🏆 Overall Lifetime Rankings</option>
@@ -117,6 +119,7 @@ $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM cha
                         style="border-bottom: 1px solid var(--color-gray-100); <?php echo $is_my_team ? 'background: #eff6ff;' : ''; ?>">
                         <td style="padding: var(--space-4); font-weight: 700; color: var(--color-gray-400);">
                             <?php
+                            //create podium
                             if ($rank == 1)
                                 echo '🥇';
                             elseif ($rank == 2)
@@ -135,7 +138,7 @@ $challenges = mysqli_query($conn, "SELECT challenge_id, title, end_date FROM cha
                                 </div>
                                 <span
                                     style="font-weight: 600; color: var(--color-gray-800);"><?php echo htmlspecialchars($team['team_name']); ?></span>
-                                <?php if ($is_my_team): ?>
+                                <?php if ($is_my_team): ?> //highlight for user team
                                     <span class="badge"
                                         style="background: var(--color-primary); color: white; padding: 2px 6px; font-size: 10px; border-radius: 4px;">YOUR
                                         TEAM</span>

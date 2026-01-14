@@ -3,10 +3,11 @@ include('../php/config.php');
 include('includes/header.php');
 
 $conn = getDBConnection(); 
+//get the time period requested
 $period = isset($_GET['period']) ? $_GET['period'] : 'lifetime';
 $current_user_id = $_SESSION['user_id'];
 
-
+//get monthly points and arrange in descending order
 if ($period === 'monthly') {
     $query = "SELECT u.user_id, u.username, 
               SUM(m.points_per_item * sm.quantity) as points,
@@ -20,7 +21,7 @@ if ($period === 'monthly') {
               AND YEAR(rs.created_at) = YEAR(CURRENT_DATE())
               GROUP BY u.user_id
               ORDER BY points DESC LIMIT 10";
-} else {
+} else { //get lifetime points and arrange in descending order
     $query = "SELECT user_id, username, lifetime_points as points,
               (SELECT IFNULL(SUM(sm.quantity), 0) 
                FROM submission_material sm 
@@ -31,6 +32,7 @@ if ($period === 'monthly') {
               ORDER BY points DESC LIMIT 10";
 }
 
+//fetch the winners
 $result = mysqli_query($conn, $query);
 $rankings = [];
 if ($result) {
@@ -125,10 +127,11 @@ if ($result) {
         </thead>
         <tbody>
             <?php 
+            //skip the top 3 ppl
             if (count($rankings) > 3):
                 for($i = 3; $i < count($rankings); $i++): 
                     $user = $rankings[$i];
-                    $is_me = ($user['user_id'] == $current_user_id);
+                    $is_me = ($user['user_id'] == $current_user_id); //if the person is the user
             ?>
             <tr style="border-bottom: 1px solid var(--color-gray-100); <?php echo $is_me ? 'background: var(--color-success-light);' : ''; ?>">
                 <td style="padding: var(--space-4); font-weight: 700; color: var(--color-gray-400);">#<?php echo $i + 1; ?></td>
