@@ -1,4 +1,5 @@
 <?php
+//check who the current user is
 session_start();
 $page_title = "Leaderboard Hub";
 include('includes/header.php');

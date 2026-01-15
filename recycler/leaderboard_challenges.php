@@ -7,6 +7,7 @@ $current_user_id = $_SESSION['user_id'];
 
 $challenge_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
+//show rankings for a specific challengs
 if ($challenge_id > 0) {
     $stmt = mysqli_prepare($conn, "SELECT *, CASE WHEN end_date >= CURRENT_DATE() THEN 'Active' ELSE 'Completed' END AS challenge_status FROM challenge WHERE challenge_id = ?");
     mysqli_stmt_bind_param($stmt, "i", $challenge_id);
@@ -117,7 +118,7 @@ if ($challenge_id > 0) {
     <?php endif; ?>
 
     <?php
-} else {
+} else { //show dashboard list all challenges
     $active_query = "SELECT c.*, 
                      (SELECT COUNT(*) FROM user_challenge WHERE challenge_id = c.challenge_id) as participant_count,
                      (SELECT challenge_point FROM user_challenge WHERE challenge_id = c.challenge_id AND user_id = $current_user_id) as my_points
@@ -382,7 +383,7 @@ if ($challenge_id > 0) {
         </div>
     </div>
 
-    <?php if (count($active_challenges) > 0):
+    <?php if (count($active_challenges) > 0): //highlight challenge (ending soonest)
         $hero = $active_challenges[0]; 
         ?>
         <h2 style="margin-bottom: var(--space-4); color: var(--color-gray-800); display: flex; align-items: center; gap: 10px;">
