@@ -1,7 +1,6 @@
 <?php
 require_once '../php/config.php';
 
-// Check role permissions (Double check, though header handles it)
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrator') {
     header('Location: ../login.php');
     exit();
@@ -9,9 +8,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrator') {
 
 $conn = getDBConnection();
 
-// --- 1. Fetch Statistics from Database ---
+// 1. fetch Statistics from Database
 
-// A. Total Users (All roles or just Recyclers? Usually Recyclers + Mods)
+// A. Total Users (Recyclers + Mods)
 $user_query = "SELECT COUNT(*) as count FROM user WHERE role != 'administrator'";
 $user_result = mysqli_query($conn, $user_query);
 $total_users = mysqli_fetch_assoc($user_result)['count'];

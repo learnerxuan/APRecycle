@@ -5,6 +5,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrator') {
     exit();
 }
 
+// use to highlight the current tabe in navigation bar
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -15,6 +16,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($page_title) ? $page_title . ' - ' : ''; ?>APRecycle Admin</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -309,6 +311,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="admin-user-info">
                 <div class="admin-user-profile">
                     <div class="admin-user-avatar">
+                        <!-- display the first letter of username in the avatar-->
                         <?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>
                     </div>
                     <div class="admin-user-details">
