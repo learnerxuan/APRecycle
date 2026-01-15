@@ -32,7 +32,7 @@ The bin camera requires a Gemini API key to classify waste items using AI.
 ## Example `.env` File
 
 ```
-GEMINI_API_KEY=AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GEMINI_API_KEY=UR_API_KEY_HERE
 ```
 
 ---
